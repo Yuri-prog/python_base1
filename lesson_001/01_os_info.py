@@ -14,3 +14,6 @@ print(info)
 with open('os_info.txt', 'w', encoding='utf8') as ff:
     ff.write(info)
 
+
+#Добрый день! У меня программа не работает. Выдает Process finished with exit code 0.
+# Сначала ругался, что нет интерпретатора, потом я указал путь к интерпретатору Python 3.8, получил такой результат.
