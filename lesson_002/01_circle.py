@@ -44,4 +44,4 @@ print(distance<radius)
 # False
 # False
 
-
+# зачет!
