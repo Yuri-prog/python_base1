@@ -33,7 +33,13 @@ for j in range(100, 1001, 100):
 
 
 # Нарисовать три ряда по 10 пузырьков
-# TODO здесь ваш код
+for x in range(100, 301,100):
+   for j in range(100, 1001, 100):
+     rad = 50
+     center = sd.get_point(j, x)
+     for i in range(3):
+        sd.circle(center, radius=rad)
+        rad = rad + 5
 
 # Нарисовать 100 пузырьков в произвольных местах экрана случайными цветами
 # TODO здесь ваш код
