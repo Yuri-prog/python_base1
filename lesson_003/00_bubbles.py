@@ -24,7 +24,13 @@ def bubble(point, step, quantity, color):
 #bubble(point, 5, 30, color=sd.COLOR_RED)
 
 # Нарисовать 10 пузырьков в ряд
-# TODO здесь ваш код
+for j in range(100, 1001, 100):
+    rad = 50
+    center = sd.get_point(j, 300)
+    for i in range(3):
+      sd.circle(center, radius=rad)
+      rad = rad + 5
+
 
 # Нарисовать три ряда по 10 пузырьков
 # TODO здесь ваш код
