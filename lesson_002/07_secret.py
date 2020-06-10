@@ -34,3 +34,4 @@ secret_message = [
 
 sec = secret_message
 print(sec[0][3], sec[1][9:13], sec[2][5:15:2], sec[3][12:6:-1], sec[4][20:15:-1])
+# зачет!

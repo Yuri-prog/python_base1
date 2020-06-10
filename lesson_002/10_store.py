@@ -80,5 +80,5 @@ print('Стул -', сhairs_quantity, 'шт, стоимость', chairs_cost, '
 
 
 
-
+# зачет! 
 
