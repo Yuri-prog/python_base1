@@ -16,8 +16,14 @@ my_family_height = [
     ['папа', 186],
     ['я', 200],
 ]
+i=0
 total_height = my_family_height[0][1]
-total_height += my_family_height[1][1]
-total_height += my_family_height[2][1]
+#total_height = my_family_height[0][1]
+#total_height += my_family_height[1][1]
+#total_height += my_family_height[2][1]
+while i < my_family_height[i]:
+   i+=i
+   total_height +=my_family_height[i][1]
 print('Общий рост моей семьи', total_height)
+
 print('дотвидания!')
