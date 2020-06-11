@@ -54,10 +54,17 @@ store = {
 #         подсчет стоимости товара
 #     вывод на консоль количества и стоимости товара на складе
 
-# TODO здесь ваш код
 
+quantity = 0
+price = 0
+common_price = 0
+common_quantity = 0
+for numbers in store:
 
+    for i in range(len(store[numbers])):
+        quantity_store = store[numbers][i]['quantity']
+        sum = store[numbers][i]['quantity'] * store[numbers][i]['price']
+        common_quantity += quantity_store
+        common_price += sum
 
-
-
-
+print('Количество единиц мебели', common_quantity, 'шт. на общую сумму', common_price, 'руб.')
