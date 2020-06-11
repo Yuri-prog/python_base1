@@ -9,6 +9,20 @@
 # Номер месяца получать от пользователя следующим образом
 user_input = input("Введите, пожалуйста, номер месяца: ")
 month = int(user_input)
-print('Вы ввели', month)
 
-# TODO здесь ваш код
+if 0 < month <= 12:
+    print('Вы ввели', month)
+
+else:
+    print('Номер некорректен')
+
+year = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30, 7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
+day = None
+if year[month]>30:
+    day = 'день'
+else:
+    day = 'дней'
+for i in year:
+    if i == month:
+     print('В месяце', month, year[i], day)
+
