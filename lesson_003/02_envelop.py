@@ -21,7 +21,17 @@ paper_x, paper_y = 8, 9
 # paper_x, paper_y = 9, 11
 # (просто раскоментировать нужную строку и проверить свой код)
 
-# TODO здесь ваш код
+def push_paper(paper_x, paper_y):
+    envelop_x = 10
+    envelop_y = 7
+    if envelop_x >= paper_x and envelop_y >= paper_y:
+        print('ДА')
+    elif envelop_x >= paper_y and envelop_y >= paper_x:
+        print('ДА')
+    else:
+        print('НЕТ')
+
+push_paper(11, 9)
 
 # Усложненное задание, решать по желанию.
 # Заданы размеры hole_x, hole_y прямоугольного отверстия и размеры brick_х, brick_у, brick_z кирпича (все размеры
