@@ -11,4 +11,13 @@
 
 educational_grant, expenses = 10000, 12000
 
-# TODO здесь ваш код
+i = 1
+sum_expens = expenses
+while i < 10:
+    expenses = expenses * 1.03
+    sum_expens = sum_expens + expenses
+    i += 1
+
+sum_grant = educational_grant * 10 #стипендия за 10 месяцев
+sum_parents = round((sum_expens - sum_grant), 2)
+print('Студенту надо попросить', sum_parents, 'рублей' )
