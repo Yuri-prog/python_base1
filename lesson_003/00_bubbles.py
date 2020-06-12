@@ -42,10 +42,10 @@ for x in range(100, 301,100):
         rad = rad + 5
 
 # Нарисовать 100 пузырьков в произвольных местах экрана случайными цветами
-'''for _ in range(100):
+for _ in range(100):
     point = sd.random_point()
     color = sd.random_color()
-    bubble(point, 3, 3, color)'''
+    bubble(point, 3, 3, color)
 
 
 sd.pause()
