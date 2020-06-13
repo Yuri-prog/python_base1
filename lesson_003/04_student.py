@@ -21,3 +21,4 @@ while i < 10:
 sum_grant = educational_grant * 10 #стипендия за 10 месяцев
 sum_parents = round((sum_expens - sum_grant), 2)
 print('Студенту надо попросить', sum_parents, 'рублей' )
+# зачет!

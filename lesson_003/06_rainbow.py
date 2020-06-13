@@ -25,3 +25,4 @@ for color in rainbow_colors:
     sd.circle(sd.get_point(500, 0), radius, color = color, width = 20)
     radius += 20
 sd.pause()
+# зачет!

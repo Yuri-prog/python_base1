@@ -8,8 +8,8 @@ import simple_draw as sd
 
 for x in range(0, 601, 100):
     for y in range(0, 600, 50):
-       if y%100 == 0:
-        sd.rectangle(sd.get_point(x-50 , y), sd.get_point(x + 50, y + 50), color=sd.COLOR_YELLOW, width=1)
+       if y%100 == 0:  # TODO: пробелы вокруг %
+        sd.rectangle(sd.get_point(x-50 , y), sd.get_point(x + 50, y + 50), color=sd.COLOR_YELLOW, width=1)  # TODO: отступы + пробел перед запятой
        else:
            sd.rectangle(sd.get_point(x, y), sd.get_point(x + 100, y + 50), color=sd.COLOR_YELLOW, width=1)
 
