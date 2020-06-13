@@ -24,7 +24,7 @@ def smile(x_center, y_center, color):
     simple_draw.circle(eye_center_1, radius, color, width=2)             #левый глаз
     simple_draw.circle(eye_center_2, radius, color, width=2)             #правый глаз
 
-    for angle in range (200, 340, 1):
+    for angle in range (200, 340,):
         mouth_point = simple_draw.get_point(simple_draw.cos(angle) * 50 + x_center,
                                             simple_draw.sin(angle) * 30 + y_center - 15, )
         simple_draw.circle(mouth_point, 0.1 * radius, color)             #рот
