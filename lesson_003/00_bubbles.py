@@ -8,17 +8,16 @@ sd.resolution = (1200, 600)
 center = sd.get_point(300, 300)
 rad = 100
 for i in range(3):
-  # TODO: отступы. Нужно 4 пробела. Ниже по заданию еще в нескольких местах есть.
-  sd.circle(center, radius=rad)
-  rad = rad + 5
+    sd.circle(center, radius=rad)
+    rad = rad + 5
 
 
 # Написать функцию рисования пузырька, принммающую 3 (или более) параметра: точка рисования, шаг и цвет
 def bubble(point, step, quantity, color):
     rad = 50
     for i in range(quantity):
-      sd.circle(point, rad, color)
-      rad = rad + step
+        sd.circle(point, rad, color)
+        rad = rad + step
 
 
 #point = sd.get_point(200, 200)
@@ -29,18 +28,18 @@ for j in range(100, 1001, 100):
     rad = 50
     center = sd.get_point(j, 300)
     for i in range(3):
-      sd.circle(center, radius=rad)
-      rad = rad + 5
+        sd.circle(center, radius=rad)
+        rad = rad + 5
 
 
 # Нарисовать три ряда по 10 пузырьков
 for x in range(100, 301,100):
    for j in range(100, 1001, 100):
-     rad = 50
-     center = sd.get_point(j, x)
-     for i in range(3):
-        sd.circle(center, radius=rad)
-        rad = rad + 5
+        rad = 50
+        center = sd.get_point(j, x)
+        for i in range(3):
+            sd.circle(center, radius=rad)
+            rad = rad + 5
 
 # Нарисовать 100 пузырьков в произвольных местах экрана случайными цветами
 for _ in range(100):
