@@ -61,10 +61,11 @@ common_price = 0
 common_quantity = 0
 for numbers in store:
 
-    for i in range(len(store[numbers])):
+    for i in range(len(store[numbers])):  # TODO: используйте pythonic-way циклы. store[numbers][i] тогда будет переменной цикла
         quantity_store = store[numbers][i]['quantity']
-        sum = store[numbers][i]['quantity'] * store[numbers][i]['price']
+        sum = store[numbers][i]['quantity'] * store[numbers][i]['price']  # TODO: sum - зарезервированное в питоне слово
         common_quantity += quantity_store
         common_price += sum
 
-print('Количество единиц мебели', common_quantity, 'шт. на общую сумму', common_price, 'руб.')
+print('Количество единиц мебели', common_quantity, 'шт. на общую сумму', common_price, 'руб.')  # TODO: сделать надо то же самое, что и во 2 домашке, только циклами.
+                                                                                                # TODO: Еще лучше использовать .format или f-строки для того, чтобы вставлять в строки значения из кода

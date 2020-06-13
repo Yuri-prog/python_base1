@@ -8,6 +8,7 @@ sd.resolution = (1200, 600)
 center = sd.get_point(300, 300)
 rad = 100
 for i in range(3):
+  # TODO: отступы. Нужно 4 пробела. Ниже по заданию еще в нескольких местах есть.
   sd.circle(center, radius=rad)
   rad = rad + 5
 
