@@ -26,3 +26,5 @@ print(zoo)
 
 print('Cage of lion is', (zoo.index('lion')+1))
 print('Cage of lark is', (zoo.index('lark')+1))
+
+# зачет!
