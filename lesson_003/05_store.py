@@ -55,17 +55,41 @@ store = {
 #     вывод на консоль количества и стоимости товара на складе
 
 
+# quantity = 0
+# price = 0
+# common_price = 0
+# common_quantity = 0
+# for numbers in store:
+#
+#     # for  in range(len(store[numbers])):
+#         quantity_store = store[numbers][i]['quantity']
+#         summa = store[numbers][i]['quantity'] * store[numbers][i]['price']
+#         common_quantity += quantity_store
+#         common_price += summa
+#
+# print('Количество единиц мебели', common_quantity, 'шт. на общую сумму', common_price, 'руб.')
+
+
+
 quantity = 0
 price = 0
-common_price = 0
-common_quantity = 0
+common_quant = 0
+common_sum = 0
+for numbers in goods:
+    print(numbers,  goods[numbers])
+
+
 for numbers in store:
 
-    for i in range(len(store[numbers])):  # TODO: используйте pythonic-way циклы. store[numbers][i] тогда будет переменной цикла
-        quantity_store = store[numbers][i]['quantity']
-        sum = store[numbers][i]['quantity'] * store[numbers][i]['price']  # TODO: sum - зарезервированное в питоне слово
-        common_quantity += quantity_store
-        common_price += sum
+    common_quant = 0
+    common_sum = 0
+    for substore in store[numbers]:
+         common_quant += substore['quantity']
+         common_sum += substore['quantity'] * substore['price']
 
-print('Количество единиц мебели', common_quantity, 'шт. на общую сумму', common_price, 'руб.')  # TODO: сделать надо то же самое, что и во 2 домашке, только циклами.
-                                                                                                # TODO: Еще лучше использовать .format или f-строки для того, чтобы вставлять в строки значения из кода
+    print(numbers,':', common_quant, 'шт. на общую сумму', common_sum, 'руб.') #f-строка не получается
+
+
+
+
+
