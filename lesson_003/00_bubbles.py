@@ -34,7 +34,7 @@ for j in range(100, 1001, 100):
 
 # Нарисовать три ряда по 10 пузырьков
 for x in range(100, 301,100):
-   for j in range(100, 1001, 100):
+    for j in range(100, 1001, 100):  # TODO: тут отступ в 3 пробелаи
         rad = 50
         center = sd.get_point(j, x)
         for i in range(3):
@@ -50,4 +50,4 @@ for _ in range(100):
 
 sd.pause()
 
-
+# зачет! 

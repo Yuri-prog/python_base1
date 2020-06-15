@@ -87,9 +87,9 @@ for numbers in store:
          common_quant += substore['quantity']
          common_sum += substore['quantity'] * substore['price']
 
-    print(numbers,':', common_quant, 'шт. на общую сумму', common_sum, 'руб.') #f-строка не получается
+    print(f'{numbers}: {common_quant} шт. на общую сумму {common_sum} руб.')  # TODO: как-то так
 
-
+# зачет!
 
 
 

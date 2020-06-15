@@ -26,3 +26,5 @@ for i in year:
     if i == month:
      print('В месяце', month, year[i], day)
 
+# зачет!
+
