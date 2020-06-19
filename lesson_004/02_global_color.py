@@ -99,38 +99,34 @@ def hexagon(point_4, angle, color, length):
 colors = [sd.COLOR_RED, sd.COLOR_ORANGE, sd.COLOR_YELLOW, sd.COLOR_GREEN, sd.COLOR_CYAN, sd.COLOR_BLUE, sd.COLOR_PURPLE]
 russian_colors = ['Красный', 'Оранжевый', 'Желтый', 'Зеленый', 'Голубой', 'Синий', 'Фиолетовый']
 
-
 for figure_color, val in enumerate(russian_colors):
     print(figure_color, val)
-def choose_color():
-    print('Выберите  цвет фигуры треугольник')
-    figure_color = int(input())
-    if 0 <= figure_color <= 5 :
-        triangle(point_1, angle=30, color=colors[figure_color], length=200)
-    else:
-        print ('Неверный выбор, начните сначала')
-        choose_color()
-    print('Выберите  цвет фигуры квадрат')
-    figure_color = int(input())
-    if 0 <=figure_color  <= 5:
-        square(point_2, angle=0, color=colors[figure_color], length=200)
-    else:
-        print('Неверный выбор, начните сначала')
-        choose_color()
-    print('Выберите  цвет фигуры пятиугольник')
-    figure_color = int(input())
-    if 0 <=figure_color  <= 5 :
-        pentagon(point_3, angle=0, color=colors[figure_color], length=140)
-    else:
-        print('Неверный выбор, начните сначала')
-        choose_color()
-    print('Выберите  цвет фигуры шестиугольник')
-    figure_color = int(input())
-    if 0 <=figure_color <= 5:
-        hexagon(point_4, angle=0, color=colors[figure_color], length=120)
-    else:
-        print('Неверный выбор, начните сначала')
-        choose_color()
 
-choose_color()
+print('Выберите  цвет фигуры треугольник')
+figure_color = int(input())
+if 0 <= figure_color <= 5:
+    triangle(point_1, angle=30, color=colors[figure_color], length=200)
+else:
+    print('Неверный выбор, введите заново')
+print('Выберите  цвет фигуры квадрат')
+figure_color = int(input())
+if 0 <= figure_color <= 5:
+    square(point_2, angle=0, color=colors[figure_color], length=200)
+else:
+    print('Неверный выбор, введите заново')
+print('Выберите  цвет фигуры пятиугольник')
+figure_color = int(input())
+if 0 <= figure_color <= 5:
+    pentagon(point_3, angle=0, color=colors[figure_color], length=140)
+else:
+    print('Неверный выбор, введите заново')
+
+print('Выберите  цвет фигуры шестиугольник')
+figure_color = int(input())
+if 0 <= figure_color <= 5:
+    hexagon(point_4, angle=0, color=colors[figure_color], length=120)
+
+else:
+    print('Неверный выбор, введите заново')
+
 sd.pause()
