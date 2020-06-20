@@ -34,7 +34,7 @@ def draw_branches(start_point, angle, length):
     start_point_2 = start_point
     angle_1 = angle
     angle_2 = angle
-    while length > 10:
+    while length >= 10:
         v1 = sd.get_vector(start_point = start_point_1, angle = angle_1, length = length, width = 1)
         v2 = sd.get_vector(start_point = start_point_2, angle = angle_2, length = length, width = 1)
         length = 0.6*length
@@ -44,9 +44,10 @@ def draw_branches(start_point, angle, length):
         angle_2 -= 30
         v1.draw()
         v2.draw()
-        #return v1.end_point, v2.end_point
 
-draw_branches(start_point, 90, 150)
+
+#draw_branches(start_point, 90, 150)
+
 root_point = sd.get_point(300, 30)
 def draw_branches(start_point, angle, length, delta):
     if length < 10:
@@ -56,12 +57,37 @@ def draw_branches(start_point, angle, length, delta):
     next_point = v1.end_point
     next_angle = angle + delta
     next_length = 0.75 * length
-    draw_branches(start_point=next_point, angle=angle, length=next_length, delta=delta)
-    draw_branches(start_point=next_point, angle=next_angle, length=next_length, delta=delta)
-for delta in range(0, 51, 10):
-    draw_branches(start_point=root_point, angle = 90, length = 100, delta = delta)
-for delta in range(-50, 1, 10):
-    draw_branches(start_point=root_point , angle = 90, length = 100, delta = delta)
+    draw_branches(start_point=next_point, angle=angle+delta, length=next_length, delta=delta)
+    draw_branches(start_point=next_point, angle=angle-delta, length=next_length, delta=delta)
+
+#draw_branches(start_point=root_point, angle = 90, length = 100, delta = 30)
+
+
+#Усложненное задание
+
+delta = 0
+
+
+def draw_branches(start_point, angle, length, delta):
+    if length < 2:
+        return
+    v1 = sd.get_vector(start_point, angle=angle, length=length,)
+    v1.draw()
+    next_point = v1.end_point
+    x = int(30 / 100 * 40)
+    y = int(length / 100 * 20)
+    length = sd.random_number(length - y, length + y)
+    delta = sd.random_number(30 - x, 30 + x)
+    next_angle = angle + delta
+    next_length = int(0.75 * length)
+    draw_branches(start_point=next_point, angle=angle + delta, length=next_length, delta=delta,)
+    draw_branches(start_point=next_point, angle=angle - delta, length=next_length, delta=delta,)
+
+
+draw_branches(start_point=root_point, angle=90, length=100, delta=delta)
+
+
+
 
 # 4) Усложненное задание (делать по желанию)
 # - сделать рандомное отклонение угла ветвей в пределах 40% от 30-ти градусов
