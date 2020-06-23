@@ -39,7 +39,7 @@ for j in range(0, N-1):
 
 
 for i in range(0, N-1):
-    length = 0
+    length = 0  # TODO: в этой строчке нет смысла, т.к. length инициализируется через 4 строчки и до этого никак не используется
     x = x_list[i]
     y = y_list[i]
     size = size_list[i]
@@ -62,6 +62,8 @@ for i in range(0, N-1):
         if sd.user_want_exit():
             break
 sd.pause()
+
+# TODO: снежинки падают по одной. Попробуйте сделать так, чтобы казалось, что они падают одновременно
 
 # подсказка! для ускорения отрисовки можно
 #  - убрать clear_screen()

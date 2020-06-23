@@ -55,7 +55,7 @@ def draw_branches(start_point, angle, length, delta):
     v1 = sd.get_vector(start_point, angle=angle, length=length,)
     v1.draw()
     next_point = v1.end_point
-    next_angle = angle + delta
+    next_angle = angle + delta  # TODO: переменная не используется
     next_length = 0.75 * length
     draw_branches(start_point=next_point, angle=angle+delta, length=next_length, delta=delta)
     draw_branches(start_point=next_point, angle=angle-delta, length=next_length, delta=delta)
@@ -68,7 +68,7 @@ def draw_branches(start_point, angle, length, delta):
 delta = 0
 
 
-def draw_branches(start_point, angle, length, delta):
+def draw_branches(start_point, angle, length, delta):  # TODO: аргумент delta не используется
     if length < 2:
         return
     v1 = sd.get_vector(start_point, angle=angle, length=length,)
@@ -78,7 +78,7 @@ def draw_branches(start_point, angle, length, delta):
     y = int(length / 100 * 20)
     length = sd.random_number(length - y, length + y)
     delta = sd.random_number(30 - x, 30 + x)
-    next_angle = angle + delta
+    next_angle = angle + delta  # TODO: переменная не используется
     next_length = int(0.75 * length)
     draw_branches(start_point=next_point, angle=angle + delta, length=next_length, delta=delta,)
     draw_branches(start_point=next_point, angle=angle - delta, length=next_length, delta=delta,)

@@ -27,7 +27,7 @@ sd.resolution = (1200, 600)
 # sd.get_vector()
 # sd.line()
 # Результат решения см lesson_004/results/exercise_01_shapes.jpg
-
+# TODO: стиль кода. Пробелы вокруг = не ставятся в случае с аргументами функций
 point = sd.get_point(50, 150)
 def triangle(point, angle, length):
 
@@ -86,6 +86,7 @@ def hexagon(point, angle, length):
 
 hexagon(point, angle = 0, length=120)
 
+# TODO: можно доделывать
 
 # Часть 1-бис.
 # Попробуйте прикинуть обьем работы, если нужно будет внести изменения в этот код.
