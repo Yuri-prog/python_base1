@@ -21,9 +21,9 @@ def smile(x, y, color):
     sd.line(p6, p8, color=color)
 
 
-for i in range(10):
-    x = sd.random_number(10, 500)
-    y = sd.random_number(10, 500)
-    smile(x, y, sd.COLOR_GREEN)
+# for i in range(10):
+#     x = sd.random_number(10, 500)
+#     y = sd.random_number(10, 500)
+#smile(100, 200, sd.COLOR_GREEN)
 
-sd.pause()
+#sd.pause()
