@@ -71,8 +71,9 @@ for number, val in enumerate(figures, 1):
     print(number, val)
 
 number = int(input('Введите номер фигуры'))
-if number ==1:
-    triangle(point_1, angle = 0, color = sd.COLOR_YELLOW,length = 200)
+if number ==1:  # TODO: не хватает пробела
+    triangle(point_1, angle = 0, color = sd.COLOR_YELLOW,length = 200)  # TODO: лишние пробелы вокруг =
+# TODO: далее аналогично
 elif number ==2:
     square(point_2, angle = 0, color = sd.COLOR_YELLOW, length = 200)
 elif number ==3:
