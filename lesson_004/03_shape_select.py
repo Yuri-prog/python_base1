@@ -71,15 +71,14 @@ for number, val in enumerate(figures, 1):
     print(number, val)
 
 number = int(input('Введите номер фигуры'))
-if number ==1:  # TODO: не хватает пробела
-    triangle(point_1, angle = 0, color = sd.COLOR_YELLOW,length = 200)  # TODO: лишние пробелы вокруг =
-# TODO: далее аналогично
-elif number ==2:
-    square(point_2, angle = 0, color = sd.COLOR_YELLOW, length = 200)
-elif number ==3:
-    pentagon(point_3, angle = 0, color = sd.COLOR_YELLOW, length = 140)
-elif number ==4:
-    hexagon(point_4, angle = 0, color = sd.COLOR_YELLOW, length = 120)
+if number == 1:
+    triangle(point_1, angle=0, color=sd.COLOR_YELLOW,length=200)
+elif number == 2:
+    square(point_2, angle=0, color=sd.COLOR_YELLOW, length=200)
+elif number == 3:
+    pentagon(point_3, angle=0, color=sd.COLOR_YELLOW, length=140)
+elif number == 4:
+    hexagon(point_4, angle=0, color=sd.COLOR_YELLOW, length=120)
 else:
     print('Неверный ввод, повторите, пожалуйста')
 sd.pause()
