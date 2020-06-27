@@ -136,3 +136,5 @@ def figure(n, angle, point,  length):
 figure(3, 0, point, 150)
 
 sd.pause()
+
+# зачет!

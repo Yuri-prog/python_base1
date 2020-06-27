@@ -38,6 +38,7 @@ for j in range(0, N - 1):
 
 for i in range(0, N - 1):
 
+    # TODO: поражен вашем терпением, но это напрасный труд, заводить под каждую снежинку переменную, когда мы знаем про циклы. 
     x0 = x_list[0]
     y0 = y_list[0]
     x1 = x_list[1]
@@ -78,6 +79,7 @@ for i in range(0, N - 1):
         sd.start_drawing()
 
 
+        # TODO: строчки ниже эквивалентны тому, как если бы мы пробежались по массиву с y, по ходу меняя значения координат
         sd.snowflake(center=point, length=size0, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
         y0 -= 5
         point = sd.get_point(x=x1, y=y1)
@@ -96,6 +98,7 @@ for i in range(0, N - 1):
         sd.snowflake(center=point, length=size5, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
         y5 -= 10
 
+        # TODO: в том же цикле можно проверять, не достигла i-я ли снежинка земли
         if y0 <= 50:
             y0 = 50
             point = sd.get_point(x=x6, y=y6)
@@ -133,6 +136,9 @@ for i in range(0, N - 1):
             y9 = 50
         if y10 <= 50:
             y10 = 50
+
+        # TODO: и тогда можно будет размещать сколько угодно снежинок на экране
+
         sd.finish_drawing()
         sd.sleep(0.02)
 
@@ -140,6 +146,8 @@ for i in range(0, N - 1):
             break
         if sd.user_want_exit():
             break
+
+    # TODO: если присмотреться, то внешний цикл for не нужен уже сейчас
 
 sd.pause()
 
