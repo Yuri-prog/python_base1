@@ -36,119 +36,33 @@ for j in range(0, N - 1):
     k = sd.random_number(10, 100)
     size_list.insert(j, k)
 
-for i in range(0, N - 1):
-
-    # TODO: поражен вашем терпением, но это напрасный труд, заводить под каждую снежинку переменную, когда мы знаем про циклы. 
-    x0 = x_list[0]
-    y0 = y_list[0]
-    x1 = x_list[1]
-    y1 = y_list[1]
-    x2 = x_list[2]
-    y2 = y_list[2]
-    x3 = x_list[3]
-    y3 = y_list[3]
-    x4 = x_list[4]
-    y4 = y_list[4]
-    x5 = x_list[5]
-    y5 = y_list[5]
-    x6 = x_list[6]
-    y6 = y_list[6]
-    x7 = x_list[7]
-    y7 = y_list[7]
-    x8 = x_list[8]
-    y8 = y_list[8]
-    x9 = x_list[9]
-    y9 = y_list[9]
-    x10 = x_list[10]
-    y10 = y_list[10]
-    size0 = size_list[0]
-    size1 = size_list[1]
-    size2 = size_list[2]
-    size3 = size_list[3]
-    size4 = size_list[4]
-    size5 = size_list[5]
-    size6 = size_list[6]
-    size7 = size_list[7]
-    size8 = size_list[8]
-    size9 = size_list[9]
-    size10 = size_list[10]
-
+def falling():
     while True:
-        point = sd.get_point(x=x0, y=y0)
-        sd.clear_screen()
-        sd.start_drawing()
+        for i in range(N-1):
+            x = x_list[i]
+            y = y_list[i]
+            size = size_list[i]
+            sd.start_drawing()
 
 
-        # TODO: строчки ниже эквивалентны тому, как если бы мы пробежались по массиву с y, по ходу меняя значения координат
-        sd.snowflake(center=point, length=size0, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-        y0 -= 5
-        point = sd.get_point(x=x1, y=y1)
-        sd.snowflake(center=point, length=size1, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-        y1 -= 7
-        point = sd.get_point(x=x2, y=y2)
-        sd.snowflake(center=point, length=size2, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-        y2 -= 8
-        point = sd.get_point(x=x3, y=y3)
-        sd.snowflake(center=point, length=size3, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-        y3 -= 8
-        point = sd.get_point(x=x4, y=y4)
-        sd.snowflake(center=point, length=size4, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-        y4 -= 8
-        point = sd.get_point(x=x5, y=y5)
-        sd.snowflake(center=point, length=size5, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-        y5 -= 10
+            sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, color=sd.COLOR_DARK_BLUE)
 
-        # TODO: в том же цикле можно проверять, не достигла i-я ли снежинка земли
-        if y0 <= 50:
-            y0 = 50
-            point = sd.get_point(x=x6, y=y6)
-            sd.snowflake(center=point, length=size6, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-            y6 -= 7
-        if y1 <= 50:
-            y1 = 50
-            point = sd.get_point(x=x7, y=y7)
-            sd.snowflake(center=point, length=size7, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-            y7 -= 8
-        if y2 <= 50:
-            y2 = 50
-            point = sd.get_point(x=x8, y=y8)
-            sd.snowflake(center=point, length=size8, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-            y8 -= 8
-        if y3 <= 50:
-            y3 = 50
-            point = sd.get_point(x=x9, y=y9)
-            sd.snowflake(center=point, length=size9, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-            y9 -= 3
-        if y4 <= 50:
-            y4 = 50
-            point = sd.get_point(x=x10, y=y10)
-            sd.snowflake(center=point, length=size10, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-            y10 -= 4
-        if y5 <= 50:
-            y5 = 50
-        if y6 <= 50:
-            y6 = 50
-        if y7 <= 50:
-            y7 = 50
-        if y8 <= 50:
-            y8 = 50
-        if y9 <= 50:
-            y9 = 50
-        if y10 <= 50:
-            y10 = 50
-
-        # TODO: и тогда можно будет размещать сколько угодно снежинок на экране
-
-        sd.finish_drawing()
-        sd.sleep(0.02)
-
-        if y6 == y7 == y8 == y9 == y10:
-            break
+            y_list[i]-= 10
+            sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, color=sd.COLOR_WHITE)
+            if y_list[i] < 50:
+                y_list[i] = 600
+            point1 = sd.get_point(x_list[i], y_list[i])
+            sd.snowflake(center=point1, length=size, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
+            sd.finish_drawing()
+            sd.sleep(0.001)
         if sd.user_want_exit():
             break
 
-    # TODO: если присмотреться, то внешний цикл for не нужен уже сейчас
 
+    # Понимаю, что вводить много переменных неправильно, но первоначально циклы не получились, добился хотя бы того, что было.
+    # Видел, что делают, чтобы снежинки падали одновременно независимо друг от друга, полдня ломал голову, но так не получается.
+
+falling()
 sd.pause()
 
 
