@@ -29,7 +29,7 @@ for x in range(0, N - 1):
     x_list.insert(x, k)
 
 for y in range(0, N - 1):
-    k = sd.random_number(500, 600)
+    k = sd.random_number(500, 600)  # TODO: сделайте нижнюю границу ниже, тогда картинка будет еще больше похожа на снегопад
     y_list.insert(y, k)
 
 for j in range(0, N - 1):
@@ -39,13 +39,15 @@ for j in range(0, N - 1):
 def falling():
     while True:
         for i in range(N-1):
+            # TODO: следующие две строчки не делают ничего полезного
             x = x_list[i]
             y = y_list[i]
+
             size = size_list[i]
-            sd.start_drawing()
+            sd.start_drawing()  # TODO: если делать sd.start_drawing и sd.finish_drawing соответственно до и после цикла for, то отрисовка будет плавнее
 
 
-            sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, color=sd.COLOR_DARK_BLUE)
+            sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, color=sd.COLOR_DARK_BLUE)  # TODO: тут цвет немного темнее. Лучше использовать sd.background_color
 
             y_list[i]-= 10
             sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, color=sd.COLOR_WHITE)
@@ -61,6 +63,7 @@ def falling():
 
     # Понимаю, что вводить много переменных неправильно, но первоначально циклы не получились, добился хотя бы того, что было.
     # Видел, что делают, чтобы снежинки падали одновременно независимо друг от друга, полдня ломал голову, но так не получается.
+    # TODO: всё просто. Нужно y координату у каждой снежинки уменьшать на рандомную величину
 
 falling()
 sd.pause()
