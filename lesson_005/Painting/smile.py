@@ -7,7 +7,7 @@ import simple_draw as sd
 def smile(x, y, color):
     point1 = sd.get_point(x=x, y=y)
     point2 = sd.get_point(x=x + 100, y=y + 70)
-    sd.ellipse(point1, point2, width=1, color=color)
+    sd.ellipse(point1, point2, width=0, color=sd.COLOR_YELLOW)
     point3 = sd.get_point(x=x + 33, y=y + 45)
     sd.circle(point3, radius=5, color=color)
     point4 = sd.get_point(x=x + 66, y=y + 45)
