@@ -36,3 +36,5 @@ def super_burger():
     mb.jam()
     print(mb.my_burger)
 super_burger()
+
+# зачет!

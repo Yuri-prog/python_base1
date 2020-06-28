@@ -6,6 +6,8 @@
 # https://docs.python.org/3/library/stdtypes.html#str.join
 from shlex import join
 
+# TODO: в этом задании нужно работать с модулем district
+
 import room_1
 import room_2
 district = room_1.folks + room_2.folks

@@ -8,4 +8,4 @@ import room_2
 print(' В комнате room_1 живут', room_1.folks[0],',',room_1.folks[1])
 print(' В комнате room_2 живeт', room_2.folks[0])
 
-
+# зачет!
