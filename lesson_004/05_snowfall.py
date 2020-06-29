@@ -22,48 +22,48 @@ N = 20
 x_list = []
 y_list = []
 size_list = []
-
+speed_list = []
 
 for x in range(0, N - 1):
     k = sd.random_number(0, 1200)
     x_list.insert(x, k)
 
 for y in range(0, N - 1):
-    k = sd.random_number(500, 600)  # TODO: сделайте нижнюю границу ниже, тогда картинка будет еще больше похожа на снегопад
+    k = sd.random_number(500, 500)
     y_list.insert(y, k)
 
 for j in range(0, N - 1):
     k = sd.random_number(10, 100)
     size_list.insert(j, k)
 
+for s in range(0, N - 1):
+    k = sd.random_number(2, 15)
+    speed_list.insert(s, k)
+
 def falling():
     while True:
+        sd.start_drawing()
         for i in range(N-1):
-            # TODO: следующие две строчки не делают ничего полезного
-            x = x_list[i]
-            y = y_list[i]
-
             size = size_list[i]
-            sd.start_drawing()  # TODO: если делать sd.start_drawing и sd.finish_drawing соответственно до и после цикла for, то отрисовка будет плавнее
+            sd.start_drawing()
 
-
-            sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, color=sd.COLOR_DARK_BLUE)  # TODO: тут цвет немного темнее. Лучше использовать sd.background_color
-
-            y_list[i]-= 10
+            sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, color=sd.background_color)
+            y_list[i]-= speed_list[i]
             sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, color=sd.COLOR_WHITE)
-            if y_list[i] < 50:
+            if y_list[i] < 40:
                 y_list[i] = 600
             point1 = sd.get_point(x_list[i], y_list[i])
             sd.snowflake(center=point1, length=size, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
-            sd.finish_drawing()
             sd.sleep(0.001)
+            sd.finish_drawing()
+
         if sd.user_want_exit():
             break
 
 
     # Понимаю, что вводить много переменных неправильно, но первоначально циклы не получились, добился хотя бы того, что было.
     # Видел, что делают, чтобы снежинки падали одновременно независимо друг от друга, полдня ломал голову, но так не получается.
-    # TODO: всё просто. Нужно y координату у каждой снежинки уменьшать на рандомную величину
+    # Действительно, все просто. Спасибо!
 
 falling()
 sd.pause()
