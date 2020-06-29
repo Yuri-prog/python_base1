@@ -2,6 +2,7 @@
 
 # (определение функций)
 import simple_draw as sd
+x = 5
 
 
 def smile(x, y, color):
