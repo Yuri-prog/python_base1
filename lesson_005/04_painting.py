@@ -19,12 +19,12 @@
 # Приправить своей фантазией по вкусу (коты? коровы? люди? трактор? что придумается)
 import simple_draw as sd
 
+import painting.smile
 import painting.fractal
 import painting.rainbow
-import painting.smile
 import painting.snowfall
 import painting.wall
-import painting.sun
+
 sd.resolution = (1600, 800)
 
 left_bottom = sd.get_point(0, 0)
