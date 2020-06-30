@@ -45,7 +45,7 @@ def falling():
         sd.start_drawing()
         for i in range(N-1):
             size = size_list[i]
-            sd.start_drawing()
+
 
             sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, color=sd.background_color)
             y_list[i]-= speed_list[i]
@@ -55,9 +55,9 @@ def falling():
             point1 = sd.get_point(x_list[i], y_list[i])
             sd.snowflake(center=point1, length=size, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
             sd.sleep(0.001)
-            # TODO: finish drawing после цикла:
+
         sd.finish_drawing()
-        # TODO: обратите внимание, как изменилась анимация.
+
         if sd.user_want_exit():
             break
 
