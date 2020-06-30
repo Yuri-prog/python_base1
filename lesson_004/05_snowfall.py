@@ -55,8 +55,9 @@ def falling():
             point1 = sd.get_point(x_list[i], y_list[i])
             sd.snowflake(center=point1, length=size, color=sd.COLOR_WHITE, factor_a=0.6, factor_b=0.35, factor_c=60)
             sd.sleep(0.001)
-            sd.finish_drawing()
-
+            # TODO: finish drawing после цикла:
+        sd.finish_drawing()
+        # TODO: обратите внимание, как изменилась анимация.
         if sd.user_want_exit():
             break
 
@@ -68,7 +69,7 @@ def falling():
 falling()
 sd.pause()
 
-
+# зачет!
 
 # подсказка! для ускорения отрисовки можно
 #  - убрать clear_screen()
