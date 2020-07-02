@@ -1,58 +1,65 @@
 # -*- coding: utf-8 -*-
 
-# Создать пакет, в который скопировать функции отрисовки из предыдущего урока
-#  - радуги
-#  - стены
-#  - дерева
-#  - смайлика
-#  - снежинок
-# Функции по модулям разместить по тематике. Название пакета и модулей - по смыслу.
-# Создать модуль с функцией отрисовки кирпичного дома с широким окном и крышей.
-
-# С помощью созданного пакета нарисовать эпохальное полотно "Утро в деревне".
-# На картине должны быть:
-#  - кирпичный дом, в окошке - смайлик.
-#  - слева от дома - сугроб (предположим что это ранняя весна)
-#  - справа от дома - дерево (можно несколько)
-#  - справа в небе - радуга, слева - солнце (весна же!)
-# пример см. lesson_005/results/04_painting.jpg
-# Приправить своей фантазией по вкусу (коты? коровы? люди? трактор? что придумается)
-
 import simple_draw as sd
-import Painting.fractal
-import Painting.rainbow
-import Painting.smile
-import Painting.snowfall
-import Painting.wall
-import Painting.sun
-sd.resolution = (1600, 800)
-def house():
 
-    left_bottom = sd.get_point(0, 0)
-    right_top = sd.get_point(1600, 50)
-    sd.rectangle(left_bottom=left_bottom , right_top=right_top, color=sd.COLOR_BLACK, width=0)
-    sd.line(start_point=sd.get_point(300,  400), end_point=sd.get_point(975, 400), color=sd.COLOR_YELLOW, width=1)
-    sd.line(start_point=sd.get_point(300,  400), end_point=sd.get_point(635, 550), color=sd.COLOR_YELLOW, width=1)
-    sd.line(start_point=sd.get_point(635, 550), end_point=sd.get_point(975, 400), color=sd.COLOR_YELLOW, width=1)
-    Painting.wall.bricks(400, 900, 50, 400, 50, 25)
-    sd.rectangle(left_bottom=sd.get_point(540, 140), right_top=sd.get_point(740, 300), color=sd.COLOR_DARK_GREEN, width=0)
-    Painting.rainbow.rainbow(600, -100, radius=1100)
-    sun_center = sd.get_point(430, 650)
-# sd.circle(center_position=sun_center, radius=60, color=sd.COLOR_YELLOW, width=0)
-# for angle in range(0, 360, 30):
-#     v = sd.get_vector(start_point=sun_center, angle=angle, length=120, width=4)
-#     v.draw()
-    Painting.sun.sun()
-    Painting.smile.smile(620, 150, sd.COLOR_RED)
-    Painting.fractal.draw_branches(start_point=sd.get_point(1300, 50), angle=90, length=120, delta=30)
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+sd.resolution = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
+# На основе кода из практической части реализовать снегопад:
+# - создать списки данных для отрисовки N снежинок
+# - нарисовать падение этих N снежинок
+# - создать список рандомных длинн лучей снежинок (от 10 до 100) и пусть все снежинки будут разные
 
-    Painting.snowfall.for_painting(20)
+N = 10
 
+# Пригодятся функции
+# sd.get_point()
+# sd.snowflake()
+# sd.sleep()
+# sd.random_number()
+# sd.user_want_exit()
 
-# Усложненное задание (делать по желанию)
-# Анимировать картину.
-# Пусть слева идет снегопад, радуга переливается цветами, смайлик моргает, солнце крутит лучами, етс.
-# Задержку в анимировании все равно надо ставить, пусть даже 0.01 сек - так библиотека устойчивей работает.
-house()
+x_coords = []
+y_coords = []
+lengths = []
+
+for x in range(0, SCREEN_WIDTH, SCREEN_WIDTH // N):
+    x_coords.append(x)
+    y_coords.append(sd.random_number(SCREEN_HEIGHT - 300, SCREEN_HEIGHT))
+    lengths.append(sd.random_number(20, 40))
+
+while True:
+    sd.start_drawing()
+    at_bottom_bound = sd.random_number(30, 70)
+    for i, x in enumerate(x_coords):
+        if y_coords[i] < at_bottom_bound:
+            continue
+        delta_y = sd.random_number(10, 20)
+        if y_coords[i] - delta_y < at_bottom_bound:
+            # если снежинка достигла дна, то перемещаем её наверх экрана.
+            # а так как она в прошлом цикле была нарисована белым, то этот отпечаток останется в сугробе
+            x_coords[i] = sd.random_number(0, SCREEN_WIDTH)
+            y_coords[i] = sd.random_number(SCREEN_HEIGHT - 50, SCREEN_HEIGHT)
+            lengths[i] = sd.random_number(20, 40)
+
+        point = sd.get_point(x, y_coords[i])
+        sd.snowflake(center=point, length=lengths[i], color=sd.background_color)
+
+        x_coords[i] += sd.random_number(-30, 30)
+        y_coords[i] -= delta_y
+
+        point = sd.get_point(x_coords[i], y_coords[i])
+        sd.snowflake(center=point, length=lengths[i])
+
+    if max(y_coords) < 50:
+        break
+
+    sd.finish_drawing()
+    sd.sleep(0.01)
+    if sd.user_want_exit():
+        break
+
 sd.pause()
+
+

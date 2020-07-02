@@ -19,11 +19,11 @@
 # Приправить своей фантазией по вкусу (коты? коровы? люди? трактор? что придумается)
 import simple_draw as sd
 
-import painting_.smile
-import painting_.fractal
-import painting_.rainbow
-import painting_.snowfall
-import painting_.wall
+import painting.smile
+import painting.fractal
+import painting.rainbow
+import painting.snowfall
+import painting.wall
 
 sd.resolution = (1600, 800)
 
@@ -33,9 +33,9 @@ sd.rectangle(left_bottom=left_bottom , right_top=right_top, color=sd.COLOR_BLACK
 sd.line(start_point=sd.get_point(300,  400), end_point=sd.get_point(975, 400), color=sd.COLOR_YELLOW, width=1)
 sd.line(start_point=sd.get_point(300,  400), end_point=sd.get_point(635, 550), color=sd.COLOR_YELLOW, width=1)
 sd.line(start_point=sd.get_point(635, 550), end_point=sd.get_point(975, 400), color=sd.COLOR_YELLOW, width=1)
-painting_.wall.bricks(400, 900, 50, 400, 50, 25)
+painting.wall.bricks(400, 900, 50, 400, 50, 25)
 sd.rectangle(left_bottom=sd.get_point(540, 140), right_top=sd.get_point(740, 300), color=sd.COLOR_DARK_GREEN, width=0)
-painting_.rainbow.rainbow(600, -100, radius=1100)
+painting.rainbow.rainbow(600, -100, radius=1100)
 sun_center = sd.get_point(430, 650)
 sd.circle(center_position=sun_center, radius=60, color=sd.COLOR_YELLOW, width=0)
 for angle in range(0, 360, 30):
@@ -44,10 +44,10 @@ for angle in range(0, 360, 30):
 
 
 
-painting_.smile.smile(620, 150, sd.COLOR_RED)
-painting_.fractal.draw_branches(start_point=sd.get_point(1300, 50), angle=90, length=120, delta=30)
+painting.smile.smile(620, 150, sd.COLOR_RED)
+painting.fractal.draw_branches(start_point=sd.get_point(1300, 50), angle=90, length=120, delta=30)
 
-painting_.snowfall.for_painting(20)
+painting.snowfall.for_painting(20)
 
 
 # Усложненное задание (делать по желанию)
