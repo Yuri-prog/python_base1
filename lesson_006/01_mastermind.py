@@ -48,8 +48,10 @@ from termcolor import cprint, colored
 comp_number()
 while True:
     your_number_string = input('Введите четырехзначное число.')
-    print('Вы ввели число', your_number_string)
-    take_number(your_number_string)
+    if take_number(your_number_string) == False:
+        print('Неверный ввод, попробуйте еще раз')
+        continue
+    print('Вы ввели число', your_number_string, )
     if check_match():
         break
 

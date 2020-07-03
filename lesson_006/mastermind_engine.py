@@ -21,7 +21,18 @@ def comp_number():
 
 def take_number(your_number_string):
     global your_number
-    your_number = [int(x) for x in list(your_number_string)]
+    if your_number_string.isdigit() == True:
+        your_number = [int(x) for x in list(your_number_string)]
+    else:
+        return False
+    if len(your_number) != len(set(your_number)):
+        return False
+    elif your_number[0] == 0:
+        return False
+    elif len(your_number) != 4:
+        return False
+    elif your_number_string.isdigit() == False:
+        return False
     return your_number
 
 

@@ -43,11 +43,13 @@
 # Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
-from lesson_006.mastermind_engine import comp_number, take_number, check_match
+from mastermind_engine import comp_number, take_number, check_match
 from termcolor import cprint, colored
+comp_number()
 while True:
-    comp_number()
     your_number_string = input('Введите четырехзначное число.')
-    print('Вы ввели число', your_number_string)
+    print('Вы ввели число', your_number_string,)
     take_number(your_number_string)
-    check_match()
+    print('Вы ввели число', your_number_string, )
+    if check_match():
+        break
