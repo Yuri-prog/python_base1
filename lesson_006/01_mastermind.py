@@ -50,4 +50,8 @@ while True:
     your_number_string = input('Введите четырехзначное число.')
     print('Вы ввели число', your_number_string)
     take_number(your_number_string)
-    check_match()
+    if check_match():
+        break
+
+
+

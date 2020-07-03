@@ -16,28 +16,32 @@ def comp_number():
         for i in range(1, 3):
             y = random.randint(1, 3)
         computer_number.insert(y, 0) #подстановка удаленного нуля в случайное место
-    print(computer_number)
 
-#comp_number()
+
+
 def take_number(your_number_string):
     global your_number
     your_number = [int(x) for x in list(your_number_string)]
     return your_number
-    print(your_number)
+
+
 def check_match():
+    differ_list = []
     cow_words =  {0:'коров', 1:'корова', 2:'коровы', 3:'коровы', 4:'коровы'}
     bull_words = {0:'быков', 1:'бык', 2:'быка', 3:'быка', 4:'быка'}
     for i in range(4):
         differ_list.append(computer_number[i]-your_number[i])
-
     check_bull = differ_list.count(0)
     if check_bull :
         print(check_bull, bull_words[check_bull])
+        if check_bull == 4:
+            print('Вы выиграли!')
+            return check_bull
     else:
         print(0, bull_words[0])
     sum_number = computer_number + your_number
     check_cow_set = set(sum_number)
     check_cow = 8 - check_bull - len(check_cow_set)
     print(check_cow, cow_words[check_cow])
-    print(computer_number)
+
 #check_match()
