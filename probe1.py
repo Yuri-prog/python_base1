@@ -1,65 +1,53 @@
 # -*- coding: utf-8 -*-
 
-import simple_draw as sd
+# Игра «Быки и коровы»
+# https://goo.gl/Go2mb9
+#
+# Правила:
+# Компьютер загадывает четырехзначное число, все цифры которого различны
+# (первая цифра числа отлична от нуля). Игроку необходимо разгадать задуманное число.
+# Игрок вводит четырехзначное число c неповторяющимися цифрами,
+# компьютер сообщают о количестве «быков» и «коров» в названном числе
+# «бык» — цифра есть в записи задуманного числа и стоит в той же позиции,
+#       что и в задуманном числе
+# «корова» — цифра есть в записи задуманного числа, но не стоит в той же позиции,
+#       что и в задуманном числе
+#
+# Например, если задумано число 3275 и названо число 1234,
+# получаем в названном числе одного «быка» и одну «корову».
+# Очевидно, что число отгадано в том случае, если имеем 4 «быка».
+#
+# Формат ответа компьютера
+# > быки - 1, коровы - 1
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-sd.resolution = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
-# На основе кода из практической части реализовать снегопад:
-# - создать списки данных для отрисовки N снежинок
-# - нарисовать падение этих N снежинок
-# - создать список рандомных длинн лучей снежинок (от 10 до 100) и пусть все снежинки будут разные
+# Составить отдельный модуль mastermind_engine, реализующий функциональность игры.
+# В mastermind_engine нужно реализовать функции:
+#   загадать_число()
+#   проверить_число(NN) - возвращает словарь {'bulls': N, 'cows': N}
+# Загаданное число хранить в глобальной переменной.
+# Обратите внимание, что строки - это список символов.
+#
+# В текущем модуле (lesson_006/01_mastermind.py) реализовать логику работы с пользователем:
+#   модуль движка загадывает число
+#   в цикле, пока число не отгадано
+#       у пользователя запрашивается вариант числа
+#       проверяем что пользователь ввел допустимое число (4 цифры, все цифры разные, не начинается с 0)
+#       модуль движка проверяет число и выдает быков/коров
+#       результат быков/коров выводится на консоль
+#  когда игрок угадал таки число - показать количество ходов и вопрос "Хотите еще партию?"
+## При написании кода учитывайте, что движок игры никак не должен взаимодействовать с пользователем.
+# Все общение с пользователем (вывод на консоль и запрос ввода от пользователя) делать в 01_mastermind.py.
+# Движок игры реализует только саму функциональность игры. Разделяем: mastermind_engine работает
+# только с загаданным числом, а 01_mastermind - с пользователем и просто передает числа на проверку движку.
+# Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
+# Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
-N = 10
-
-# Пригодятся функции
-# sd.get_point()
-# sd.snowflake()
-# sd.sleep()
-# sd.random_number()
-# sd.user_want_exit()
-
-x_coords = []
-y_coords = []
-lengths = []
-
-for x in range(0, SCREEN_WIDTH, SCREEN_WIDTH // N):
-    x_coords.append(x)
-    y_coords.append(sd.random_number(SCREEN_HEIGHT - 300, SCREEN_HEIGHT))
-    lengths.append(sd.random_number(20, 40))
-
+from lesson_006.mastermind_engine import comp_number, take_number, check_match
+from termcolor import cprint, colored
 while True:
-    sd.start_drawing()
-    at_bottom_bound = sd.random_number(30, 70)
-    for i, x in enumerate(x_coords):
-        if y_coords[i] < at_bottom_bound:
-            continue
-        delta_y = sd.random_number(10, 20)
-        if y_coords[i] - delta_y < at_bottom_bound:
-            # если снежинка достигла дна, то перемещаем её наверх экрана.
-            # а так как она в прошлом цикле была нарисована белым, то этот отпечаток останется в сугробе
-            x_coords[i] = sd.random_number(0, SCREEN_WIDTH)
-            y_coords[i] = sd.random_number(SCREEN_HEIGHT - 50, SCREEN_HEIGHT)
-            lengths[i] = sd.random_number(20, 40)
-
-        point = sd.get_point(x, y_coords[i])
-        sd.snowflake(center=point, length=lengths[i], color=sd.background_color)
-
-        x_coords[i] += sd.random_number(-30, 30)
-        y_coords[i] -= delta_y
-
-        point = sd.get_point(x_coords[i], y_coords[i])
-        sd.snowflake(center=point, length=lengths[i])
-
-    if max(y_coords) < 50:
-        break
-
-    sd.finish_drawing()
-    sd.sleep(0.01)
-    if sd.user_want_exit():
-        break
-
-sd.pause()
-
-
+    comp_number()
+    your_number_string = input('Введите четырехзначное число.')
+    print('Вы ввели число', your_number_string)
+    take_number(your_number_string)
+    check_match()
