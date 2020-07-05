@@ -20,8 +20,8 @@ import lesson_005.painting.snowfall as sn
 
 
 snowfall.flake()
-#while True:
-    #color('желтый')
+while True:
+    color('желтый')
     #  сдвинуть_снежинки()
     #  нарисовать_снежинки_цветом(color)
     #  если есть номера_достигших_низа_экрана() то
@@ -31,4 +31,4 @@ snowfall.flake()
     # if sd.user_want_exit():
     #     break
 
-#sd.pause()
+sd.pause()
