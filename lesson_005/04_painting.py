@@ -23,6 +23,7 @@ import painting.smile
 import painting.fractal
 import painting.rainbow
 import painting.snowfall
+import painting.snow
 import painting.wall
 
 sd.resolution = (1600, 800)
@@ -35,7 +36,8 @@ sd.line(start_point=sd.get_point(300,  400), end_point=sd.get_point(635, 550), c
 sd.line(start_point=sd.get_point(635, 550), end_point=sd.get_point(975, 400), color=sd.COLOR_YELLOW, width=1)
 painting.wall.bricks(400, 900, 50, 400, 50, 25)
 sd.rectangle(left_bottom=sd.get_point(540, 140), right_top=sd.get_point(740, 300), color=sd.COLOR_DARK_GREEN, width=0)
-painting.rainbow.rainbow(600, -100, radius=1100)
+painting.snow.rainbow(600, -100, radius=1100)
+painting.rainbow.flake()
 sun_center = sd.get_point(430, 650)
 sd.circle(center_position=sun_center, radius=60, color=sd.COLOR_YELLOW, width=0)
 for angle in range(0, 360, 30):
@@ -48,7 +50,7 @@ painting.smile.smile(620, 150, sd.COLOR_RED)
 painting.fractal.draw_branches(start_point=sd.get_point(1300, 50), angle=90, length=120, delta=30)
 
 painting.snowfall.for_painting(20)
-
+#painting.rainbow.flake()
 
 # Усложненное задание (делать по желанию)
 # Анимировать картину.

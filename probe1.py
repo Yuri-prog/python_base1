@@ -1,55 +1,65 @@
-# -*- coding: utf-8 -*-
+import simple_draw as sd
+#sd.resolution = (1200, 600)
+N = 10
 
-# Игра «Быки и коровы»
-# https://goo.gl/Go2mb9
-#
-# Правила:
-# Компьютер загадывает четырехзначное число, все цифры которого различны
-# (первая цифра числа отлична от нуля). Игроку необходимо разгадать задуманное число.
-# Игрок вводит четырехзначное число c неповторяющимися цифрами,
-# компьютер сообщают о количестве «быков» и «коров» в названном числе
-# «бык» — цифра есть в записи задуманного числа и стоит в той же позиции,
-#       что и в задуманном числе
-# «корова» — цифра есть в записи задуманного числа, но не стоит в той же позиции,
-#       что и в задуманном числе
-#
-# Например, если задумано число 3275 и названо число 1234,
-# получаем в названном числе одного «быка» и одну «корову».
-# Очевидно, что число отгадано в том случае, если имеем 4 «быка».
-#
-# Формат ответа компьютера
-# > быки - 1, коровы - 1
+x_list = []
+y_list = []
+size_list = []
+speed_list = []
+
+#color = ''
+colors = {
+        'красный':sd.COLOR_RED,
+        'оранжевый':sd.COLOR_ORANGE,
+        'желтый':sd.COLOR_YELLOW,
+        'зеленый':sd.COLOR_GREEN,
+        'голубой':sd.COLOR_CYAN,
+        'синий':sd.COLOR_BLUE,
+        'фиолетовый':sd.COLOR_PURPLE,
+        'разный':sd.random_color,
+        'фон':sd.background_color,
+        'белый':sd.COLOR_WHITE,
+         }
+cl = colors['красный']
+
+def flake():
+     for i in range(0, N):
+         k = sd.random_number(0, sd.resolution[0])
+         x_list.insert(i, k)
+         k = sd.random_number(sd.resolution[1] - 100, sd.resolution[1])
+         y_list.insert(i, k)
+         k = sd.random_number(10, 100)
+         size_list.insert(i, k)
+         size = size_list[i]
+
+         sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, )
+
+start_point = sd.get_point(300, 50)
+def draw_branches(start_point, angle, length):
+
+    start_point_1 = start_point
+    start_point_2 = start_point
+    angle_1 = angle
+    angle_2 = angle
+    while length >= 10:
+        v1 = sd.get_vector(start_point = start_point_1, angle = angle_1, length = length, width = 1)
+        v2 = sd.get_vector(start_point = start_point_2, angle = angle_2, length = length, width = 1)
+        length = 0.6*length
+        start_point_1 = v1.end_point
+        start_point_2 = v2.end_point
+        angle_1 += 30
+        angle_2 -= 30
+        v1.draw()
+        v2.draw()
+
+#flake()
 
 
-# Составить отдельный модуль mastermind_engine, реализующий функциональность игры.
-# В mastermind_engine нужно реализовать функции:
-#   загадать_число()
-#   проверить_число(NN) - возвращает словарь {'bulls': N, 'cows': N}
-# Загаданное число хранить в глобальной переменной.
-# Обратите внимание, что строки - это список символов.
-#
-# В текущем модуле (lesson_006/01_mastermind.py) реализовать логику работы с пользователем:
-#   модуль движка загадывает число
-#   в цикле, пока число не отгадано
-#       у пользователя запрашивается вариант числа
-#       проверяем что пользователь ввел допустимое число (4 цифры, все цифры разные, не начинается с 0)
-#       модуль движка проверяет число и выдает быков/коров
-#       результат быков/коров выводится на консоль
-#  когда игрок угадал таки число - показать количество ходов и вопрос "Хотите еще партию?"
-## При написании кода учитывайте, что движок игры никак не должен взаимодействовать с пользователем.
-# Все общение с пользователем (вывод на консоль и запрос ввода от пользователя) делать в 01_mastermind.py.
-# Движок игры реализует только саму функциональность игры. Разделяем: mastermind_engine работает
-# только с загаданным числом, а 01_mastermind - с пользователем и просто передает числа на проверку движку.
-# Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
-# Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
-from mastermind_engine import comp_number, take_number, check_match
-from termcolor import cprint, colored
-comp_number()
-while True:
-    your_number_string = input('Введите четырехзначное число.')
-    print('Вы ввели число', your_number_string,)
-    take_number(your_number_string)
-    print('Вы ввели число', your_number_string, )
-    if check_match():
-        break
+# def colore(color):#     cl = colors[1]
+#     #snowflak()
+
+
+#color('желтый')
+#snowflak()
+sd.pause()

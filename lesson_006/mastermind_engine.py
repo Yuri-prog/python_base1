@@ -56,5 +56,5 @@ def check_match():
     check_cow_set = set(sum_number)
     check_cow = 8 - check_bull - len(check_cow_set)
     print(check_cow, cow_words[check_cow])
-
+    print(computer_number)
 #check_match()
