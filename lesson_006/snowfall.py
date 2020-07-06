@@ -13,7 +13,6 @@ y_list = []
 size_list = []
 speed_list = []
 
-# color = ''
 colors = {
     'красный': sd.COLOR_RED,
     'оранжевый': sd.COLOR_ORANGE,
@@ -42,9 +41,9 @@ def flake():
         sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, )
 #flake()
 
-def colore(color):
-     cl = colors[1]
-     #snowflak()
+def color(color):
+     cl = colors[color]
+     flake()
 
 
 sd.pause()

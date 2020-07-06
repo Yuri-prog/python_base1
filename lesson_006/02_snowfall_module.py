@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import simple_draw as sd
 import snowfall
-import lesson_005.painting.snowfall as sn
-#sd.resolution = (1200, 600)
+
+sd.resolution = (1200, 600)
 
 
 
@@ -20,8 +20,8 @@ import lesson_005.painting.snowfall as sn
 
 
 snowfall.flake()
-while True:
-    color('желтый')
+#while True:
+    #color('желтый')
     #  сдвинуть_снежинки()
     #  нарисовать_снежинки_цветом(color)
     #  если есть номера_достигших_низа_экрана() то

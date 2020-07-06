@@ -42,5 +42,5 @@ def flake():
         sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, )
 #flake()
 # rainbow(500, 60, radius=400)
-# sd.pause()
+sd.pause()
 # зачет!
