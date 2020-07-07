@@ -4,6 +4,8 @@ import snowfall
 
 sd.resolution = (1200, 600)
 
+#TODO: В таком виде программа не запускается, выдает такую ошибку. File "D:\Python\lib\site-packages\simple_draw-2.6.8-py3.8.egg\simple_draw.py", line 437, in snowflake
+# pygame.error: video system not initialized. Функция flake() в модуле запускается нормально.
 
 
 # На основе кода из lesson_004/05_snowfall.py

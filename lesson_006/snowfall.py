@@ -41,9 +41,6 @@ def flake():
         sd.snowflake(center=sd.get_point(x=x_list[i], y=y_list[i]), length=size, )
 #flake()
 
-def color(color):
-     cl = colors[color]
-     flake()
 
 
 sd.pause()
