@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import simple_draw as sd
-import snowfall
+import probe1
 
 sd.resolution = (1200, 600)
 
@@ -20,17 +20,23 @@ sd.resolution = (1200, 600)
 # В текущем модуле реализовать главный цикл падения снежинок,
 # обращаясь ТОЛЬКО к функциям модуля snowfall
 
+probe1.flake()
 
-snowfall.flake()
-#while True:
-    #color('желтый')
-    #  сдвинуть_снежинки()
-    #  нарисовать_снежинки_цветом(color)
+while True:
+    sd.start_drawing()
+
+    probe1.color('фон')
+    probe1.move()
+    probe1.color('белый')
+
+
     #  если есть номера_достигших_низа_экрана() то
     #       удалить_снежинки(номера)
     #       создать_снежинки(count)
-    # sd.sleep(0.1)
+
+    sd.sleep(0.01)
+    sd.finish_drawing()
+
     # if sd.user_want_exit():
     #     break
-
 sd.pause()
