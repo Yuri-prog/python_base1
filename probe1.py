@@ -3,10 +3,9 @@
 # (цикл for)
 
 import simple_draw as sd
-
 sd.resolution = (1200, 600)
 
-N = 50
+N = 30
 
 x_list = []
 y_list = []
@@ -14,6 +13,8 @@ size_list = []
 speed_list = []
 shift_x_list = []
 shift_y_list = []
+flake_numbers = []
+flake_count = []
 x = 0
 y = 0
 
@@ -39,13 +40,12 @@ for i in range(0, N):
     size_list.insert(i, k)
     k = sd.random_number(-5, 5)
     shift_x_list.insert(i, k)
-    k = sd.random_number(5, 15)
+    k = sd.random_number(5, 12)
     shift_y_list.insert(i, k)
 
 
 def flake():
     global x, y, size, shift_x, shift_y
-
     sd.snowflake(center=sd.get_point(x_list[i], y_list[i]), length=size_list[i], color=cl)
 
 def color(color):
@@ -53,17 +53,40 @@ def color(color):
     for i in range(0, N):
         cl = colors[color]
         flake()
-        #print(y_list[1])
-#flake()
 
-def move():
+def move_right():
     for i in range(0, N):
-       x_list[i] += shift_x_list[i]
-       y_list[i] -= shift_y_list[i]
-
-      # print(y_list[1])
+        x_list[i] += shift_x_list[i]
+        y_list[i] -= shift_y_list[i]
 
 
+def move_left():
+    for i in range(0, N):
+        x_list[i] -= shift_x_list[i]
+        y_list[i] -= shift_y_list[i]
+
+def short(list):
+    for m in list:
+        if list.count(m) > 1:
+            list.remove(m)
+
+    print('За границу экрана вышли снежинки №', *list)
+
+def count():
+    for j, m in enumerate(y_list):
+        if -20 < m < 0:
+            flake_numbers.append(j)
+        if y_list[i] < -1000:
+              y_list[i] = 600
+    short(flake_numbers)
+def flake_del():
+ for j, m in enumerate(y_list):
+    if -820 < m < -800:
+        if flake_numbers.count(j) == 0:
+            continue
+        else:
+            flake_numbers.remove(j)
+        #print(flake_numbers)
 
 
 

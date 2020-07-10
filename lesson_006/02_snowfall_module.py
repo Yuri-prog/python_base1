@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 import simple_draw as sd
-import probe1
+from snowfall import flake, color, move_right, move_left, count, short, flake_del
 
 sd.resolution = (1200, 600)
-
-#TODO: В таком виде программа не запускается, выдает такую ошибку. File "D:\Python\lib\site-packages\simple_draw-2.6.8-py3.8.egg\simple_draw.py", line 437, in snowflake
-# pygame.error: video system not initialized. Функция flake() в модуле запускается нормально.
-
 
 # На основе кода из lesson_004/05_snowfall.py
 # сделать модуль snowfall.py в котором реализовать следующие функции
@@ -20,23 +16,24 @@ sd.resolution = (1200, 600)
 # В текущем модуле реализовать главный цикл падения снежинок,
 # обращаясь ТОЛЬКО к функциям модуля snowfall
 
-probe1.flake()
-
+flake()
+k = 0
 while True:
     sd.start_drawing()
-
-    probe1.color('фон')
-    probe1.move()
-    probe1.color('белый')
-
-
-    #  если есть номера_достигших_низа_экрана() то
-    #       удалить_снежинки(номера)
-    #       создать_снежинки(count)
-
-    sd.sleep(0.01)
+    color('фон')
+    if k%2 == 0:
+        move_right()
+    else:
+        move_left()
+    color('желтый')
+    k += 1
+    if count() == False:
+        break
+    sd.sleep(0.1)
     sd.finish_drawing()
+    if sd.user_want_exit():
+        break
+    flake_del()
 
-    # if sd.user_want_exit():
-    #     break
 sd.pause()
+
