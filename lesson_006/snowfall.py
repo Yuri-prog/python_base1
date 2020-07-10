@@ -29,7 +29,8 @@ colors = {
     'фон': sd.background_color,
     'белый': sd.COLOR_WHITE,
 }
-cl = colors['белый']
+cl = colors['белый']  # TODO: переменную нужно назвать осмысленно. Не надо экономить буквы
+# TODO: слишком много однобуквенных переменных. x, y, i еще более-менее общепринято, но остальным нужно придумать осмысленные названия.
 
 for i in range(0, N):
     k = sd.random_number(0, sd.resolution[0])
@@ -48,7 +49,7 @@ def flake():
     global x, y, size, shift_x, shift_y
     sd.snowflake(center=sd.get_point(x_list[i], y_list[i]), length=size_list[i], color=cl)
 
-def color(color):
+def color(color):  # TODO: название функции не соответствует назначению. Ну и называть одинаково функцию и её же аргумент такое себе
     global cl, i
     for i in range(0, N):
         cl = colors[color]
@@ -65,7 +66,7 @@ def move_left():
         x_list[i] -= shift_x_list[i]
         y_list[i] -= shift_y_list[i]
 
-def short(list):
+def short(list):  # TODO: list - зарезервированное в питоне слово. Лучше придумать другое название.
     for m in list:
         if list.count(m) > 1:
             list.remove(m)
@@ -81,6 +82,7 @@ def count():
         return False
 
 def flake_del():
+ # TODO: отступы поехали
  for j, m in enumerate(y_list):
     if -820 < m < -800:
         if flake_numbers.count(j) == 0:

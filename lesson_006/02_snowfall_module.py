@@ -27,7 +27,7 @@ while True:
         move_left()
     color('желтый')
     k += 1
-    if count() == False:
+    if count() == False:  # TODO: Проверку на False/True/None лучше выполнять с помощью оператора is.
         break
     sd.sleep(0.1)
     sd.finish_drawing()

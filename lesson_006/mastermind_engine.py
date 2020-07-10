@@ -9,8 +9,10 @@ def comp_number():
     global computer_number
     for i in range(0, 10):
         digit_list.append(i)
+    # TODO: можно же сделать проще. Сделать sample длиной 4, и если есть 0 в начале, то поменять его местами с каким-нибудь другим элементом.
     dig_list = random.sample(digit_list, len(digit_list))  # случайный список от 0 до 9
     for i in range(4):
+            # TODO: отступы поехали.
             x = dig_list[i]
             computer_number.append(x)
     if computer_number[0] == 0:
@@ -23,7 +25,7 @@ def comp_number():
 
 def take_number(your_number_string):
     global your_number
-    if your_number_string.isdigit() == True:
+    if your_number_string.isdigit() == True:  # TODO: Проверку на False/True/None лучше выполнять с помощью оператора is.
         your_number = [int(x) for x in list(your_number_string)]
     else:
         return False
@@ -40,6 +42,7 @@ def take_number(your_number_string):
 
 def check_match():
     differ_list = []
+    # TODO: стиль кода. Пробелы после :
     cow_words =  {0:'коров', 1:'корова', 2:'коровы', 3:'коровы', 4:'коровы'}
     bull_words = {0:'быков', 1:'бык', 2:'быка', 3:'быка', 4:'быка'}
     for i in range(4):
@@ -47,6 +50,7 @@ def check_match():
 
     check_bull = differ_list.count(0)
     if check_bull :
+         # TODO: Стиль кода. 5 отступов вместо 4х
          print(check_bull, bull_words[check_bull])
          if check_bull == 4:
              return check_bull
