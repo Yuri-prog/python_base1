@@ -29,9 +29,7 @@ colors = {
     'фон': sd.background_color,
     'белый': sd.COLOR_WHITE,
 }
-cl = colors['белый']  # TODO: переменную нужно назвать осмысленно. Не надо экономить буквы
-# TODO: слишком много однобуквенных переменных. x, y, i еще более-менее общепринято, но остальным нужно придумать осмысленные названия.
-
+flake_color = colors['белый']
 for i in range(0, N):
     k = sd.random_number(0, sd.resolution[0])
     x_list.insert(i, k)
@@ -47,12 +45,12 @@ for i in range(0, N):
 
 def flake():
     global x, y, size, shift_x, shift_y
-    sd.snowflake(center=sd.get_point(x_list[i], y_list[i]), length=size_list[i], color=cl)
+    sd.snowflake(center=sd.get_point(x_list[i], y_list[i]), length=size_list[i], color=flake_color)
 
-def color(color):  # TODO: название функции не соответствует назначению. Ну и называть одинаково функцию и её же аргумент такое себе
-    global cl, i
+def color_and_list(color):
+    global flake_color, i
     for i in range(0, N):
-        cl = colors[color]
+        flake_color = colors[color]
         flake()
 
 def move_right():
@@ -66,11 +64,11 @@ def move_left():
         x_list[i] -= shift_x_list[i]
         y_list[i] -= shift_y_list[i]
 
-def short(list):  # TODO: list - зарезервированное в питоне слово. Лучше придумать другое название.
-    for m in list:
-        if list.count(m) > 1:
-            list.remove(m)
-    print('За границу экрана вышли снежинки №', *list)
+def short(my_list):
+    for m in my_list:
+        if my_list.count(m) > 1:
+            my_list.remove(m)
+    print('За границу экрана вышли снежинки №', *my_list)
 
 def count():
     for j, m in enumerate(y_list):
@@ -78,17 +76,16 @@ def count():
             flake_numbers.append(j)
     short(flake_numbers)
 
-    if y_list[i] < -2000:
+    if y_list[i] < -2200:
         return False
 
 def flake_del():
- # TODO: отступы поехали
- for j, m in enumerate(y_list):
-    if -820 < m < -800:
-        if flake_numbers.count(j) == 0:
-            continue
-        else:
-            flake_numbers.remove(j)
+    for j, m in enumerate(y_list):
+        if -820 < m < -800:
+            if flake_numbers.count(j) == 0:
+                continue
+            else:
+                flake_numbers.remove(j)
 
 
 
