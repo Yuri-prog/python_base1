@@ -20,7 +20,7 @@ def comp_number():
 
 def take_number(your_number_string):
     global your_number
-    if your_number_string.isdigit() is True:
+    if your_number_string.isdigit():  # NOTE в случае с True явно прописывать это не нужно
         your_number = [int(x) for x in list(your_number_string)]
     else:
         return False
@@ -52,3 +52,6 @@ def check_match():
     check_cow_set = set(sum_number)
     check_cow = 8 - check_bull - len(check_cow_set)
     print(check_cow, cow_words[check_cow])
+
+# TODO оформить код по PEP8
+#  рекомендую пользоваться пунктом меню Code → Reformat code, это отформатирует код по правилам записи

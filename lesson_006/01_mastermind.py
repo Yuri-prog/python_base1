@@ -49,18 +49,13 @@ from termcolor import cprint, colored
 comp_number()
 
 while True:
-    your_number_string = input(colored('Введите четырехзначное число', color='green'))
-    if  take_number(your_number_string) is False:
+    your_number_string = input(colored('Введите четырехзначное число: ', color='green'))
+    if take_number(your_number_string) is False:
         cprint('Неверный ввод, попробуйте еще раз', color='red')
         continue
     cprint('Вы ввели число {}'.format(your_number_string), color='blue')
     if check_match():
-
         cprint('Вы выиграли!', color='red', on_color='on_green')
         print(your_number_string)
         break
-
-
-
-
-
+# TODO не реализован подсчёт ходов и запрос на новую партию
