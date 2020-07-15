@@ -43,8 +43,11 @@
 # Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
-from lesson_006.mastermind_engine import comp_number, take_number, check_match
+from mastermind_engine import comp_number, take_number, check_match
+# from lesson_006.mastermind_engine import comp_number, take_number, check_match
 from termcolor import cprint, colored
+# TODO рекомендации, почему не нужно вставлять lesson_006 приведены тут https://clck.ru/Ndwqz
+# TODO оформить код по PEP8
 def game():
     comp_number()
     k = 0
@@ -62,10 +65,13 @@ def game():
         step_list.append(k)
     cprint('Было загадано число {}, количество ходов {}'.format(your_number_string, len(step_list)+1), color='blue')
     question = input(colored('Хотите еще партию? y/n', color='green'))
+    # TODO нужно доработать остальные возможные варианты ответов пользователя
+    #  (в том числе и некорректный, в случае которого пользователя нужно отправить повторить ввод)
     if question == 'y':
-        game()
+        game()  # TODO реализуйте решение таким образом, чтобы избежать этого рекурсивного вызова
     else:
         print('Выход')
+
 
 game()
 
