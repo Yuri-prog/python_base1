@@ -43,19 +43,30 @@
 # Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
-from mastermind_engine import comp_number, take_number, check_match
+from lesson_006.mastermind_engine import comp_number, take_number, check_match
 from termcolor import cprint, colored
+def game():
+    comp_number()
+    k = 0
+    step_list = []
+    while True:
+        your_number_string = input(colored('Введите четырехзначное число: ', color='green'))
+        if take_number(your_number_string) is False:
+            cprint('Неверный ввод, попробуйте еще раз', color='red')
+            continue
+        cprint('Вы ввели число {}'.format(your_number_string), color='blue')
+        if check_match():
+            cprint('Вы выиграли!', color='red', on_color='on_green')
+            break
+        k += 1
+        step_list.append(k)
+    cprint('Было загадано число {}, количество ходов {}'.format(your_number_string, len(step_list)+1), color='blue')
+    question = input(colored('Хотите еще партию? y/n', color='green'))
+    if question == 'y':
+        game()
+    else:
+        print('Выход')
 
-comp_number()
-
-while True:
-    your_number_string = input(colored('Введите четырехзначное число: ', color='green'))
-    if take_number(your_number_string) is False:
-        cprint('Неверный ввод, попробуйте еще раз', color='red')
-        continue
-    cprint('Вы ввели число {}'.format(your_number_string), color='blue')
-    if check_match():
-        cprint('Вы выиграли!', color='red', on_color='on_green')
-        print(your_number_string)
-        break
+game()
 # TODO не реализован подсчёт ходов и запрос на новую партию
+
