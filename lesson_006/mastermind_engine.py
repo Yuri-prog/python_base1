@@ -54,6 +54,3 @@ def check_match():
     check_cow_set = set(sum_number)
     check_cow = 8 - check_bull - len(check_cow_set)
     print(check_cow, cow_words[check_cow])
-
-# TODO оформить код по PEP8
-#  рекомендую пользоваться пунктом меню Code → Reformat code, это отформатирует код по правилам записи

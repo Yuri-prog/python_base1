@@ -37,4 +37,4 @@ while True:
 
 sd.pause()
 
-# TODO оформить код по правилам PEP8
+
