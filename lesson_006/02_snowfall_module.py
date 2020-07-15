@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from snowfall import flake, color_and_list, move_right, move_left, count, flake_del
-
 import simple_draw as sd
 
 sd.resolution = (1200, 600)

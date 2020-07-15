@@ -13,7 +13,9 @@ speed_list = []
 shift_x_list = []
 shift_y_list = []
 flake_numbers = []
-
+size = 0
+shift_x = 0
+shift_y = 0
 x = 0
 y = 0
 
@@ -78,7 +80,6 @@ def count():
         if -20 < m < 0:
             flake_numbers.append(j)
     short(flake_numbers)
-
     if y_list[i] < -2200:
         return False
 

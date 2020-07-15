@@ -7,6 +7,7 @@ differ_list = []
 
 
 def comp_number():
+    y = 0
     global computer_number
     computer_number = []
     digit_list = []
@@ -22,7 +23,7 @@ def comp_number():
 
 def take_number(your_number_string):
     global your_number
-    if your_number_string.isdigit():  # NOTE в случае с True явно прописывать это не нужно
+    if your_number_string.isdigit():
         your_number = [int(x) for x in list(your_number_string)]
     else:
         return False
@@ -39,6 +40,7 @@ def take_number(your_number_string):
 
 def check_match():
     differ_list = []
+    check_bull = []
     cow_words = {0: 'коров', 1: 'корова', 2: 'коровы', 3: 'коровы', 4: 'коровы'}
     bull_words = {0: 'быков', 1: 'бык', 2: 'быка', 3: 'быка', 4: 'быка'}
     for i in range(4):
