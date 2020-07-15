@@ -90,5 +90,3 @@ def flake_del():
                 continue
             else:
                 flake_numbers.remove(j)
-
-

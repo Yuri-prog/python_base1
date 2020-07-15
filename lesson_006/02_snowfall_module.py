@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from snowfall import flake, color_and_list, move_right, move_left, count, flake_del
+
 import simple_draw as sd
-from snowfall import flake, color_and_list, move_right, move_left, count, short, flake_del
 
 sd.resolution = (1200, 600)
 
@@ -21,7 +22,7 @@ k = 0
 while True:
     sd.start_drawing()
     color_and_list('фон')
-    if k%2 == 0:
+    if k % 2 == 0:
         move_right()
     else:
         move_left()
@@ -37,4 +38,4 @@ while True:
 
 sd.pause()
 
-
+# зачёт! 🚀
