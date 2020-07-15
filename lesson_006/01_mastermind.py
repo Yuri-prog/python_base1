@@ -43,8 +43,7 @@
 # Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
 
-from mastermind_engine import comp_number, take_number, check_match
-# from lesson_006.mastermind_engine import comp_number, take_number, check_match
+from lesson_006.mastermind_engine import comp_number, take_number, check_match
 from termcolor import cprint, colored
 # TODO рекомендации, почему не нужно вставлять lesson_006 приведены тут https://clck.ru/Ndwqz
 # TODO оформить код по PEP8
