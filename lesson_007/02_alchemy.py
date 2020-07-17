@@ -32,7 +32,8 @@ class Water:
             return Steam(part1=self, part2=other)
         elif isinstance(other, Ground):
             return Dirt(part1=self, part2=other)
-
+        elif isinstance(other, Airplane):
+            return Hydroplane(part1=self, part2=other)
 
 class Air:
 
@@ -46,7 +47,8 @@ class Air:
             return Lightning(part1=self, part2=other)
         elif isinstance(other, Ground):
             return Dust(part1=self, part2=other)
-
+        if isinstance(other, Airplane):
+            return Flight(part1=self, part2=other)
 
 class Fire:
 
@@ -60,7 +62,8 @@ class Fire:
             return Steam(part1=self, part2=other)
         elif isinstance(other, Ground):
             return Lava(part1=self, part2=other)
-
+        elif isinstance(other, Airplane):
+            return Big_fire(part1=self, part2=other)
 
 
 class Ground:
@@ -75,7 +78,8 @@ class Ground:
             return Dirt(part1=self, part2=other)
         elif isinstance(other, Fire):
             return Lava(part1=self, part2=other)
-
+        elif isinstance(other, Airplane):
+            return Landing(part1=self, part2=other)
 
 class Storm:
 
@@ -150,5 +154,60 @@ print(Fire(), '+', Ground(), '=', Fire() + Ground())
 # Придумать что будет при сложении существующих элементов с новым.
 
 
+class Airplane:
+
+    def __str__(self):
+        return 'Самолет'
+
+    def __add__(self, other):
+        if isinstance(other, Air):
+            return Flight(part1=self, part2=other)
+        elif isinstance(other, Water):
+            return Hydroplane(part1=self, part2=other)
+        elif isinstance(other, Ground):
+            return Landing(part1=self, part2=other)
+        elif isinstance(other, Fire):
+            return Big_fire(part1=self, part2=other)
+
+class Flight:
+
+    def __init__(self, part1, part2):
+        self.part1 = part1
+        self.part2 = part2
+
+    def __str__(self):
+        return 'Полет'
 
 
+class Hydroplane:
+
+    def __init__(self, part1, part2):
+        self.part1 = part1
+        self.part2 = part2
+
+    def __str__(self):
+        return 'Гидросамолет'
+
+
+class Landing:
+
+    def __init__(self, part1, part2):
+        self.part1 = part1
+        self.part2 = part2
+
+    def __str__(self):
+        return 'Посадка'
+
+class Big_fire:
+
+    def __init__(self, part1, part2):
+        self.part1 = part1
+        self.part2 = part2
+
+    def __str__(self):
+        return 'Пожар'
+
+print(Airplane(), '+', Air(), '=', Airplane() + Air())
+print(Airplane(), '+', Ground(), '=', Airplane() + Ground())
+print(Airplane(), '+', Water(), '=', Airplane() + Water())
+print(Airplane(), '+', Fire(), '=', Airplane() + Fire())
