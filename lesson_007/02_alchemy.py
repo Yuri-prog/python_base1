@@ -2,6 +2,10 @@
 
 # Создать прототип игры Алхимия: при соединении двух элементов получается новый.
 # Реализовать следующие элементы: Вода, Воздух, Огонь, Земля, Шторм, Пар, Грязь, Молния, Пыль, Лава.
+# -*- coding: utf-8 -*-
+
+# Создать прототип игры Алхимия: при соединении двух элементов получается новый.
+# Реализовать следующие элементы: Вода, Воздух, Огонь, Земля, Шторм, Пар, Грязь, Молния, Пыль, Лава.
 # Каждый элемент организовать как отдельный класс.
 # Таблица преобразований:
 #   Вода + Воздух = Шторм
@@ -20,136 +24,154 @@
 #   print(Fire(), '+', Air(), '=', Fire() + Air())
 
 
-# TODO во всех классах должен быть __init__ в котором задан self.name
-# TODO а в __str__ нужно возвращать self.name вместо 'название_элемента'
-
 class Water:
 
+    def __init__(self, name):
+        self.name = name
+
     def __str__(self):
-        return 'Вода'
+        return self.name
 
     def __add__(self, other):
         if isinstance(other, Air):
-            return Storm(part1=self, part2=other)
+            return Storm(part1=self, part2=other, name='Шторм')
         elif isinstance(other, Fire):
-            return Steam(part1=self, part2=other)
+            return Steam(part1=self, part2=other, name="Пар")
         elif isinstance(other, Ground):
-            return Dirt(part1=self, part2=other)
+            return Dirt(part1=self, part2=other, name='Грязь')
         elif isinstance(other, Airplane):
-            return Hydroplane(part1=self, part2=other)
+            return Hydroplane(part1=self, part2=other, name='Самолет')
+
 
 class Air:
 
+    def __init__(self, name):
+        self.name = name
+
     def __str__(self):
-        return 'Воздух'
+        return self.name
 
     def __add__(self, other):
         if isinstance(other, Water):
-            return Storm(part1=self, part2=other)
+            return Storm(part1=self, part2=other, name='Шторм')
         elif isinstance(other, Fire):
-            return Lightning(part1=self, part2=other)
+            return Lightning(part1=self, part2=other, name='Молния')
         elif isinstance(other, Ground):
-            return Dust(part1=self, part2=other)
+            return Dust(part1=self, part2=other, name='Пыль')
         if isinstance(other, Airplane):
-            return Flight(part1=self, part2=other)
+            return Flight(part1=self, part2=other, name='Полет')
+
 
 class Fire:
 
+    def __init__(self, name):
+        self.name = name
+
     def __str__(self):
-        return 'Огонь'
+        return self.name
 
     def __add__(self, other):
         if isinstance(other, Air):
-            return Lightning(part1=self, part2=other)
+            return Lightning(part1=self, part2=other, name='Молния')
         elif isinstance(other, Water):
-            return Steam(part1=self, part2=other)
+            return Steam(part1=self, part2=other, name='Пар')
         elif isinstance(other, Ground):
-            return Lava(part1=self, part2=other)
+            return Lava(part1=self, part2=other, name='Лава')
         elif isinstance(other, Airplane):
-            return Big_fire(part1=self, part2=other)
+            return Big_fire(part1=self, part2=other, name='Пожар')
 
 
 class Ground:
 
+    def __init__(self, name):
+        self.name = name
+
     def __str__(self):
-        return 'Земля'
+        return self.name
 
     def __add__(self, other):
         if isinstance(other, Air):
-            return Dust(part1=self, part2=other)
+            return Dust(part1=self, part2=other, name='Пыль')
         elif isinstance(other, Water):
-            return Dirt(part1=self, part2=other)
+            return Dirt(part1=self, part2=other, name='Грязь')
         elif isinstance(other, Fire):
-            return Lava(part1=self, part2=other)
+            return Lava(part1=self, part2=other, name='Лава')
         elif isinstance(other, Airplane):
-            return Landing(part1=self, part2=other)
+            return Landing(part1=self, part2=other, name='Посадка')
+
 
 class Storm:
 
-    def __init__(self, part1, part2):
+    def __init__(self, part1, part2, name):
         self.part1 = part1
         self.part2 = part2
+        self.name = name
 
     def __str__(self):
-        return 'Шторм'
+        return self.name
 
 
 class Steam:
 
-    def __init__(self, part1, part2):
+    def __init__(self, part1, part2, name):
         self.part1 = part1
         self.part2 = part2
+        self.name = name
 
     def __str__(self):
-        return 'Пар'
+        return self.name
 
 
 class Dirt:
 
-    def __init__(self, part1, part2):
+    def __init__(self, part1, part2, name):
         self.part1 = part1
         self.part2 = part2
+        self.name = name
 
     def __str__(self):
-        return 'Грязь'
+        return self.name
 
 
 class Lightning:
 
-    def __init__(self, part1, part2):
+    def __init__(self, part1, part2, name):
         self.part1 = part1
         self.part2 = part2
+        self.name = name
 
     def __str__(self):
-        return 'Молния'
+        return self.name
 
 
 class Dust:
 
-    def __init__(self, part1, part2):
+    def __init__(self, part1, part2, name):
         self.part1 = part1
         self.part2 = part2
+        self.name = name
 
     def __str__(self):
-        return 'Пыль'
+        return self.name
 
 
 class Lava:
 
-    def __init__(self, part1, part2):
+    def __init__(self, part1, part2, name):
         self.part1 = part1
         self.part2 = part2
+        self.name = name
 
     def __str__(self):
-        return 'Лава'
+        return self.name
 
 
-print(Water(), '+', Air(), '=', Water() + Air())
-print(Water(), '+', Fire(), '=', Water() + Fire())
-print(Water(), '+', Ground(), '=', Water() + Ground())
-print(Air(), '+', Fire(), '=', Air() + Fire())
-print(Air(), '+', Ground(), '=', Air() + Ground())
-print(Fire(), '+', Ground(), '=', Fire() + Ground())
+print(Water('Вода'), '+', Air('Воздух'), '=', Water('Вода') + Air('Воздух'))
+print(Water('Вода'), '+', Fire('Огонь'), '=', Water('Вода') + Fire('Огонь'))
+print(Water('Вода'), '+', Ground('Земля'), '=', Water('Вода') + Ground('Земля'))
+print(Air('Воздух'), '+', Fire('Огонь'), '=', Air('Воздух') + Fire('Огонь'))
+print(Air('Воздух'), '+', Ground('Земля'), '=', Air('Воздух') + Ground('Земля'))
+print(Fire('Огонь'), '+', Ground('Земля'), '=', Fire('Огонь') + Ground('Земля'))
 
 
 # Усложненное задание (делать по желанию)
@@ -159,8 +181,11 @@ print(Fire(), '+', Ground(), '=', Fire() + Ground())
 
 class Airplane:
 
+    def __init__(self, name):
+        self.name = name
+
     def __str__(self):
-        return 'Самолет'
+        return self.name
 
     def __add__(self, other):
         if isinstance(other, Air):
@@ -171,6 +196,7 @@ class Airplane:
             return Landing(part1=self, part2=other)
         elif isinstance(other, Fire):
             return Big_fire(part1=self, part2=other)
+
 
 class Flight:
 
@@ -201,6 +227,7 @@ class Landing:
     def __str__(self):
         return 'Посадка'
 
+
 class Big_fire:
 
     def __init__(self, part1, part2):
@@ -210,10 +237,10 @@ class Big_fire:
     def __str__(self):
         return 'Пожар'
 
-print(Airplane(), '+', Air(), '=', Airplane() + Air())
-print(Airplane(), '+', Ground(), '=', Airplane() + Ground())
-print(Airplane(), '+', Water(), '=', Airplane() + Water())
-print(Airplane(), '+', Fire(), '=', Airplane() + Fire())
 
-# TODO оформить код по PEP8
-#  рекомендую пользоваться пунктом меню Code → Reformat code, это отформатирует код по правилам записи
+print(Airplane('Самолет'), '+', Air('Воздух'), '=', Airplane('Самолет') + Air('Воздух'))
+print(Airplane('Самолет'), '+', Ground('Земля'), '=', Airplane('Самолет') + Ground('Земля'))
+print(Airplane('Самолет'), '+', Water('Вода'), '=', Airplane('Самолет') + Water('Вода'))
+print(Airplane('Самолет'), '+', Fire('Огонь'), '=', Airplane('Самолет') + Fire('Огонь'))
+
+
