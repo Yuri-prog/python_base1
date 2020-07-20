@@ -13,7 +13,7 @@ sd.resolution = (1200, 600)
 
 
 class Snowflake:
-    pass  # TODO это не нужно
+
 
     def __init__(self):
         self.length = randint(10, 100)
