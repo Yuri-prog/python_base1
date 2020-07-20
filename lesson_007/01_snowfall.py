@@ -13,7 +13,7 @@ sd.resolution = (1200, 600)
 
 
 class Snowflake:
-    pass
+    pass  # TODO это не нужно
 
     def __init__(self):
         self.length = randint(10, 100)
@@ -39,23 +39,25 @@ class Snowflake:
         if self.y > 0:
             return True
 
+# TODO в классе Снежинка должны быть методы, относящиеся ТОЛЬКО к одной снежинке. Через неё нельзя получить все
+
     def get_flakes(self, count):
         flakes = []
-        for i in range(0, count):
+        for i in range(count):
             i = Snowflake()
             flakes.append(i)
         return flakes
 
     def get_fallen_flakes(self):
         fallen_flakes = []
-        for i in range(0, N):
+        for i in range(N):
             if self.y < 500:
                 fallen_flakes.append(i)
         if len(fallen_flakes) >= N:
             return len(fallen_flakes)
 
     def append_flakes(self, count):
-        for i in range(0, count):
+        for i in range(count):  # NOTE так тоже можно
             i = Snowflake()
             flakes.append(i)
 

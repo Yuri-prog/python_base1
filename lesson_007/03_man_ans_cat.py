@@ -69,7 +69,7 @@ class Man:
 
         self.house = house
         self.fullness -= 10
-        cprint('{} Вьехал в дом'.format(self.name), color='cyan')
+        cprint('{} Въехал в дом'.format(self.name), color='cyan')
 
     def take_cat(self, cat, house):
         self.cat = cat
@@ -150,6 +150,8 @@ class Cat:
         if self.house.dirt > 100:
             cprint('Дома грязь', color='red')
 
+# TODO во всех методах сначала должно быть действие, а потом уже сообщение о том, что оно совершено
+
 
 class House:
 
@@ -173,17 +175,19 @@ citizens = [
 
 my_sweet_home = House()
 cat = Cat(50, None)
-for citisen in citizens:
+for citisen in citizens:  # TODO typo mistake: citisen -> citizen
+    # TODO to make it faster: Shift + F6 or Top Menu -> Refactor -> Rename
     citisen.go_to_the_house(house=my_sweet_home)
-    citisen.take_cat(cat, my_sweet_home)
-cprint('Бивис взял в дом кота', color='green')
+    citisen.take_cat(cat, my_sweet_home)  # TODO судя по модели каждый взял себе кота (по-идее одного и того же)
+cprint('Бивис взял в дом кота', color='green')  # TODO но сообщение только для одного жителя выводится. Здесь не должно
+# TODO не очевиден смысл такого подхода, поэтому это некорректно
 
 for day in range(1, 366):
     print('================ день {} =================='.format(day))
     for citisen in citizens:
         citisen.act()
         if citisen.name == 'Бивис':
-            citisen.act_cat()
+            citisen.act_cat()  # TODO аналогично, почему только у Бивиса кот что-то делать может, а у других - нет?
     print('--- в конце дня ---')
     for citisen in citizens:
         print(citisen)

@@ -20,6 +20,9 @@
 #   print(Fire(), '+', Air(), '=', Fire() + Air())
 
 
+# TODO во всех классах должен быть __init__ в котором задан self.name
+# TODO а в __str__ нужно возвращать self.name вместо 'название_элемента'
+
 class Water:
 
     def __str__(self):
@@ -211,3 +214,6 @@ print(Airplane(), '+', Air(), '=', Airplane() + Air())
 print(Airplane(), '+', Ground(), '=', Airplane() + Ground())
 print(Airplane(), '+', Water(), '=', Airplane() + Water())
 print(Airplane(), '+', Fire(), '=', Airplane() + Fire())
+
+# TODO оформить код по PEP8
+#  рекомендую пользоваться пунктом меню Code → Reformat code, это отформатирует код по правилам записи
