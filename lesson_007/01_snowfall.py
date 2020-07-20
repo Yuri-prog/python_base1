@@ -15,6 +15,7 @@ sd.resolution = (1200, 600)
 class Snowflake:
 
 
+
     def __init__(self):
         self.length = randint(10, 100)
         self.x = randint(0, 1200)
@@ -40,6 +41,8 @@ class Snowflake:
             return True
 
 # TODO в классе Снежинка должны быть методы, относящиеся ТОЛЬКО к одной снежинке. Через неё нельзя получить все
+
+class Snowflakes(Snowflake):
 
     def get_flakes(self, count):
         flakes = []
@@ -80,19 +83,20 @@ N = 15
 
 # шаг 2: создать снегопад - список объектов Снежинка в отдельном списке, обработку примерно так:
 
-flakes = Snowflake()
+
+flakes = Snowflakes()
 flakes = flakes.get_flakes(count=N)  # создать список снежинок
 k = 0
-fallen_flakes = 0
+fallen_flakes = []
 while True:
     sd.start_drawing()
     for flake in flakes:
         flake.clear_previous_picture()
         flake.move()
         flake.draw()
-        fallen_flakes = flake.get_fallen_flakes()  # подчитать сколько снежинок уже упало
+        fallen_flakes = flakes.get_fallen_flakes()  # подчитать сколько снежинок уже упало
     if fallen_flakes:
-        flake.append_flakes(count=fallen_flakes)  # добавить еще сверху
+        flakes.append_flakes(count=fallen_flakes)  # добавить еще сверху
     k += 1
     sd.sleep(0.1)
     sd.finish_drawing()
@@ -100,3 +104,4 @@ while True:
         break
 
 sd.pause()
+#TODO Если создать дочерний класс для снегопада, возникают ошибки. Не могу с ними справиться. Что у меня не так?
