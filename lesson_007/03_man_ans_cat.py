@@ -42,26 +42,26 @@ class Man:
 
     def eat(self):
         if self.house.food >= 10:
-            cprint('{} поел'.format(self.name), color='yellow')
             self.fullness += 10
             self.house.food -= 10
+            cprint('{} поел'.format(self.name), color='yellow')
         else:
             cprint('{} нет еды'.format(self.name), color='red')
 
     def work(self):
-        cprint('{} сходил на работу'.format(self.name), color='blue')
         self.house.money += 150
         self.fullness -= 10
+        cprint('{} сходил на работу'.format(self.name), color='blue')
 
     def watch_MTV(self):
-        cprint('{} смотрел MTV целый день'.format(self.name), color='green')
         self.fullness -= 10
+        cprint('{} смотрел MTV целый день'.format(self.name), color='green')
 
     def shopping(self):
         if self.house.money >= 50:
-            cprint('{} сходил в магазин за едой'.format(self.name), color='magenta')
             self.house.money -= 50
             self.house.food += 100
+            cprint('{} сходил в магазин за едой'.format(self.name), color='magenta')
         else:
             cprint('{} деньги кончились!'.format(self.name), color='red')
 
@@ -74,22 +74,33 @@ class Man:
     def take_cat(self, cat, house):
         self.cat = cat
         self.cat.house = house
+        cprint('{} взял в дом кота'.format(self.name), color='magenta')
 
     def buy_cat_food(self):
-        cprint('{} купил коту еды'.format(self.name), color='magenta')
         self.house.cat_food += 50
         self.house.money -= 50
+        cprint('{} купил котам еды'.format(self.name), color='magenta')
 
     def cleen_house(self):
-        cprint('{} убрался в доме'.format(self.name), color='magenta')
         self.fullness -= 20
         self.house.dirt -= 100
+        cprint('{} убрался в доме'.format(self.name), color='magenta')
 
     def act(self):
         if self.fullness <= 0:
             cprint('{} умер...'.format(self.name), color='red')
             return
         dice = randint(1, 6)
+        if self.cat.fullness >= 0:
+            if self.cat.fullness <= 30:
+                self.cat.eat()
+            elif dice == 1 or dice == 2 or dice == 3:
+                self.cat.sleep()
+            elif dice == 4 or dice == 5 or dice == 6:
+                self.cat.tear_wallpaper()
+        else:
+            cprint('Кот умер', color='red')
+            self.cat = None
         if self.fullness < 40:
             self.eat()
         elif self.house.food < 50:
@@ -107,19 +118,6 @@ class Man:
         else:
             self.watch_MTV()
 
-    def act_cat(self):
-        mood = randint(1, 2)
-        if self.cat.fullness >= 0:
-            if self.cat.fullness <= 30:
-                self.cat.eat()
-            elif mood == 1:
-                self.cat.sleep()
-            elif mood == 2:
-                self.cat.tear_wallpaper()
-        else:
-            cprint('Кот умер', color='red')
-            self.cat = None
-
 
 class Cat:
 
@@ -132,25 +130,23 @@ class Cat:
             self.fullness)
 
     def sleep(self):
-        cprint('Кот поспал', color='yellow')
         self.fullness -= 10
+        cprint('Кот поспал', color='yellow')
 
     def eat(self):
-        cprint('Кот поел', color='yellow')
         if self.house.cat_food >= 10:
             self.fullness += 20
             self.house.cat_food -= 10
+            cprint('Кот поел', color='yellow')
         else:
             cprint('Кончилась кошачья еда', color='red')
 
     def tear_wallpaper(self):
-        cprint('Кот подрал обои', color='yellow')
         self.fullness -= 10
         self.house.dirt += 5
+        cprint('Кот подрал обои', color='yellow')
         if self.house.dirt > 100:
             cprint('Дома грязь', color='red')
-
-# TODO во всех методах сначала должно быть действие, а потом уже сообщение о том, что оно совершено
 
 
 class House:
@@ -160,7 +156,6 @@ class House:
         self.money = 0
         self.cat_food = 50
         self.dirt = 0
-
 
     def __str__(self):
         return 'В доме еды осталось {}, денег осталось {}, кошачьей еды осталось {}, грязь {}'.format(
@@ -175,24 +170,18 @@ citizens = [
 
 my_sweet_home = House()
 cat = Cat(50, None)
-for citisen in citizens:  # TODO typo mistake: citisen -> citizen
-    # TODO to make it faster: Shift + F6 or Top Menu -> Refactor -> Rename
-    citisen.go_to_the_house(house=my_sweet_home)
-    citisen.take_cat(cat, my_sweet_home)  # TODO судя по модели каждый взял себе кота (по-идее одного и того же)
-cprint('Бивис взял в дом кота', color='green')  # TODO но сообщение только для одного жителя выводится. Здесь не должно
-# TODO не очевиден смысл такого подхода, поэтому это некорректно
+for citizen in citizens:
+    citizen.go_to_the_house(house=my_sweet_home)
+    citizen.take_cat(cat, my_sweet_home)
 
 for day in range(1, 366):
     print('================ день {} =================='.format(day))
-    for citisen in citizens:
-        citisen.act()
-        if citisen.name == 'Бивис':
-            citisen.act_cat()  # TODO аналогично, почему только у Бивиса кот что-то делать может, а у других - нет?
+    for citizen in citizens:
+        citizen.act()
+
     print('--- в конце дня ---')
-    for citisen in citizens:
-        print(citisen)
-        if citisen.name == 'Бивис':
-            print(cat)
+    for citizen in citizens:
+        print(citizen)
     print(my_sweet_home)
 
 # Усложненное задание (делать по желанию)
