@@ -18,6 +18,7 @@ sd.resolution = (1200, 600)
 
 flake()
 k = 0
+
 while True:
     sd.start_drawing()
     color_and_list('фон')
