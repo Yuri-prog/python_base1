@@ -11,11 +11,7 @@ sd.resolution = (1200, 600)
 #  - отработку изменений координат
 #  - отрисовку
 
-# TODO отредактировать код по PEP8
-
 class Snowflake:
-
-
 
     def __init__(self):
         self.length = randint(10, 100)
@@ -41,29 +37,28 @@ class Snowflake:
         if self.y > 0:
             return True
 
-# TODO в классе Снежинка должны быть методы, относящиеся ТОЛЬКО к одной снежинке. Через неё нельзя получить все
 
-class Snowflakes(Snowflake):
+def get_flakes(count):
+    flakes = []
+    for i in range(count):
+        i = Snowflake()
+        flakes.append(i)
+    return flakes
 
-    def get_flakes(self, count):
-        flakes = []
-        for i in range(count):
-            i = Snowflake()
-            flakes.append(i)
-        return flakes
 
-    def get_fallen_flakes(self):
-        fallen_flakes = []
-        for i in range(N):
-            if self.y < 500:
-                fallen_flakes.append(i)
-        if len(fallen_flakes) >= N:
-            return len(fallen_flakes)
+def get_fallen_flakes(self):
+    fallen_flakes = []
+    for i in range(N):
+        if self.y < 500:
+            fallen_flakes.append(i)
+    if len(fallen_flakes) >= N:
+        return len(fallen_flakes)
 
-    def append_flakes(self, count):
-        for i in range(count):  # NOTE так тоже можно
-            i = Snowflake()
-            flakes.append(i)
+
+def append_flakes(count):
+    for i in range(count):
+        i = Snowflake()
+        flakes.append(i)
 
 
 flake = Snowflake()
@@ -85,8 +80,7 @@ N = 15
 # шаг 2: создать снегопад - список объектов Снежинка в отдельном списке, обработку примерно так:
 
 
-flakes = Snowflakes()
-flakes = flakes.get_flakes(count=N)  # создать список снежинок
+flakes = get_flakes(count=N)  # создать список снежинок
 k = 0
 fallen_flakes = []
 while True:
@@ -95,9 +89,9 @@ while True:
         flake.clear_previous_picture()
         flake.move()
         flake.draw()
-        fallen_flakes = flakes.get_fallen_flakes()  # подчитать сколько снежинок уже упало
+        fallen_flakes = get_fallen_flakes(flake)  # подчитать сколько снежинок уже упало
     if fallen_flakes:
-        flakes.append_flakes(count=fallen_flakes)  # добавить еще сверху
+        append_flakes(count=fallen_flakes)  # добавить еще сверху
     k += 1
     sd.sleep(0.1)
     sd.finish_drawing()
@@ -105,6 +99,3 @@ while True:
         break
 
 sd.pause()
-# NOTE Если создать дочерний класс для снегопада, возникают ошибки. Не могу с ними справиться. Что у меня не так?
-# TODO дочерний класс от снежинки здесь не нужен!
-#  Реализуйте методы, относящиеся к снегопаду, отдельно здесь в коде, сами по себе. Без привязки к какому-либо классу
