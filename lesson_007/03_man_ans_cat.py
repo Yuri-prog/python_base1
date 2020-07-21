@@ -33,7 +33,6 @@ class Man:
     def __init__(self, name):
         self.name = name
         self.fullness = 50
-        self.cat = None
         self.house = None
 
     def __str__(self):
@@ -71,17 +70,12 @@ class Man:
         self.fullness -= 10
         cprint('{} Въехал в дом'.format(self.name), color='cyan')
 
-    def take_cat(self, cat, house):
-        self.cat = cat
-        self.cat.house = house
-        cprint('{} взял в дом кота'.format(self.name), color='magenta')
-
     def buy_cat_food(self):
         self.house.cat_food += 50
         self.house.money -= 50
         cprint('{} купил котам еды'.format(self.name), color='magenta')
 
-    def cleen_house(self):  # TODO typo error: cleen_house -> clean_house
+    def clean_house(self):
         self.fullness -= 20
         self.house.dirt -= 100
         cprint('{} убрался в доме'.format(self.name), color='magenta')
@@ -91,17 +85,6 @@ class Man:
             cprint('{} умер...'.format(self.name), color='red')
             return
         dice = randint(1, 6)
-        if self.cat.fullness >= 0:
-            # TODO внутри класса Человек не должно быть кошачьих активностей, кроме покупки человеком еды для кота
-            if self.cat.fullness <= 30:
-                self.cat.eat()
-            elif dice == 1 or dice == 2 or dice == 3:  # TODO лучше использовать конструкцию dice in [...]
-                self.cat.sleep()
-            elif dice == 4 or dice == 5 or dice == 6:  # TODO аналогично, см. комментарий выше
-                self.cat.tear_wallpaper()
-        else:
-            cprint('Кот умер', color='red')
-            self.cat = None
         if self.fullness < 40:
             self.eat()
         elif self.house.food < 50:
@@ -109,7 +92,7 @@ class Man:
         elif self.house.cat_food < 20:
             self.buy_cat_food()
         elif self.house.dirt > 100:
-            self.cleen_house()
+            self.clean_house()
         elif self.house.money < 50:
             self.work()
         elif dice == 1:
@@ -122,32 +105,51 @@ class Man:
 
 class Cat:
 
-    def __init__(self, fullness, house):
+    def __init__(self, fullness, house, name):
         self.fullness = 50
         self.house = None
+        self.name = name
 
     def __str__(self):
-        return 'Я - кот, сытость {} '.format(
-            self.fullness)
+        return 'Я - {}, сытость {} '.format(self.name,
+                                            self.fullness)
+
+    def taken_home(self, house):
+        self.house = house
+        self.house.cat = cat
+        cprint(' {} взят в дом'.format(self.name), color='magenta')
 
     def sleep(self):
         self.fullness -= 10
-        cprint('Кот поспал', color='yellow')
+        cprint('{} поспал'.format(self.name), color='yellow')
 
     def eat(self):
         if self.house.cat_food >= 10:
             self.fullness += 20
             self.house.cat_food -= 10
-            cprint('Кот поел', color='yellow')
+            cprint('{} поел'.format(self.name), color='yellow')
         else:
             cprint('Кончилась кошачья еда', color='red')
 
     def tear_wallpaper(self):
         self.fullness -= 10
-        self.house.dirt += 5
-        cprint('Кот подрал обои', color='yellow')
+        # self.house.dirt += 5
+        cprint('{} подрал обои'.format(self.name), color='yellow')
         if self.house.dirt > 100:
             cprint('Дома грязь', color='red')
+
+    def cat_act(self):
+        mood = randint(1, 2)
+        if self.fullness >= 0:
+            if self.fullness <= 30:
+                self.eat()
+            elif mood == 1:
+                self.sleep()
+            elif mood == 2:
+                self.tear_wallpaper()
+        else:
+            cprint('Кот умер', color='red')
+            self.house.cat = None
 
 
 class House:
@@ -157,11 +159,14 @@ class House:
         self.money = 0
         self.cat_food = 50
         self.dirt = 0
+        self.cat = None
 
     def __str__(self):
         return 'В доме еды осталось {}, денег осталось {}, кошачьей еды осталось {}, грязь {}'.format(
             self.food, self.money, self.cat_food, self.dirt)
 
+
+my_sweet_home = House()
 
 citizens = [
     Man(name='Бивис'),
@@ -169,22 +174,27 @@ citizens = [
     Man(name='Кенни'),
 ]
 
-my_sweet_home = House()
-cat = Cat(50, None)
+cats = [
+    Cat(name='Кот Бивиса', fullness=50, house=my_sweet_home),
+    Cat(name='Кот Батхеда', fullness=50, house=my_sweet_home),
+    Cat(name='Кот Кенни', fullness=50, house=my_sweet_home)
+]
+
 for citizen in citizens:
     citizen.go_to_the_house(house=my_sweet_home)
-    citizen.take_cat(cat, my_sweet_home)
-
+for cat in cats:
+    cat.taken_home(my_sweet_home)
 for day in range(1, 366):
     print('================ день {} =================='.format(day))
     for citizen in citizens:
         citizen.act()
-        # TODO теперь получается, что каждый житель взял по коту, но сам кот участия в жизни дома не проявляет
-        # TODO сейчас судя по исходному коду, кот живёт внутри своего хозяина. Это неверно!
-        #  Здесь должен вызываться кошачий act(). Не привязывайте его к конкретному жителю дома. То есть вне цикла
+    for cat in cats:
+        cat.cat_act()
     print('--- в конце дня ---')
     for citizen in citizens:
         print(citizen)
+    for cat in cats:
+        print(cat)
     print(my_sweet_home)
 
 # Усложненное задание (делать по желанию)
