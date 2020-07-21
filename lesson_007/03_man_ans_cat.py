@@ -81,7 +81,7 @@ class Man:
         self.house.money -= 50
         cprint('{} купил котам еды'.format(self.name), color='magenta')
 
-    def cleen_house(self):
+    def cleen_house(self):  # TODO typo error: cleen_house -> clean_house
         self.fullness -= 20
         self.house.dirt -= 100
         cprint('{} убрался в доме'.format(self.name), color='magenta')
@@ -92,6 +92,7 @@ class Man:
             return
         dice = randint(1, 6)
         if self.cat.fullness >= 0:
+            # TODO внутри класса Человек не должно быть кошачьих активностей, кроме покупки человеком еды для кота
             if self.cat.fullness <= 30:
                 self.cat.eat()
             elif dice == 1 or dice == 2 or dice == 3:
@@ -178,7 +179,9 @@ for day in range(1, 366):
     print('================ день {} =================='.format(day))
     for citizen in citizens:
         citizen.act()
-
+        # TODO теперь получается, что каждый житель взял по коту, но сам кот участия в жизни дома не проявляет
+        # TODO сейчас судя по исходному коду, кот живёт внутри своего хозяина. Это неверно!
+        #  Здесь должен вызываться кошачий act(). Не привязывайте его к конкретному жителю дома. То есть вне цикла
     print('--- в конце дня ---')
     for citizen in citizens:
         print(citizen)
