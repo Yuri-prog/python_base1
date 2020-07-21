@@ -95,9 +95,9 @@ class Man:
             # TODO внутри класса Человек не должно быть кошачьих активностей, кроме покупки человеком еды для кота
             if self.cat.fullness <= 30:
                 self.cat.eat()
-            elif dice == 1 or dice == 2 or dice == 3:
+            elif dice == 1 or dice == 2 or dice == 3:  # TODO лучше использовать конструкцию dice in [...]
                 self.cat.sleep()
-            elif dice == 4 or dice == 5 or dice == 6:
+            elif dice == 4 or dice == 5 or dice == 6:  # TODO аналогично, см. комментарий выше
                 self.cat.tear_wallpaper()
         else:
             cprint('Кот умер', color='red')
