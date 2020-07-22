@@ -105,7 +105,7 @@ class Man:
 
 class Cat:
 
-    def __init__(self, fullness, house, name):
+    def __init__(self, fullness, house, name):  # TODO удалить два неиспользуемых здесь аргумента fullness, house
         self.fullness = 50
         self.house = None
         self.name = name
@@ -114,7 +114,7 @@ class Cat:
         return 'Я - {}, сытость {} '.format(self.name,
                                             self.fullness)
 
-    def taken_home(self, house):
+    def taken_home(self, house):  # TODO кот не может сам себя взять в дом. Только у человека может быть такое действие
         self.house = house
         self.house.cat = cat
         cprint(' {} взят в дом'.format(self.name), color='magenta')
@@ -133,7 +133,8 @@ class Cat:
 
     def tear_wallpaper(self):
         self.fullness -= 10
-        # self.house.dirt += 5
+        # self.house.dirt += 5  # TODO грязь должна прибавляться, поэтому нужно раскомментировать эту строку
+        # TODO иначе уровень грязи в доме всегда 0
         cprint('{} подрал обои'.format(self.name), color='yellow')
         if self.house.dirt > 100:
             cprint('Дома грязь', color='red')
@@ -173,7 +174,9 @@ citizens = [
     Man(name='Батхед'),
     Man(name='Кенни'),
 ]
-
+# TODO сейчас нет гарантии того, что количество будущих хозяев и их потенциальных питомцев не разойдётся
+#  задайте их тогда уж парами с словаре с названием habitants (жители).
+#  На "будущее", при масштабировании данного решения, будет хорошая страховка от проблем :)
 cats = [
     Cat(name='Кот Бивиса', fullness=50, house=my_sweet_home),
     Cat(name='Кот Батхеда', fullness=50, house=my_sweet_home),
