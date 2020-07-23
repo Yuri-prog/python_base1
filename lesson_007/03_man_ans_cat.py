@@ -65,10 +65,14 @@ class Man:
             cprint('{} деньги кончились!'.format(self.name), color='red')
 
     def go_to_the_house(self, house):
-
         self.house = house
         self.fullness -= 10
         cprint('{} Въехал в дом'.format(self.name), color='cyan')
+
+    def take_cat(self):
+        self.cat = cat
+        self.cat.house = house
+        cprint('{} взял в дом кота'.format(self.name), color='magenta')
 
     def buy_cat_food(self):
         self.house.cat_food += 50
@@ -105,19 +109,14 @@ class Man:
 
 class Cat:
 
-    def __init__(self, fullness, house, name):  # TODO удалить два неиспользуемых здесь аргумента fullness, house
-        self.fullness = 50
+    def __init__(self, name):
         self.house = None
         self.name = name
+        self.fullness = 50
 
     def __str__(self):
-        return 'Я - {}, сытость {} '.format(self.name,
-                                            self.fullness)
-
-    def taken_home(self, house):  # TODO кот не может сам себя взять в дом. Только у человека может быть такое действие
-        self.house = house
-        self.house.cat = cat
-        cprint(' {} взят в дом'.format(self.name), color='magenta')
+        return 'Я - {}, сытость {}'.format(self.name,
+                                           self.fullness)
 
     def sleep(self):
         self.fullness -= 10
@@ -133,8 +132,7 @@ class Cat:
 
     def tear_wallpaper(self):
         self.fullness -= 10
-        # self.house.dirt += 5  # TODO грязь должна прибавляться, поэтому нужно раскомментировать эту строку
-        # TODO иначе уровень грязи в доме всегда 0
+        self.house.dirt += 5
         cprint('{} подрал обои'.format(self.name), color='yellow')
         if self.house.dirt > 100:
             cprint('Дома грязь', color='red')
@@ -160,7 +158,7 @@ class House:
         self.money = 0
         self.cat_food = 50
         self.dirt = 0
-        self.cat = None
+        # self.cat = None
 
     def __str__(self):
         return 'В доме еды осталось {}, денег осталось {}, кошачьей еды осталось {}, грязь {}'.format(
@@ -168,25 +166,29 @@ class House:
 
 
 my_sweet_home = House()
+house = my_sweet_home
 
 citizens = [
     Man(name='Бивис'),
     Man(name='Батхед'),
     Man(name='Кенни'),
 ]
-# TODO сейчас нет гарантии того, что количество будущих хозяев и их потенциальных питомцев не разойдётся
-#  задайте их тогда уж парами с словаре с названием habitants (жители).
-#  На "будущее", при масштабировании данного решения, будет хорошая страховка от проблем :)
+
 cats = [
-    Cat(name='Кот Бивиса', fullness=50, house=my_sweet_home),
-    Cat(name='Кот Батхеда', fullness=50, house=my_sweet_home),
-    Cat(name='Кот Кенни', fullness=50, house=my_sweet_home)
+    Cat(name='Кот Бивиса'),
+    Cat(name='Кот Батхеда'),
+    Cat(name='Кот Кенни'),
 ]
 
-for citizen in citizens:
+habitants = {
+    citizens[0]: cats[0],
+    citizens[1]: cats[1],
+    citizens[2]: cats[2],
+}
+
+for citizen, cat in habitants.items():
     citizen.go_to_the_house(house=my_sweet_home)
-for cat in cats:
-    cat.taken_home(my_sweet_home)
+    citizen.take_cat()
 for day in range(1, 366):
     print('================ день {} =================='.format(day))
     for citizen in citizens:
