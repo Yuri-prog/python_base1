@@ -158,7 +158,6 @@ class House:
         self.money = 0
         self.cat_food = 50
         self.dirt = 0
-        # self.cat = None
 
     def __str__(self):
         return 'В доме еды осталось {}, денег осталось {}, кошачьей еды осталось {}, грязь {}'.format(
@@ -180,13 +179,13 @@ cats = [
     Cat(name='Кот Кенни'),
 ]
 
-habitants = {
+habitats = {
     citizens[0]: cats[0],
     citizens[1]: cats[1],
     citizens[2]: cats[2],
 }
 
-for citizen, cat in habitants.items():
+for citizen, cat in habitats.items():
     citizen.go_to_the_house(house=my_sweet_home)
     citizen.take_cat()
 for day in range(1, 366):
@@ -207,3 +206,5 @@ for day in range(1, 366):
 # Им всем вместе так же надо прожить 365 дней.
 
 # (Можно определить критическое количество котов, которое может прокормить человек...)
+
+# зачёт! 🚀
