@@ -45,52 +45,102 @@ from random import randint
 class House:
 
     def __init__(self):
-        pass
+        self.money = 100
+        self.food = 50
+        self.dirt = 0
 
+class Men:
 
-class Husband:
+    def __init(self, name, house):
+        self.name = name
+        self.fullness = 30
+        self.happiness = 100
+        self.house = house
 
-    def __init__(self):
-        pass
+    def __str__(self):
+        return 'Член семьи {}, сытость {}, счастье {}'.format(self.name, self.fullness, self.happiness)
+
+    def eat(self):
+        self.fullness += 30
+        self.house.food -= 30
+        cprint(self.name, 'поел', color='green')
+
+class Husband(Men):
+
+    def __init__(self, name):
+        self.name = name   #TODO Вопрос. Объект дочернего класса должен наследовать атрибуты и методы родительского
+                           # класса.Почему в нашем случае при запуске программы пишет 'Husband' object has no attribute 'fullness'?
 
     def __str__(self):
         return super().__str__()
 
     def act(self):
-        pass
-
-    def eat(self):
-        pass
+        if 0 < self.fullness < 30:
+            self.eat()
+        elif self.fullness < 0:
+            cprint(self.name, 'умер от голода', color='red')
+            return
+        elif self.happiness < 10:
+            cprint(self.name, 'умер от депрессии', color='red')
+            return
+        elif self.house.money < 50:
+            self.work()
+        else:
+            self.gaming()
 
     def work(self):
-        pass
+        self.house.money += 150
+        self.fullness -= 10
+        cprint(self.name, 'сходил на работу', color='green')
 
     def gaming(self):
-        pass
+        self.happiness += 20
+        self.fullness -= 10
+        cprint(self.name, 'поиграл', color='green')
 
 
-class Wife:
+class Wife(Men):
 
-    def __init__(self):
-        pass
+    def __init__(self, name):
+        self.name = name
 
     def __str__(self):
         return super().__str__()
 
     def act(self):
-        pass
+        if 0 < self.fullness < 30:
+            self.eat()
+        elif self.fullness < 0:
+            cprint(self.name, 'умерла от голода', color='red')
+            return
+        elif self.happiness < 10:
+            cprint(self.name, 'умерла от депрессии', color='red')
+            return
+        elif self.house.money > 420:
+            self.buy_fur_coat()
+        elif self.house.dirt > 100:
+            self.clean_house()
 
     def eat(self):
-        pass
+        self.fullness += 30
+        self.house.food -= 30
+        cprint(self.name, 'поела', color='green')
 
     def shopping(self):
-        pass
+        self.house.food += 70
+        self.house.money -= 70
+        self.fullness -= 10
+        cprint(self.name, 'сходила в магазин за едой', color='green')
 
     def buy_fur_coat(self):
-        pass
+        self.house.money -= 350
+        self.happiness += 60
+        self.fullness -= 10
+        cprint(self.name, 'купила шубу!!!', color='orange')
 
     def clean_house(self):
-        pass
+        self.house.dirt -= 100
+        self.fullness -= 10
 
 
 home = House()
@@ -99,6 +149,10 @@ masha = Wife(name='Маша')
 
 for day in range(365):
     cprint('================== День {} =================='.format(day), color='red')
+    home.dirt += 5
+    if home.dirt > 90:
+        serge.happiness -= 10
+        masha.happiness -= 10
     serge.act()
     masha.act()
     cprint(serge, color='cyan')
