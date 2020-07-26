@@ -50,10 +50,13 @@ class House:
         self.food = 50
         self.dirt = 0
 
+    def __str__(self):
+        return 'Дом, денег в тумбочке {}, еды {}, грязь {}'.format(self.money, self.food, self.dirt)
+
 
 class Human:
 
-    def __init(self, name, house):  # TODO здесь опечатка в названии метода
+    def __init__(self, house, name):
         self.name = name
         self.fullness = 30
         self.happiness = 100
@@ -65,30 +68,31 @@ class Human:
     def eat(self):
         self.fullness += 30
         self.house.food -= 30
-        cprint(self.name, 'поел', color='green')  # TODO см. уже аналогичную проблему с cprint в gaming()
+        cprint(self.name + ' ест', color='green')
+
+    def act(self):
+        if 0 <= self.fullness < 40:
+            self.eat()
+        elif self.fullness < 0:
+            cprint(self.name + ', смерть от голода', color='red')
+            return
+        elif self.happiness < 10:
+            cprint(self.name + ', смерть от депрессии', color='red')
+            return
 
 
 class Husband(Human):
 
-    def __init__(self, name):  # TODO здесь ещё нужно принимать аргумент house
-        super().__init__(name=name)  # TODO и здесь передавать house тоже
-        self.name = name  # TODO эта строка не нужна
-    # TODO И эта проблема уже другого порядка, не связанная с предыдущим вопросом
+    def __init__(self, house, name):
+        super().__init__(house, name=name)
 
     def __str__(self):
         return super().__str__()
 
     def act(self):
-        # TODO здесь аналогично, нужно вызывать сначала родительский act
-        if 0 < self.fullness < 30:
-            self.eat()
-        elif self.fullness < 0:
-            cprint(self.name, 'умер от голода', color='red')
-            return
-        elif self.happiness < 10:
-            cprint(self.name, 'умер от депрессии', color='red')
-            return
-        elif self.house.money < 50:
+        super().act()
+        dice = randint(1, 2)
+        if dice == 1:
             self.work()
         else:
             self.gaming()
@@ -96,65 +100,54 @@ class Husband(Human):
     def work(self):
         self.house.money += 150
         self.fullness -= 10
-        cprint(self.name, 'сходил на работу', color='green')
+        cprint(self.name + ' сходил на работу', color='green')
 
     def gaming(self):
         self.happiness += 20
         self.fullness -= 10
-        cprint(self.name + ' поиграл', color='green')  # TODO здесь self.name, 'поиграл' нужно объединить в одну строку
-        # TODO иначе cprint не может корректно распарсить аргументы, которые этому методу переданы
+        cprint(self.name + ' поиграл', color='green')
 
 
 class Wife(Human):
 
-    def __init__(self, name):  # TODO требуется доработать по аналогии с методом __init__ в Husband
-        super().__init__(name=name)
-        self.name = name
+    def __init__(self, house, name):
+        super().__init__(house, name=name)
 
     def __str__(self):
         return super().__str__()
 
     def act(self):
-        # TODO вызывать act из родительского класса
-        if 0 < self.fullness < 30:
-            self.eat()
-        elif self.fullness < 0:
-            cprint(self.name, 'умерла от голода', color='red')
-            return
-        elif self.happiness < 10:
-            cprint(self.name, 'умерла от депрессии', color='red')
-            return
-        elif self.house.money > 420:
+        super().act()
+        if self.house.money > 500:
             self.buy_fur_coat()
-        elif self.house.dirt > 100:
+        elif self.house.dirt > 110:
             self.clean_house()
-
-    def eat(self):
-        self.fullness += 30
-        self.house.food -= 30
-        cprint(self.name, 'поела', color='green')
+        elif self.house.food < 80:
+            self.shopping()
+        else:
+            cprint(self.name + ' отдыхает', color='yellow')
 
     def shopping(self):
         self.house.food += 70
         self.house.money -= 70
         self.fullness -= 10
-        cprint(self.name, 'сходила в магазин за едой', color='green')
+        cprint(self.name + ' сходила в магазин за едой', color='green')
 
     def buy_fur_coat(self):
         self.house.money -= 350
         self.happiness += 60
         self.fullness -= 10
-        cprint(self.name, 'купила шубу!!!', color='orange')
+        cprint(self.name + ' купила шубу!!!', color='green')
 
     def clean_house(self):
         self.house.dirt -= 100
         self.fullness -= 10
+        cprint(self.name + ' сделала уборку', color='green')
 
 
 home = House()
-# TODO в двух строках ниже тоже требуются доработки
-serge = Husband(name='Сережа')
-masha = Wife(name='Маша')
+serge = Husband(home, name='Сережа')
+masha = Wife(home, name='Маша')
 
 for day in range(365):
     cprint('================== День {} =================='.format(day), color='red')
@@ -244,7 +237,6 @@ class Child:
     def sleep(self):
         pass
 
-
 # TODO после реализации второй части - отдать на проверку учителем две ветки
 
 
@@ -255,22 +247,22 @@ class Child:
 # отправить на проверку учителем.
 
 
-home = House()
-serge = Husband(name='Сережа')
-masha = Wife(name='Маша')
-kolya = Child(name='Коля')
-murzik = Cat(name='Мурзик')
-
-for day in range(365):
-    cprint('================== День {} =================='.format(day), color='red')
-    serge.act()
-    masha.act()
-    kolya.act()
-    murzik.act()
-    cprint(serge, color='cyan')
-    cprint(masha, color='cyan')
-    cprint(kolya, color='cyan')
-    cprint(murzik, color='cyan')
+# home = House()
+# serge = Husband(home, name='Сережа')
+# masha = Wife(home, name='Маша')
+# kolya = Child(name='Коля')
+# murzik = Cat(name='Мурзик')
+#
+# for day in range(365):
+#     cprint('================== День {} =================='.format(day), color='red')
+#     serge.act()
+#     masha.act()
+#     kolya.act()
+#     murzik.act()
+#     cprint(serge, color='cyan')
+#     cprint(masha, color='cyan')
+#     cprint(kolya, color='cyan')
+#     cprint(murzik, color='cyan')
 
 # Усложненное задание (делать по желанию)
 #
