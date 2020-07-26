@@ -53,7 +53,7 @@ class House:
 
 class Human:
 
-    def __init(self, name, house):
+    def __init(self, name, house):  # TODO здесь опечатка в названии метода
         self.name = name
         self.fullness = 30
         self.happiness = 100
@@ -65,15 +65,15 @@ class Human:
     def eat(self):
         self.fullness += 30
         self.house.food -= 30
-        cprint(self.name, 'поел', color='green')
+        cprint(self.name, 'поел', color='green')  # TODO см. уже аналогичную проблему с cprint в gaming()
 
 
 class Husband(Human):
 
-    def __init__(self, name):
-        super().__init__(name=name)
-        self.name = name  # TODO Вопрос. Объект дочернего класса должен наследовать атрибуты и методы родительского
-        # класса.Почему в нашем случае при запуске программы пишет 'Husband' object has no attribute 'fullness'?
+    def __init__(self, name):  # TODO здесь ещё нужно принимать аргумент house
+        super().__init__(name=name)  # TODO и здесь передавать house тоже
+        self.name = name  # TODO эта строка не нужна
+    # TODO И эта проблема уже другого порядка, не связанная с предыдущим вопросом
 
     def __str__(self):
         return super().__str__()
@@ -101,12 +101,13 @@ class Husband(Human):
     def gaming(self):
         self.happiness += 20
         self.fullness -= 10
-        cprint(self.name, 'поиграл', color='green')
+        cprint(self.name + ' поиграл', color='green')  # TODO здесь self.name, 'поиграл' нужно объединить в одну строку
+        # TODO иначе cprint не может корректно распарсить аргументы, которые этому методу переданы
 
 
 class Wife(Human):
 
-    def __init__(self, name):
+    def __init__(self, name):  # TODO требуется доработать по аналогии с методом __init__ в Husband
         super().__init__(name=name)
         self.name = name
 
@@ -151,6 +152,7 @@ class Wife(Human):
 
 
 home = House()
+# TODO в двух строках ниже тоже требуются доработки
 serge = Husband(name='Сережа')
 masha = Wife(name='Маша')
 
@@ -169,6 +171,7 @@ for day in range(365):
 
 # TODO после реализации первой части - отдать на проверку учителю
 # TODO нужно всегда удалять все TODO по мере выполнения заданий
+# TODO удалить неактуальные TODO
 
 ######################################################## Часть вторая
 #
