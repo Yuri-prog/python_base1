@@ -149,7 +149,7 @@ home = House()
 serge = Husband(home, name='Сережа')
 masha = Wife(home, name='Маша')
 
-for day in range(365):
+for day in range(365):  # TODO сделать нумерацию дней с 1 до 365
     cprint('================== День {} =================='.format(day), color='red')
     home.dirt += 5
     if home.dirt > 90:
@@ -162,6 +162,7 @@ for day in range(365):
     cprint(home, color='cyan')
 
 
+# зачёт первой части
 # TODO после реализации первой части - отдать на проверку учителю
 # TODO нужно всегда удалять все TODO по мере выполнения заданий
 # TODO удалить неактуальные TODO
