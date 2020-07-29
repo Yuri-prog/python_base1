@@ -145,11 +145,34 @@ class Wife(Human):
         cprint(self.name + ' сделала уборку', color='green')
 
 
+class Child(Human):
+
+    def __init__(self, house, name):
+        super().__init__(house, name=name)
+
+    def __str__(self):
+        return super().__str__()
+
+    def act(self):
+        super().act()
+        self.sleep()
+
+    def eat(self):
+        self.fullness += 10
+        self.house.food -= 10
+        cprint(self.name + ' ест', color='green')
+
+    def sleep(self):
+        self.fullness -= 5
+        cprint(self.name + ' поспал', color='green')
+
+
 home = House()
 serge = Husband(home, name='Сережа')
 masha = Wife(home, name='Маша')
+kolya = Child(home, name='сын Коля')
 
-for day in range(365):  # TODO сделать нумерацию дней с 1 до 365
+for day in range(365):
     cprint('================== День {} =================='.format(day), color='red')
     home.dirt += 5
     if home.dirt > 90:
@@ -157,15 +180,14 @@ for day in range(365):  # TODO сделать нумерацию дней с 1 �
         masha.happiness -= 10
     serge.act()
     masha.act()
+    kolya.act()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
+    cprint(kolya, color='cyan')
     cprint(home, color='cyan')
 
 
 # зачёт первой части
-# TODO после реализации первой части - отдать на проверку учителю
-# TODO нужно всегда удалять все TODO по мере выполнения заданий
-# TODO удалить неактуальные TODO
 
 ######################################################## Часть вторая
 #
@@ -209,7 +231,6 @@ class Cat:
     def soil(self):
         pass
 
-
 ######################################################## Часть вторая бис
 #
 # После реализации первой части надо в ветке мастер продолжить работу над семьей - добавить ребенка
@@ -220,25 +241,6 @@ class Cat:
 #
 # отличия от взрослых - кушает максимум 10 единиц еды,
 # степень счастья  - не меняется, всегда ==100 ;)
-
-class Child:
-
-    def __init__(self):
-        pass
-
-    def __str__(self):
-        return super().__str__()
-
-    def act(self):
-        pass
-
-    def eat(self):
-        pass
-
-    def sleep(self):
-        pass
-
-# TODO после реализации второй части - отдать на проверку учителем две ветки
 
 
 ######################################################## Часть третья
