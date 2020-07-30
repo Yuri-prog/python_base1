@@ -81,10 +81,8 @@ class Human:
             self.eat()
         elif self.fullness < 0:
             cprint(self.name + ', смерть от голода', color='red')
-            return  # TODO эта строка не нужна, так как функция в любом случае здесь вернёт None
         elif self.happiness < 10:
             cprint(self.name + ', смерть от депрессии', color='red')
-            return  # TODO аналогично замечанию в методе act
 
 
 class Husband(Human):
@@ -202,8 +200,7 @@ serge = Husband(home, name='Сережа')
 masha = Wife(home, name='Маша')
 cat = Cat(home, name='Мурзик')
 
-for day in range(365):
-    # TODO сделать нумерацию дней с 1 до 365
+for day in range(1, 366):
     cprint('================== День {} =================='.format(day), color='red')
     home.dirt += 5
     if home.dirt > 90:
