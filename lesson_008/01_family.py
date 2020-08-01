@@ -290,22 +290,6 @@ for day in range(1, 366):
 # отправить на проверку учителем.
 
 
-# home = House()
-# serge = Husband(home, name='Сережа')
-# masha = Wife(home, name='Маша')
-# kolya = Child(name='Коля')
-# murzik = Cat(name='Мурзик')
-#
-# for day in range(365):
-#     cprint('================== День {} =================='.format(day), color='red')
-#     serge.act()
-#     masha.act()
-#     kolya.act()
-#     murzik.act()
-#     cprint(serge, color='cyan')
-#     cprint(masha, color='cyan')
-#     cprint(kolya, color='cyan')
-#     cprint(murzik, color='cyan')
 
 # Усложненное задание (делать по желанию)
 #
