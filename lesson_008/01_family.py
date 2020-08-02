@@ -119,7 +119,7 @@ class Wife(Human):
     def __init__(self, house, name):
         super().__init__(house, name=name)
 
-    def __str__(self):
+    def __str__(self):  # TODO: это можно и не прописывать, если метод наследуется без изменений. Из других классов также нужно убрать.
         return super().__str__()
 
     def act(self):
