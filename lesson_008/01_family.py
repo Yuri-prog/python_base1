@@ -90,9 +90,6 @@ class Husband(Human):
     def __init__(self, house, name):
         super().__init__(house, name=name)
 
-    def __str__(self):
-        return super().__str__()
-
     def act(self):
         super().act()
         dice = randint(1, 3)
@@ -118,9 +115,6 @@ class Wife(Human):
 
     def __init__(self, house, name):
         super().__init__(house, name=name)
-
-    def __str__(self):  # TODO: это можно и не прописывать, если метод наследуется без изменений. Из других классов также нужно убрать.
-        return super().__str__()
 
     def act(self):
         super().act()
@@ -200,9 +194,6 @@ class Child(Human):
     def __init__(self, house, name):
         super().__init__(house, name=name)
 
-    def __str__(self):
-        return super().__str__()
-
     def act(self):
         super().act()
         self.sleep()
@@ -239,7 +230,6 @@ for day in range(1, 366):
     cprint(kolya, color='cyan')
     cprint(home, color='cyan')
 
-
 # зачёт первой части
 # зачёт второй части бис
 
@@ -268,9 +258,6 @@ for day in range(1, 366):
 # Если кот дерет обои, то грязи становится больше на 5 пунктов
 
 
-
-
-
 ######################################################## Часть вторая бис
 #
 # После реализации первой части надо в ветке мастер продолжить работу над семьей - добавить ребенка
@@ -283,13 +270,11 @@ for day in range(1, 366):
 # степень счастья  - не меняется, всегда ==100 ;)
 
 
-
 ######################################################## Часть третья
 #
 # после подтверждения учителем второй части (обоих веток)
 # влить в мастер все коммиты из ветки develop и разрешить все конфликты
 # отправить на проверку учителем.
-
 
 
 # Усложненное задание (делать по желанию)
