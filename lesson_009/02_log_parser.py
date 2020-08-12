@@ -37,18 +37,22 @@ class Parser:
         self.new_pair_list = []
 
     def count_events(self):
+        # TODO: алгоритм работает, но алгоритм очень не оптимальный
         with open(file_name, 'r', encoding='cp1251') as file:
             for line in file:
                 if line.count('NOK'):
                     line = line[0:17] + ']'
                     self.nok_quant.append(line)
             for line in self.nok_quant:
-                pair = line + ' ' + str(self.nok_quant.count(line))
+                pair = line + ' ' + str(self.nok_quant.count(line))  # TODO: операция count() под капотом пробегает по всему списку строк, да еще каждую сравнивает посимвольно с line
                 self.pair_list.append(pair)
             for pair in self.pair_list:
-                if pair not in self.new_pair_list:
+                if pair not in self.new_pair_list:  # TODO: операция in тоже пробегает по всему списку
                     self.new_pair_list.append(pair)
             return str('\n'.join(self.new_pair_list))
+        # TODO: Уменьшить алгоритмичискую сложность можно используя обрезок строки (44 строчка) как ключ в словаре, и уже за первый проход по
+        # TODO: файлу посчитать результат. А дальше уже можно параметризовать границу отрезания строки, чтобы считать события по разным промежуткам времени.
+        # TODO: Давайте попробуем сделать так
 
     def file_write(self):
         new_file = open(self.new_file_name, mode='w', encoding='utf8')

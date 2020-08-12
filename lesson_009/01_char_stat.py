@@ -29,7 +29,7 @@ file_name = 'voyna-i-mir.txt'
 
 
 class Text:
-    alphabet = list(range(0x0041, 0x005B)) + list(range(0x0061, 0x007B)) + list(range(0x0410, 0x0450))
+    alphabet = list(range(0x0041, 0x005B)) + list(range(0x0061, 0x007B)) + list(range(0x0410, 0x0450))  # TODO: можно сделать более человекочитаемо с использованием ord/chr
 
     def __init__(self, file_name):
         self.file_name = file_name
@@ -60,7 +60,7 @@ class Text:
 file = Text('voyna-i-mir.txt')
 file.count_letters()
 file.print_table()
-
+# TODO: можно доделывать
 # После зачета первого этапа нужно сделать упорядочивание статистики
 #  - по частоте по возрастанию
 #  - по алфавиту по возрастанию
