@@ -29,23 +29,16 @@ file_name = 'voyna-i-mir.txt'
 
 
 class Text:
-    alphabet = list(range(0x0041, 0x005B)) + list(range(0x0061, 0x007B)) + list(range(0x0410, 0x0450))  # TODO: можно сделать более человекочитаемо с использованием ord/chr
+    alphabet = list(range(ord('A'), ord('Z') + 1)) + list(range(ord('a'), ord('z') + 1)) + list(
+        range(ord('А'), ord('я') + 1))
 
     def __init__(self, file_name):
         self.file_name = file_name
         self.total_quant = []
         self.letter_quant = ()
-        self.sum = 0
-
-    def count_letters(self):
-        with open(file_name, 'r', encoding='cp1251') as file:
-            total = file.read()
-            for letter in self.alphabet:
-                self.letter_quant = (chr(letter), total.count(chr(letter)))
-                self.total_quant.append(self.letter_quant)
-                self.total_quant.sort(key=lambda i: i[1], reverse=True)
 
     def print_table(self):
+        self.sum = 0
         print('+{txt:-<6}+{txt:-<10}+'.format(txt=''))
         print('|{txt1:^6}|{txt2:^10}|'.format(txt1='Буква', txt2='Частота'))
         print('+{txt:-<6}+{txt:-<10}+'.format(txt=''))
@@ -56,12 +49,46 @@ class Text:
         print('|{txt1:^6}|{txt2:^10}|'.format(txt1='Итого', txt2=self.sum))
         print('+{txt:-<6}+{txt:-<10}+'.format(txt=''))
 
+    def count_letters(self):
+        with open(file_name, 'r', encoding='cp1251') as file:
+            total = file.read()
+            for letter in self.alphabet:
+                self.letter_quant = (chr(letter), total.count(chr(letter)))
+                self.total_quant.append(self.letter_quant)
+
+    def alph_up(self):
+        self.total_quant = []
+        self.count_letters()
+        self.total_quant.sort(key=lambda i: i[0], reverse=False)
+        self.print_table()
+
+    def freq_up(self):
+        self.total_quant = []
+        self.count_letters()
+        self.total_quant.sort(key=lambda i: i[1], reverse=False)
+        self.print_table()
+
+    def freq_down(self):
+        self.total_quant = []
+        self.count_letters()
+        self.total_quant.sort(key=lambda i: i[1], reverse=True)
+        self.print_table()
+
+    def alph_down(self):
+        self.total_quant = []
+        self.count_letters()
+        self.total_quant.sort(key=lambda i: i[0], reverse=True)
+        self.print_table()
+
 
 file = Text('voyna-i-mir.txt')
-file.count_letters()
-file.print_table()
-# TODO: можно доделывать
+file.freq_down()
+file.freq_up()
+file.alph_up()
+file.alph_down()
+
 # После зачета первого этапа нужно сделать упорядочивание статистики
 #  - по частоте по возрастанию
 #  - по алфавиту по возрастанию
 #  - по алфавиту по убыванию
+

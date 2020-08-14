@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from collections import Counter
 
 # Имеется файл events.txt вида:
 #
@@ -32,27 +33,23 @@ class Parser:
     def __init__(self, file_name, new_file_name):
         self.file_name = file_name
         self.new_file_name = new_file_name
-        self.nok_quant = []
-        self.pair_list = []
         self.new_pair_list = []
 
     def count_events(self):
-        # TODO: алгоритм работает, но алгоритм очень не оптимальный
+        a = []
         with open(file_name, 'r', encoding='cp1251') as file:
-            for line in file:
+            for i, line in enumerate(file):
                 if line.count('NOK'):
                     line = line[0:17] + ']'
-                    self.nok_quant.append(line)
-            for line in self.nok_quant:
-                pair = line + ' ' + str(self.nok_quant.count(line))  # TODO: операция count() под капотом пробегает по всему списку строк, да еще каждую сравнивает посимвольно с line
-                self.pair_list.append(pair)
-            for pair in self.pair_list:
-                if pair not in self.new_pair_list:  # TODO: операция in тоже пробегает по всему списку
-                    self.new_pair_list.append(pair)
+                    a.append(line)
+                    a.append(str(line) + ' ' + str(a.count(line)))
+            i = 1
+            while i < (len(a)):
+                if a[i - 1][0:18] != a[i][0:18]:
+                    self.new_pair_list.append(a[i - 1])
+                i += 1
+            print('\n'.join(self.new_pair_list))
             return str('\n'.join(self.new_pair_list))
-        # TODO: Уменьшить алгоритмичискую сложность можно используя обрезок строки (44 строчка) как ключ в словаре, и уже за первый проход по
-        # TODO: файлу посчитать результат. А дальше уже можно параметризовать границу отрезания строки, чтобы считать события по разным промежуткам времени.
-        # TODO: Давайте попробуем сделать так
 
     def file_write(self):
         new_file = open(self.new_file_name, mode='w', encoding='utf8')
@@ -64,7 +61,10 @@ file = Parser('events.txt', 'new_events.txt')
 file.count_events()
 file.file_write()
 
+#TODO С ключами словаря у меня не получается посчитать количество повторений ключей за минуту за один проход. Сделал, как смог.
+#TODO Почему то не происходит запись в файл, хотя выдает код процесса 0. Даже при запуске первого рабочего коммита.
+
+
 # После зачета первого этапа нужно сделать группировку событий
 #  - по часам
 #  - по месяцу
-#  - по году
