@@ -40,7 +40,20 @@ import shutil
 #   см https://refactoring.guru/ru/design-patterns/template-method
 #   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
 
-# TODO здесь ваш код
+path = 'C:\\Users\\asus\\PycharmProjects\\python_base1\\lesson_009\\icons'
+count = 0
+for dirpath, dirnames, filenames in os.walk(path):
+    print(dirpath, dirnames, filenames)
+    count += len(filenames)
+    print(count)
+    for file in filenames:
+        full_file_path = os.path.join(dirpath, file)
+        secs = os.path.getctime(full_file_path)
+        file_time = time.gmtime(secs)
+        print(full_file_path, secs, file_time)
+        print(os.path.dirname(__file__))
+        print(os.path.dirname(path))
+
 
 # Усложненное задание (делать по желанию)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
