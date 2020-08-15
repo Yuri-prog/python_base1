@@ -4,6 +4,7 @@ import os
 import time
 import shutil
 
+
 # Нужно написать скрипт для упорядочивания фотографий (вообще любых файлов)
 # Скрипт должен разложить файлы из одной папки по годам и месяцам в другую.
 # Например, так:
@@ -40,20 +41,33 @@ import shutil
 #   см https://refactoring.guru/ru/design-patterns/template-method
 #   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
 
-path = 'C:\\Users\\asus\\PycharmProjects\\python_base1\\lesson_009\\icons'
-count = 0
-for dirpath, dirnames, filenames in os.walk(path):
-    print(dirpath, dirnames, filenames)
-    count += len(filenames)
-    print(count)
-    for file in filenames:
-        full_file_path = os.path.join(dirpath, file)
-        secs = os.path.getctime(full_file_path)
-        file_time = time.gmtime(secs)
-        print(full_file_path, secs, file_time)
-        print(os.path.dirname(__file__))
-        print(os.path.dirname(path))
+class SortFile:
+    output_path = 'C:\\Users\\asus\\PycharmProjects\\python_base1\\lesson_009\\icons'
+    target_path = 'C:\\Users\\asus\\PycharmProjects\\python_base1\\lesson_009\\icons_by_year'
 
+    def __init__(self, output_dir, target_dir):
+        self.output_dir = output_dir
+        self.target_dir = target_dir
+
+    def __str__(self):
+        return 'Файлы рассортированы по дате'
+
+    def copy_file(self, output_path, target_path):
+        for dirpath, dirnames, filenames in os.walk(output_path):
+            print(dirpath, dirnames, filenames)
+        for file in filenames:
+            full_file_path = os.path.join(dirpath, file)
+            secs = os.path.getmtime(full_file_path)
+            file_time = time.gmtime(secs)
+            new_dir_path = os.path.join(str(target_path), str(file_time[0]), str(file_time[1]), str(file_time[2]))
+            if (os.path.isdir(new_dir_path)) is False:
+                os.makedirs(new_dir_path)
+            shutil.copyfile(full_file_path, os.path.join(new_dir_path, file))
+
+
+file = SortFile('icons', 'icons_by_year')
+file.copy_file(file.output_path, file.target_path)
+print(file)
 
 # Усложненное задание (делать по желанию)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
