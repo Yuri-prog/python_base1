@@ -29,6 +29,7 @@ file_name = 'events.txt'
 
 
 class Parser:
+    new_pair_dict = {}
 
     def __init__(self, file_name, new_file_name):
         self.file_name = file_name
@@ -36,19 +37,16 @@ class Parser:
         self.new_pair_list = []
 
     def count_events(self):
-        a = []
         with open(file_name, 'r', encoding='cp1251') as file:
             for i, line in enumerate(file):
                 if line.count('NOK'):
                     line = line[0:17] + ']'
-                    a.append(line)
-                    a.append(str(line) + ' ' + str(a.count(line)))
-            i = 1
-            while i < (len(a)):  # TODO: здесь всё равно происходит проход по всем ранее найденным строчками
-                if a[i - 1][0:18] != a[i][0:18]:
-                    self.new_pair_list.append(a[i - 1])
-                i += 1
-            print('\n'.join(self.new_pair_list))
+                    if line not in self.new_pair_dict:
+                        self.new_pair_dict[line] = 1
+                    else:
+                        self.new_pair_dict[line] += 1
+            for key, value in self.new_pair_dict.items():
+                self.new_pair_list.append(key + ' ' + str(value))
             return str('\n'.join(self.new_pair_list))
 
     def file_write(self):
@@ -58,52 +56,43 @@ class Parser:
 
 
 file = Parser('events.txt', 'new_events.txt')
-# file.count_events()
-# file.file_write()
+file.count_events()
+file.file_write()
 
-#TODO С ключами словаря у меня не получается посчитать количество повторений ключей за минуту за один проход. Сделал, как смог.
-
-# TODO: давайте попробуем решить задачу попроще.
-# TODO: надо посчитать ноки для каждой цифры:
-payload = {
-    '1 a': 'NOK',
-    '1 b': 'NOK',
-    '1 c': 'OK',
-    '2 d': 'NOK',
-    '2 e': 'NOK',
-    '2 f': 'OK',
-    '2 g': 'NOK',
-    '3 h': 'NOK',
-    '3 i': 'OK',
-    '3 j': 'OK',
-    '1 k': 'NOK',
-    '3 l': 'NOK',
-    '2 m': 'OK',
-    '2 n': 'NOK',
-}
-quant = 1
-
-result = {}  # TODO: результат записать сюда
-
-for key, value in payload.items():
-
-    num = key[0]  # TODO: num можно использовать как ключ для result
-    # TODO: дальше ваш код
-    # TODO: Извините, все равно непонятно. Если значениями словаря является счетчик, он считает весь цикл и после первой цифры
-    # TODO получаются неправильные значения. То есть после каждой цифры его надо обнулять, при этом он перестает считать.
-    # TODO Для того, чтобы работал, нужно запускать цикл заново для каждой цифры, либо для каждой цифры заводить свою
-    # TODO переменную счетчика. Как по-другому?
-
-    # TODO: Если мы нашли NOK, и ключа нет в словаре, то надо по этому значению записать 1.
-    # TODO: Если ключ есть, то прибавить значение по этому ключу на 1.
-    if value == 'NOK':
-        result[key[0]] = quant
-        quant += 1
-        print(result)
-quant = 1
-
-print(result)
-
-# После зачета первого этапа нужно сделать группировку событий
-#  - по часам
-#  - по месяцу
+# payload = {
+#     '1 a': 'NOK',
+#     '1 b': 'NOK',
+#     '1 c': 'OK',
+#     '2 d': 'NOK',
+#     '2 e': 'NOK',
+#     '2 f': 'OK',
+#     '2 g': 'NOK',
+#     '3 h': 'NOK',
+#     '3 i': 'OK',
+#     '3 j': 'OK',
+#     '1 k': 'NOK',
+#     '3 l': 'NOK',
+#     '2 m': 'OK',
+#     '2 n': 'NOK',
+# }
+#
+#
+# result = {}
+#
+# for key, value in payload.items():
+#
+#     num = key[0]
+#
+#     if value == 'NOK':
+#         if  num not in result:
+#             result[num] = 1
+#         else:
+#             result[num] += 1
+#         print(result)
+#
+#
+# print(result)
+#
+# # После зачета первого этапа нужно сделать группировку событий
+# #  - по часам
+# #  - по месяцу
