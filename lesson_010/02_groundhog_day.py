@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from random import randint
 # День сурка
 #
 # Напишите функцию one_day() которая возвращает количество кармы от 1 до 7
@@ -19,6 +19,18 @@
 
 ENLIGHTENMENT_CARMA_LEVEL = 777
 
-# TODO здесь ваш код
+def one_day():
+    carma = 0
+    while True:
+     a = randint(1, 8)
+     carma += a
+     print(carma)
+     if carma > ENLIGHTENMENT_CARMA_LEVEL:
+        break
+    b = randint
 
+
+try:
+    one_day()
+exept
 # https://goo.gl/JnsDqu
