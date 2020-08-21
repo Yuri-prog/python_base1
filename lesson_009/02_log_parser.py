@@ -26,7 +26,6 @@ from collections import Counter
 #   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
 
 file_name = 'events.txt'
-new_file_name = 'new_events.txt'
 
 
 class Parser:
@@ -74,7 +73,7 @@ class Parser:
 
 
 file = Parser('events.txt', 'new_events.txt')
-time = 'hour'
+time = 'month'
 write_list = file.count_events(time)
 file.file_write()
 
@@ -115,4 +114,3 @@ file.file_write()
 # # После зачета первого этапа нужно сделать группировку событий
 # #  - по часам
 # #  - по месяцу
-
