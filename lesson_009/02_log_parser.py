@@ -37,51 +37,46 @@ class Parser:
         self.file_name = file_name
         self.new_file_name = new_file_name
         self.new_pair_list = []
+        self.line = ''
+
+    def count_time(self):
+        if self.line not in self.new_pair_dict:
+            self.new_pair_dict[self.line] = 1
+        else:
+            self.new_pair_dict[self.line] += 1
 
     def count_events(self, time):
         with open(file_name, 'r', encoding='cp1251') as file:
-            for line in file:
-                if 'NOK' in line:
-                    def count_time():  # TODO: дефы внутри дефов без веской причины использовать не нужно.
-                                       # TODO: тут веской причины нет.
-                        if line not in self.new_pair_dict:
-                            self.new_pair_dict[line] = 1
-                        else:
-                            self.new_pair_dict[line] += 1
-
+            for self.line in file:
+                if 'NOK' in self.line:
                     if time == 'min':
-                        line = line[0:17] + ']'
-                        count_time()
+                        self.line = self.line[0:17] + ']'
+                        self.count_time()
                     elif time == 'hour':
-                        line = line[0:14] + ']'
-                        count_time()
+                        self.line = self.line[0:14] + ']'
+                        self.count_time()
                     elif time == 'month':
-                        line = line[0:8] + ']'
-                        count_time()
+                        self.line = self.line[0:8] + ']'
+                        self.count_time()
                     else:
                         print('Ошибка ввода')
                         break
                 else:
                     continue
             for key, value in self.new_pair_dict.items():
-                self.new_pair_list.append(key + ' ' + str(value))  # TODO: а дублирование происходит потому что этот массив заполняется два раза.
-                                                                   # TODO: Попробуйте найти, где именно. 
+                self.new_pair_list.append(key + ' ' + str(value))
             return str('\n'.join(self.new_pair_list))
 
     def file_write(self):
         new_file = open(self.new_file_name, mode='w', encoding='utf8')
-        new_file.write(self.count_events(self.time))
+        new_file.write(write_list)
         new_file.close()
 
 
 file = Parser('events.txt', 'new_events.txt')
-file.count_events('hour')
+time = 'hour'
+write_list = file.count_events(time)
 file.file_write()
-
-#TODO: Вопрос. Почему пишет Ошибку ввода и делает двойную запись в файл?
-# TODO: Вы написали код, который выводит это сообщение, и спрашиваете меня, почему он его выводит :)
-# TODO: Обратите внимание на все вызовы count_events. time и self.time - это разные переменные
-
 
 # payload = {
 #     '1 a': 'NOK',
