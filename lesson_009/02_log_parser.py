@@ -29,13 +29,12 @@ file_name = 'events.txt'
 
 
 class Parser:
-    new_pair_dict = {}  # TODO: сделайте это полем инстенса. В полях класса оно не нужно.
-    time = ''  # TODO: а это вообще не нужно, получается
 
     def __init__(self, file_name, new_file_name):
         self.file_name = file_name
         self.new_file_name = new_file_name
         self.new_pair_list = []
+        self.new_pair_dict = {}
         self.line = ''
 
     def count_time(self):
