@@ -1,33 +1,4 @@
 # -*- coding: utf-8 -*-
-
-from collections import Counter
-
-# Имеется файл events.txt вида:
-#
-# [2018-05-17 01:55:52.665804] NOK
-# [2018-05-17 01:56:23.665804] OK
-# [2018-05-17 01:56:55.665804] OK
-# [2018-05-17 01:57:16.665804] NOK
-# [2018-05-17 01:57:58.665804] OK
-# ...
-#
-# Напишите программу, которая считывает файл
-# и выводит число событий NOK за каждую минуту в другой файл в формате
-#
-# [2018-05-17 01:57] 1234
-# [2018-05-17 01:58] 4321
-# ...
-#
-# Входные параметры: файл для анализа, файл результата
-#
-# Требования к коду: он должен быть готовым к расширению функциональности - делать сразу на классах.
-# Для этого пригодится шаблон проектирование "Шаблонный метод"
-#   см https://refactoring.guru/ru/design-patterns/template-method
-#   и https://gitlab.skillbox.ru/vadim_shandrinov/python_base_snippets/snippets/4
-
-
-
-# -*- coding: utf-8 -*-
 from random import randint
 
 # День сурка
@@ -48,13 +19,13 @@ from random import randint
 # базовых встроенных исключений.
 
 ENLIGHTENMENT_CARMA_LEVEL = 777
-expression = ''
+expression_list = []
 
 
 class IamGodError(Exception):
 
     def __str__(self):
-        pass
+        print('Я Бог!')
 
 
 class DrunkError(Exception):
@@ -90,44 +61,42 @@ carma = 0
 
 def one_day():
     global carma
-    global expression
     a = randint(1, 8)
     carma += a
     print(carma)
-    if carma > ENLIGHTENMENT_CARMA_LEVEL:
+    if carma >= ENLIGHTENMENT_CARMA_LEVEL:
         print('Уровень кармы 777!')
     else:
         b = randint(1, 14)
-        print('b = ', b)
         if b == 1:
-            expression = 'Я бог'
-            file_write(expression)
+            expression = f'Я Бог! при уровне кармы {carma}'
+            expression_list.append(expression)
             raise IamGodError
         elif b == 2:
-            expression = 'Я пьян!'
-            file_write(expression)
+            expression = f'Я пьян!при уровне кармы {carma}'
+            expression_list.append(expression)
             raise DrunkError
         elif b == 3:
-            expression = 'Я разбился в автокатастрофе!'
-            file_write(expression)
+            expression = f'Я разбился в автокатастрофе! при уровне кармы {carma}'
+            expression_list.append(expression)
             raise CarCrashError
         elif b == 4:
-            expression = 'Я объелся!'
-            file_write(expression)
+            expression = f'Я объелся! при уровне кармы {carma}'
+            expression_list.append(expression)
             raise GluttonyError
         elif b == 5:
-            expression = 'Я в депрессии!'
-            file_write(expression)
+            expression = f'Я в депрессии! при уровне кармы {carma}'
+            expression_list.append(expression)
             raise DepressionError
         elif b == 6:
-            expression = 'Я самоубился!'
-            file_write(expression)
+            expression = f'Я самоубился! при уровне кармы {carma}'
+            expression_list.append(expression)
             raise SuicideError
     return carma
 
 file_name = 'log.txt'
 
-def file_write(expression):
+def file_write(expression):  #Запись в лог-файл
     file = open(file_name, mode='w', encoding='utf8')
     file.write(expression)
     file.close()
@@ -135,25 +104,20 @@ def file_write(expression):
 
 while True:
     try:
-        if one_day() > ENLIGHTENMENT_CARMA_LEVEL:
+        if one_day() >= ENLIGHTENMENT_CARMA_LEVEL:
             break
     except IamGodError:
-        print('Я бог')
+        print(f'Я Бог! при уровне кармы {carma}')
     except DrunkError:
-       print('Я пьян!')
+        print(f'Я пьян! при уровне кармы {carma}')
     except CarCrashError:
-        print('Я разбился в автокатастрофе!')
+        print(f'Я разбился в автокатастрофе! при уровне кармы {carma}')
     except GluttonyError:
-        print('Я объелся!')
+        print(f'Я объелся! при уровне кармы {carma}')
     except DepressionError:
-        print('Я в депрессии!')
+        print(f'Я в депрессии! при уровне кармы {carma}')
     except SuicideError:
-        print('Я самоубился!')
-
-file = open(file_name, mode='w', encoding='utf8')
-file.write('ggggggggddddddddddddddd')
-file.close()
+        print(f'Я самоубился! при уровне кармы {carma}')
+    file_write('\n'.join(expression_list) + '\n' + f'Общее количество исключений {len(expression_list)}')
 
 
-# https://goo.gl/JnsDqu
-#one_day()
