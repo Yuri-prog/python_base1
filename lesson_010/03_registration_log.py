@@ -67,7 +67,7 @@ def sort_mistakes():
                     raise ValueError
             good_log.append(line)
             write_file(good_log_name, good_log)
-        except ValueError:
+        except ValueError:  # TODO: давайте ловить исключения при вызове этой функции, а то так получается довольно бессмысленная конструкция
             if age.isdigit() is False:
                 expression = f'Возраст в строке {line} не является числом, ошибка {ValueError}'
                 print(expression)

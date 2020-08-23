@@ -60,7 +60,7 @@ class SuicideError(Exception):
 carma = 0
 
 def one_day():
-    global carma
+    global carma  # TODO: это можно убрать из глобального состояния.
     a = randint(1, 8)
     carma += a
     print(carma)
@@ -92,6 +92,9 @@ def one_day():
             expression = f'Я самоубился! при уровне кармы {carma}'
             expression_list.append(expression)
             raise SuicideError
+    # TODO: не настаиваю, но давайте попробуем сделать красиво.
+    # TODO: положите классы исключений в словарь, в котором цифры будут ключами,
+    # TODO: и райзите эти исключения прямо из словаря, используя b как ключ.
     return carma
 
 file_name = 'log.txt'
