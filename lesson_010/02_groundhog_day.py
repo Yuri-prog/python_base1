@@ -109,3 +109,5 @@ while True:
     except exceptions[6]:
         print(phrases[6])
     file_write('\n'.join(expression_list) + '\n' + f'Общее количество исключений {len(expression_list)}')
+
+# зачет!

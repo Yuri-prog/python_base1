@@ -97,3 +97,4 @@ for line in file:
         print(expression)
         bad_log.append(expression)
     write_file(bad_log_name, bad_log)
+# зачет! 
