@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from random import randint
+from random import randint, shuffle
 
 # День сурка
 #
@@ -57,70 +57,55 @@ class SuicideError(Exception):
     def __str__(self):
         print('Я самоубился!')
 
+
 carma = 0
 
+exceptions = {1: IamGodError, 2: DrunkError, 3: CarCrashError, 4: GluttonyError, 5: DepressionError, 6: SuicideError}
+phrases = {1: f'Я Бог!', 2: f'Я пьян!', 3: f'Я разбился в автокатастрофе! ', 4: f'Я объелся! ', 5: f'Я в депрессии!',
+           6: f'Я самоубился!'}
+
+
+def rasing(b, expression):
+    expression_list.append(expression)
+    raise exceptions[b]
+
+
 def one_day():
-    global carma  # TODO: это можно убрать из глобального состояния.
-    a = randint(1, 8)
-    carma += a
     print(carma)
+    b = randint(1, 14)
     if carma >= ENLIGHTENMENT_CARMA_LEVEL:
         print('Уровень кармы 777!')
     else:
-        b = randint(1, 14)
-        if b == 1:
-            expression = f'Я Бог! при уровне кармы {carma}'
-            expression_list.append(expression)
-            raise IamGodError
-        elif b == 2:
-            expression = f'Я пьян!при уровне кармы {carma}'
-            expression_list.append(expression)
-            raise DrunkError
-        elif b == 3:
-            expression = f'Я разбился в автокатастрофе! при уровне кармы {carma}'
-            expression_list.append(expression)
-            raise CarCrashError
-        elif b == 4:
-            expression = f'Я объелся! при уровне кармы {carma}'
-            expression_list.append(expression)
-            raise GluttonyError
-        elif b == 5:
-            expression = f'Я в депрессии! при уровне кармы {carma}'
-            expression_list.append(expression)
-            raise DepressionError
-        elif b == 6:
-            expression = f'Я самоубился! при уровне кармы {carma}'
-            expression_list.append(expression)
-            raise SuicideError
-    # TODO: не настаиваю, но давайте попробуем сделать красиво.
-    # TODO: положите классы исключений в словарь, в котором цифры будут ключами,
-    # TODO: и райзите эти исключения прямо из словаря, используя b как ключ.
+        if b in range(1, 6):
+            rasing(b, phrases[b])
     return carma
+
 
 file_name = 'log.txt'
 
-def file_write(expression):  #Запись в лог-файл
+
+def file_write(expression):  # Запись в лог-файл
     file = open(file_name, mode='w', encoding='utf8')
     file.write(expression)
     file.close()
 
 
 while True:
+    a = randint(1, 8)
+    carma += a
     try:
         if one_day() >= ENLIGHTENMENT_CARMA_LEVEL:
             break
-    except IamGodError:
-        print(f'Я Бог! при уровне кармы {carma}')
-    except DrunkError:
-        print(f'Я пьян! при уровне кармы {carma}')
-    except CarCrashError:
-        print(f'Я разбился в автокатастрофе! при уровне кармы {carma}')
-    except GluttonyError:
-        print(f'Я объелся! при уровне кармы {carma}')
-    except DepressionError:
-        print(f'Я в депрессии! при уровне кармы {carma}')
-    except SuicideError:
-        print(f'Я самоубился! при уровне кармы {carma}')
+    except exceptions[1]:
+        print(phrases[1])
+    except exceptions[2]:
+        print(phrases[2])
+    except exceptions[3]:
+        print(phrases[3])
+    except exceptions[4]:
+        print(phrases[4])
+    except exceptions[5]:
+        print(phrases[5])
+    except exceptions[6]:
+        print(phrases[6])
     file_write('\n'.join(expression_list) + '\n' + f'Общее количество исключений {len(expression_list)}')
-
-

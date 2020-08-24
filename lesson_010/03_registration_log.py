@@ -39,6 +39,10 @@ good_log_name = 'registrations_good.log'
 bad_log_name = 'registrations_bad.log'
 good_log = []
 bad_log = []
+name = ''
+email = ''
+age = ''
+line = ''
 
 
 def write_file(log_name, log):
@@ -52,43 +56,44 @@ def write_file(log_name, log):
 
 
 def sort_mistakes():
-    file = open(file_name, mode='r', encoding='utf8')
-    for line in file:
-        try:
-            name, email, age = line.split()
-            if name.isalpha() is False:
-                raise NotNameError
-            elif '@' not in email or '.' not in email:
-                raise NotEmailError
-            elif age.isdigit() is False:
-                raise ValueError
-            elif age.isdigit() is True:
-                if int(age) < 10 or int(age) > 99:
-                    raise ValueError
-            good_log.append(line)
-            write_file(good_log_name, good_log)
-        except ValueError:  # TODO: давайте ловить исключения при вызове этой функции, а то так получается довольно бессмысленная конструкция
-            if age.isdigit() is False:
-                expression = f'Возраст в строке {line} не является числом, ошибка {ValueError}'
-                print(expression)
-                bad_log.append(expression)
-            elif int(age) < 10 or int(age) > 99:
-                expression = f'Возраст  в строке {line} не находится в допустимых пределах, ошибка {ValueError}'
-                print(expression)
-                bad_log.append(expression)
-            else:
-                expression = f'Несоответствие количества элементов в строке {line}, ошибка {ValueError}'
-                print(expression)
-                bad_log.append(expression)
-        except NotNameError:
-            expression = f'Имя {name} содержит не только буквы, ошибка {NotNameError}'
-            print(expression)
-            bad_log.append(expression)
-        except NotEmailError:
-            expression = f'E-mail {email} не содержит элементов @ или ., ошибка {NotEmailError}'
-            print(expression)
-            bad_log.append(expression)
-        write_file(bad_log_name, bad_log)
+    name, email, age = line.split()
+    if name.isalpha() is False:
+        raise NotNameError
+    elif '@' not in email or '.' not in email:
+        raise NotEmailError
+    elif age.isdigit() is False:
+        raise ValueError
+    elif age.isdigit() is True:
+        if int(age) < 10 or int(age) > 99:
+            raise ValueError
+    good_log.append(line)
+    write_file(good_log_name, good_log)
+    return line
 
 
-sort_mistakes()
+file = open(file_name, mode='r', encoding='utf8')
+for line in file:
+    try:
+        sort_mistakes()
+    except ValueError:
+        if age.isdigit() is False:
+            expression = f'Возраст в строке {line} не является числом, ошибка {ValueError}'
+            print(expression)
+            bad_log.append(expression)
+        elif int(age) < 10 or int(age) > 99:
+            expression = f'Возраст  в строке {line} не находится в допустимых пределах, ошибка {ValueError}'
+            print(expression)
+            bad_log.append(expression)
+        else:
+            expression = f'Несоответствие количества элементов в строке {line}, ошибка {ValueError}'
+            print(expression)
+            bad_log.append(expression)
+    except NotNameError:
+        expression = f'Имя  в строке {line} содержит не только буквы, ошибка {NotNameError}'
+        print(expression)
+        bad_log.append(expression)
+    except NotEmailError:
+        expression = f'E-mail в строке {line} не содержит элементов @ или ., ошибка {NotEmailError}'
+        print(expression)
+        bad_log.append(expression)
+    write_file(bad_log_name, bad_log)
