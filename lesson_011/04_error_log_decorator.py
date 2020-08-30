@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 
 # Написать декоратор, который будет логировать (записывать в лог файл)
 # ошибки из декорируемой функции и выбрасывать их дальше.
@@ -7,13 +8,25 @@
 # Формат лога: <имя функции> <параметры вызова> <тип ошибки> <текст ошибки>
 # Лог файл открывать каждый раз при ошибке в режиме 'a'
 
+file_name = 'function_errors.log'
+
 
 def log_errors(func):
-    pass
-    # TODO здесь ваш код
+    def wrapper(*args):
+        try:
+            func(*args)
+        except Exception as exc:
+            print(f'Invalid format: {exc}')
+            log.append(f' {func.__name__:15} {str(args):32} {str(exc.__class__):25} {exc}')
+        file = open(file_name, mode='w', encoding='utf8')
+        file.write(str('\n'.join(log)))
+        file.close()
+
+    return wrapper
 
 
 # Проверить работу на следующих функциях
+
 @log_errors
 def perky(param):
     return param / 0
@@ -38,13 +51,12 @@ lines = [
     'Земфира 86',
     'Равшан wmsuuzsxi@mail.ru 35',
 ]
-for line in lines:
-    try:
-        check_line(line)
-    except Exception as exc:
-        print(f'Invalid format: {exc}')
-perky(param=42)
 
+log = []
+for line in lines:
+    print(check_line(line))
+
+# perky(42)
 
 # Усложненное задание (делать по желанию).
 # Написать декоратор с параметром - именем файла

@@ -14,4 +14,27 @@
 #
 # [2018-05-17 01:57] 1234
 
-# TODO здесь ваш код
+file_name = 'events.txt'
+
+
+def count_events():
+    new_pair_dict = {}
+    new_pair_list = []
+    with open(file_name, 'r', encoding='cp1251') as file:
+        for line in file:
+            if 'NOK' in line:
+                line = line[0:17] + ']'
+                if line not in new_pair_dict:
+                    new_pair_dict[line] = 1
+                else:
+                    new_pair_dict[line] += 1
+            else:
+                continue
+        for key, value in new_pair_dict.items():
+            new_pair_list.append(key + ' ' + str(value))
+        yield str('\n'.join(new_pair_list))
+
+
+grouped_events = count_events()
+for group_time in grouped_events:
+    print(f'{group_time}')
