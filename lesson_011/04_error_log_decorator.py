@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import logging
 
 # Написать декоратор, который будет логировать (записывать в лог файл)
 # ошибки из декорируемой функции и выбрасывать их дальше.
@@ -17,7 +16,7 @@ def log_errors(func):
             func(*args)
         except Exception as exc:
             print(f'Invalid format: {exc}')
-            log.append(f' {func.__name__:15} {str(args):32} {str(exc.__class__):25} {exc}')
+            log.append(f' {func.__name__:15} {str(args)[1:-2]:32} {str(exc.__class__):25} {exc}')
         file = open(file_name, mode='w', encoding='utf8')
         file.write(str('\n'.join(log)))
         file.close()
@@ -45,7 +44,7 @@ def check_line(line):
 
 lines = [
     'Ярослав bxh@ya.ru 600',
-    'Земфира tslzp@mail.ru 52',
+    'Земфира tslz@pmail.ru 52',
     'Тролль nsocnzas.mail.ru 82',
     'Джигурда wqxq@gmail.com 29',
     'Земфира 86',
@@ -54,7 +53,7 @@ lines = [
 
 log = []
 for line in lines:
-    print(check_line(line))
+    check_line(line)
 
 # perky(42)
 
