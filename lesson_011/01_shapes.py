@@ -28,3 +28,5 @@ draw_triangle = get_polygon(n=5)
 draw_triangle(point=sd.get_point(200, 200), angle=13, length=100)
 
 sd.pause()
+
+# зачет!

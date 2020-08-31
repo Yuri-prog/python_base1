@@ -32,7 +32,9 @@ def count_events():
                 continue
         for key, value in new_pair_dict.items():
             new_pair_list.append(key + ' ' + str(value))
-        yield str('\n'.join(new_pair_list))
+        yield str('\n'.join(new_pair_list))  # TODO: так не интересно. Из генератора выдается единственная строка, и смысла от генератора в общем-то нет.
+                                             # TODO: Сделайте так, чтобы за очередной промежуток времени результат выдавался "на лету", то есть до того, как станут известны результаты для
+                                             # TODO: следующих промежутков.
 
 
 grouped_events = count_events()

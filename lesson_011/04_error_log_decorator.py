@@ -14,7 +14,7 @@ def log_errors(func):
     def wrapper(*args):
         try:
             func(*args)
-        except Exception as exc:
+        except Exception as exc:  # TODO: исключение нужно рерайзнуть дальше
             print(f'Invalid format: {exc}')
             log.append(f' {func.__name__:15} {str(args)[1:-2]:32} {str(exc.__class__):25} {exc}')
         file = open(file_name, mode='w', encoding='utf8')
