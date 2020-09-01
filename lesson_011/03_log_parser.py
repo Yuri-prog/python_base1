@@ -18,25 +18,22 @@ file_name = 'events.txt'
 
 
 def count_events():
-    new_pair_dict = {}
-    new_pair_list = []
+    count = 0
+    line_1 = ''
     with open(file_name, 'r', encoding='cp1251') as file:
         for line in file:
             if 'NOK' in line:
-                line = line[0:17] + ']'
-                if line not in new_pair_dict:
-                    new_pair_dict[line] = 1
-                else:
-                    new_pair_dict[line] += 1
+                line = line[1:17]
+                if line != line_1 and line_1 != '':
+                    yield line_1, count
+                    count = 0
+                line_1 = line
+                count += 1
             else:
                 continue
-        for key, value in new_pair_dict.items():
-            new_pair_list.append(key + ' ' + str(value))
-        yield str('\n'.join(new_pair_list))  # TODO: так не интересно. Из генератора выдается единственная строка, и смысла от генератора в общем-то нет.
-                                             # TODO: Сделайте так, чтобы за очередной промежуток времени результат выдавался "на лету", то есть до того, как станут известны результаты для
-                                             # TODO: следующих промежутков.
 
 
 grouped_events = count_events()
-for group_time in grouped_events:
-    print(f'{group_time}')
+for group_time, event_count in grouped_events:
+    print(f'[{group_time}] {event_count}')
+

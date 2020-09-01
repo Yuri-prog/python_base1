@@ -46,8 +46,8 @@ class PrimeNumbers:
 
 
 prime_number_iterator = PrimeNumbers(n=10000)
-for number in prime_number_iterator :
-    if number != None:  # TODO: Проверку на None лучше делать с помощью оператора is, да и никаких None итератор возвращать не должен.
+for number in prime_number_iterator:
+    if number:
         print(number)
 
 # TODO после подтверждения части 1 преподователем, можно делать
