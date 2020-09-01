@@ -14,9 +14,9 @@ def log_errors(func):
     def wrapper(*args):
         try:
             func(*args)
-        except Exception as exc:  # TODO: исключение нужно рерайзнуть дальше
-            print(f'Invalid format: {exc}')
+        except Exception as exc:
             log.append(f' {func.__name__:15} {str(args)[1:-2]:32} {str(exc.__class__):25} {exc}')
+            raise
         file = open(file_name, mode='w', encoding='utf8')
         file.write(str('\n'.join(log)))
         file.close()
@@ -44,7 +44,7 @@ def check_line(line):
 
 lines = [
     'Ярослав bxh@ya.ru 600',
-    'Земфира tslz@pmail.ru 52',
+    'Земфира tslzp@mail.ru 52',
     'Тролль nsocnzas.mail.ru 82',
     'Джигурда wqxq@gmail.com 29',
     'Земфира 86',
@@ -53,8 +53,10 @@ lines = [
 
 log = []
 for line in lines:
-    check_line(line)
-
+    try:
+        check_line(line)
+    except Exception as exc:
+        print(f'Invalid format: {exc}')
 # perky(42)
 
 # Усложненное задание (делать по желанию).
