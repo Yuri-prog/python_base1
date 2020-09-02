@@ -47,7 +47,8 @@ class PrimeNumbers:
 
 prime_number_iterator = PrimeNumbers(n=10000)
 for number in prime_number_iterator:
-    if number:
+    if number:  # TODO: еще раз, None итератор возвращать не должен. Чтобы это не происходило, можно код внутри next завернуть в цикл,
+                # TODO: и возвращать оттуда значения только когда найдено простое.
         print(number)
 
 # TODO после подтверждения части 1 преподователем, можно делать

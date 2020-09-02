@@ -16,9 +16,9 @@ def log_errors(func):
             func(*args)
         except Exception as exc:
             log.append(f' {func.__name__:15} {str(args)[1:-2]:32} {str(exc.__class__):25} {exc}')
-            raise
+            raise  # TODO: получается, если произошло исключение, то не произойдет запись в лог
         file = open(file_name, mode='w', encoding='utf8')
-        file.write(str('\n'.join(log)))
+        file.write(str('\n'.join(log)))  # TODO: почему, кстати, log берется откуда-то из космоса? Его надо инициализировать в текущем скоупе.
         file.close()
 
     return wrapper

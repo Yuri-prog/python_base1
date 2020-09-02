@@ -19,7 +19,10 @@ file_name = 'events.txt'
 
 def count_events():
     count = 0
-    line_1 = ''
+    line_1 = ''  # TODO: о тайном смысле line и line_1 приходится догадываться из алгоритма.
+                 # TODO: Нужно их назвать соответственно их смыслу: line - это текущая строка, которую мы достали из файла,
+                 # TODO: а line_1 это строка, с которой сравниваем текущую.
+
     with open(file_name, 'r', encoding='cp1251') as file:
         for line in file:
             if 'NOK' in line:
