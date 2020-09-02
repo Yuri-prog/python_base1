@@ -62,6 +62,8 @@ for line in lines:
 # Усложненное задание (делать по желанию).
 # Написать декоратор с параметром - именем файла
 #
+
+
 # @log_errors('function_errors.log')
 # def func():
 #     pass
