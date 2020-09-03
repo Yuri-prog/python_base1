@@ -37,3 +37,4 @@ def count_events():
 grouped_events = count_events()
 for group_time, event_count in grouped_events:
     print(f'[{group_time}] {event_count}')
+# зачет!

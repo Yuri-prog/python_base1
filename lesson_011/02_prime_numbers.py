@@ -49,6 +49,8 @@ prime_number_iterator = PrimeNumbers(n=10000)
 for number in prime_number_iterator:
     print(number)
 
+# TODO: можно делать дальше
+
 # TODO после подтверждения части 1 преподователем, можно делать
 # Часть 2
 # Теперь нужно создать генератор, который выдает последовательность простых чисел до n
