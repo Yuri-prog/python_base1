@@ -19,18 +19,16 @@ file_name = 'events.txt'
 
 def count_events():
     count = 0
-    line_1 = ''  # TODO: о тайном смысле line и line_1 приходится догадываться из алгоритма.
-                 # TODO: Нужно их назвать соответственно их смыслу: line - это текущая строка, которую мы достали из файла,
-                 # TODO: а line_1 это строка, с которой сравниваем текущую.
+    saved_line = ''
 
     with open(file_name, 'r', encoding='cp1251') as file:
-        for line in file:
-            if 'NOK' in line:
-                line = line[1:17]
-                if line != line_1 and line_1 != '':
-                    yield line_1, count
+        for file_line in file:
+            if 'NOK' in file_line:
+                file_line = file_line[1:17]
+                if file_line != saved_line and saved_line != '':
+                    yield saved_line, count
                     count = 0
-                line_1 = line
+                saved_line = file_line
                 count += 1
             else:
                 continue
@@ -39,4 +37,3 @@ def count_events():
 grouped_events = count_events()
 for group_time, event_count in grouped_events:
     print(f'[{group_time}] {event_count}')
-

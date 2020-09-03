@@ -27,29 +27,27 @@ class PrimeNumbers:
         self.number = 1
         self.n = n
         self.prime_numbers = []
-        self.prime = None
+        self.prime = 1
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        self.number += 1
-        if self.number <= self.n:
+        while self.number < self.n:
+            self.number += 1
             for self.prime in self.prime_numbers:
                 if self.number % self.prime == 0:
                     break
             else:
                 self.prime_numbers.append(self.number)
                 return self.prime
-        else:
-            raise StopIteration()
+
+        raise StopIteration()
 
 
 prime_number_iterator = PrimeNumbers(n=10000)
 for number in prime_number_iterator:
-    if number:  # TODO: еще раз, None итератор возвращать не должен. Чтобы это не происходило, можно код внутри next завернуть в цикл,
-                # TODO: и возвращать оттуда значения только когда найдено простое.
-        print(number)
+    print(number)
 
 # TODO после подтверждения части 1 преподователем, можно делать
 # Часть 2

@@ -11,14 +11,17 @@ file_name = 'function_errors.log'
 
 
 def log_errors(func):
+    log = []
+
     def wrapper(*args):
         try:
             func(*args)
         except Exception as exc:
             log.append(f' {func.__name__:15} {str(args)[1:-2]:32} {str(exc.__class__):25} {exc}')
             raise  # TODO: получается, если произошло исключение, то не произойдет запись в лог
+        # TODO: почему не произойдет? Она же реально производится. В предыдущей строке исключение добавляется в log, а в следующих log записывается в файл.
         file = open(file_name, mode='w', encoding='utf8')
-        file.write(str('\n'.join(log)))  # TODO: почему, кстати, log берется откуда-то из космоса? Его надо инициализировать в текущем скоупе.
+        file.write(str('\n'.join(log)))
         file.close()
 
     return wrapper
@@ -44,14 +47,13 @@ def check_line(line):
 
 lines = [
     'Ярослав bxh@ya.ru 600',
-    'Земфира tslzp@mail.ru 52',
+    'Земфира tslz@pmail.ru 52',
     'Тролль nsocnzas.mail.ru 82',
     'Джигурда wqxq@gmail.com 29',
     'Земфира 86',
     'Равшан wmsuuzsxi@mail.ru 35',
 ]
 
-log = []
 for line in lines:
     try:
         check_line(line)
