@@ -8,24 +8,19 @@
 # Лог файл открывать каждый раз при ошибке в режиме 'a'
 
 file_name = 'function_errors.log'
+log = []
 
 
 def log_errors(func):
-    log = []  # TODO: мутабельная переменная, объявленная в декораторе, сохраняется между вызовами декорируемой функции.
-              # TODO: подумайте, почему так происходит, и почему это плохо.
-
     def wrapper(*args):
         try:
             func(*args)
         except Exception as exc:
             log.append(f' {func.__name__:15} {str(args)[1:-2]:32} {str(exc.__class__):25} {exc}')
-            raise  # TODO: получается, если произошло исключение, то не произойдет запись в лог
-        # TODO: почему не произойдет? Она же реально производится. В предыдущей строке исключение добавляется в log, а в следующих log записывается в файл.
-        # TODO: потому что код после raise не выполнится.
-        file = open(file_name, mode='w', encoding='utf8')
-        file.write(str('\n'.join(log)))  # TODO: А запись в файл происходит, только когда исключение не случилось.
-                                         # TODO: Соответственно, если последний вызов задекорированной функции произошел с исключением, то мы потеряем информацию об этом исключении.  
-        file.close()
+            file = open(file_name, mode='w', encoding='utf8')
+            file.write(str('\n'.join(log)))
+            file.close()
+            raise
 
     return wrapper
 
@@ -50,7 +45,7 @@ def check_line(line):
 
 lines = [
     'Ярослав bxh@ya.ru 600',
-    'Земфира tslz@pmail.ru 52',
+    'Земфира tslzp@mail.ru 52',
     'Тролль nsocnzas.mail.ru 82',
     'Джигурда wqxq@gmail.com 29',
     'Земфира 86',
