@@ -8,7 +8,8 @@
 # Лог файл открывать каждый раз при ошибке в режиме 'a'
 
 file_name = 'function_errors.log'
-log = []
+log = []  # TODO: моё замечание на первой итерации было про то, что log берется откуда-то из космоса.
+          # TODO: зачем вообще складывать туда сообщения исключений, если
 
 
 def log_errors(func):
@@ -17,7 +18,7 @@ def log_errors(func):
             func(*args)
         except Exception as exc:
             log.append(f' {func.__name__:15} {str(args)[1:-2]:32} {str(exc.__class__):25} {exc}')
-            file = open(file_name, mode='w', encoding='utf8')
+            file = open(file_name, mode='w', encoding='utf8')  # TODO: файл можно открывать в режиме дописывания 'a', и писать туда записи по ходу поступления. 
             file.write(str('\n'.join(log)))
             file.close()
             raise

@@ -130,3 +130,5 @@ gen = prime_numbers_generator(100000)  # второй способ
 result = map(lucky_number, gen)
 for i in result:
     print(i)
+
+# зачет!
