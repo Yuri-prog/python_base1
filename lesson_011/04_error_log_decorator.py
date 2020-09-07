@@ -8,8 +8,6 @@
 # Лог файл открывать каждый раз при ошибке в режиме 'a'
 
 file_name = 'function_errors.log'
-log = []  # TODO: моё замечание на первой итерации было про то, что log берется откуда-то из космоса.
-          # TODO: зачем вообще складывать туда сообщения исключений, если
 
 
 def log_errors(func):
@@ -17,9 +15,8 @@ def log_errors(func):
         try:
             func(*args)
         except Exception as exc:
-            log.append(f' {func.__name__:15} {str(args)[1:-2]:32} {str(exc.__class__):25} {exc}')
-            file = open(file_name, mode='w', encoding='utf8')  # TODO: файл можно открывать в режиме дописывания 'a', и писать туда записи по ходу поступления. 
-            file.write(str('\n'.join(log)))
+            file = open(file_name, mode='a', encoding='utf8')
+            file.write(str('\n' f' {func.__name__:15} {str(args)[1:-2]:32} {str(exc.__class__):25} {exc}'))
             file.close()
             raise
 
@@ -46,12 +43,16 @@ def check_line(line):
 
 lines = [
     'Ярослав bxh@ya.ru 600',
-    'Земфира tslzp@mail.ru 52',
+    'Земфира tslz@pmail.ru 52',
     'Тролль nsocnzas.mail.ru 82',
     'Джигурда wqxq@gmail.com 29',
     'Земфира 86',
     'Равшан wmsuuzsxi@mail.ru 35',
 ]
+
+file = open(file_name, mode='w', encoding='utf8')   #обнуление лога
+file.write(str(''))
+file.close()
 
 for line in lines:
     try:
