@@ -69,3 +69,4 @@ for line in lines:
 # @log_errors('function_errors.log')
 # def func():
 #     pass
+# зачет! 
