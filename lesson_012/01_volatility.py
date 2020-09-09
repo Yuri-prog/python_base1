@@ -65,12 +65,62 @@
 #
 # Для плавного перехода к мультипоточности, код оформить в обьектном стиле, используя следующий каркас
 #
-# class <Название класса>:
-#
-#     def __init__(self, <параметры>):
-#         <сохранение параметров>
-#
-#     def run(self):
-#         <обработка данных>
+import os
 
-# TODO написать код в однопоточном/однопроцессорном стиле
+directory = 'trades'
+files = os.listdir(directory)
+volatility_list = []
+null_volatility = []
+
+
+
+class Tickers:
+
+    def __init__(self):
+        self.files = files
+        self.max_volatility = 0
+        self.max_volatility = 0
+        self.null_volatility = []
+
+    def run(self):
+        self.ticker_prices = []
+        file = open(file_name, 'r', encoding='utf8')
+        for line in file:
+            line = (line.split(','))
+            ticker_name = line[0]
+            price = line[2]
+            if price[0].isnumeric():
+                price = round(float(price), 2)
+                self.ticker_prices.append(price)
+        half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
+        volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
+        volatility = round((volatility), 2)
+        if volatility == 0.0:
+            self.null_volatility.append(ticker_name)
+        else:
+            volatility_list.append((ticker_name, volatility))
+            volatility_list.sort(key=lambda i: i[1])
+        self.min_volatility = dict(volatility_list[0:3])
+        self.max_volatility = dict(volatility_list[-3:])
+        return self.max_volatility, self.min_volatility, self.null_volatility
+
+    def print_result(self):
+        print('Максимальная волатильность:')
+        for key, val in self.max_volatility.items():
+            print(key, val)
+        print('Минимальная волатильность:')
+        for key, val in self.min_volatility.items():
+            print(key, val)
+        print('Нулевая волатильность:')
+        print(self.null_volatility)
+
+
+
+file_name = ''
+ticker = Tickers()
+
+for file_name in files:
+    file_name = f'trades\\\{file_name}'
+    ticker.run()
+ticker.print_result()
+
