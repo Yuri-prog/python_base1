@@ -101,7 +101,6 @@ class Tickers:
             volatility_list.append((ticker_name, volatility))
             volatility_list.sort(key=lambda i: i[1])
         self.min_volatility = dict(volatility_list[2::-1])
-        #self.min_volatility = dict(volatility_list[0:3])
         self.max_volatility = dict(volatility_list[:-4:-1])
         return self.max_volatility, self.min_volatility, self.null_volatility
 
