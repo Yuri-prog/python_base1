@@ -66,10 +66,14 @@
 # Для плавного перехода к мультипоточности, код оформить в обьектном стиле, используя следующий каркас
 #
 import os
+# TODO: от глобального состояния нужно избавиться.
+# TODO: сделайте два класса. В одном будет производиться анализ одного файла, в другом
+# TODO: управление инстансами класса и результатами их работы.
+# TODO: В классы из глобального скоупа ничего попадать не должно.
 
 directory = 'trades'
 files = os.listdir(directory)
-volatility_list = []
+volatility_list = []  # TODO: сейчас это и имена файлов приходят в класс откуда-то из космоса. Программа сломается даже если изменятся названия у этих переменных.
 null_volatility = []
 
 
@@ -90,7 +94,8 @@ class Tickers:
             ticker_name = line[0]
             price = line[2]
             if price[0].isnumeric():
-                price = round(float(price), 2)
+                price = round(float(price), 2)  # TODO: вспоминаем вторую домашку. Округлять можно только при выводе. Для вычислений, сравнений
+                                                # TODO: мы не можем себе позволить такую потерю точности
                 self.ticker_prices.append(price)
         half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
         volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
