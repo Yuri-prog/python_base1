@@ -123,10 +123,11 @@ class Tickers:
         print(self.null_volatility)
 
 
-one_file = Volatility()
+one_file = Volatility()  # TODO: нужно создавать по одному инстансу Volatility на каждый файл, и делать это надо внутри Tickers.
+                         # TODO: один иснтанс Volatility должен быть привязан к файлу, и не должен обрабатывать несколько файлов за время своей жизни
 all_files = Tickers()
 
-for file_name in all_files.files:
+for file_name in all_files.files:  # TODO: сделайте это методом Tickers
     file_name = f'trades\\\{file_name}'
     one_file.run()
     all_files.count_in_files(vol=one_file)
