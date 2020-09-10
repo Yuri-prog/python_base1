@@ -66,47 +66,50 @@
 # Для плавного перехода к мультипоточности, код оформить в обьектном стиле, используя следующий каркас
 #
 import os
-# TODO: от глобального состояния нужно избавиться.
-# TODO: сделайте два класса. В одном будет производиться анализ одного файла, в другом
-# TODO: управление инстансами класса и результатами их работы.
-# TODO: В классы из глобального скоупа ничего попадать не должно.
-
-directory = 'trades'
-files = os.listdir(directory)
-volatility_list = []  # TODO: сейчас это и имена файлов приходят в класс откуда-то из космоса. Программа сломается даже если изменятся названия у этих переменных.
-null_volatility = []
 
 
-
-class Tickers:
+class Volatility:
 
     def __init__(self):
-        self.files = files
-        self.max_volatility = 0
-        self.max_volatility = 0
-        self.null_volatility = []
+        self.ticker_name = ''
+        self.volatility = 0
 
     def run(self):
         self.ticker_prices = []
         file = open(file_name, 'r', encoding='utf8')
         for line in file:
             line = (line.split(','))
-            ticker_name = line[0]
+            self.ticker_name = line[0]
             price = line[2]
             if price[0].isnumeric():
-                price = round(float(price), 2)  # TODO: вспоминаем вторую домашку. Округлять можно только при выводе. Для вычислений, сравнений
-                                                # TODO: мы не можем себе позволить такую потерю точности
+                price = float(price)
                 self.ticker_prices.append(price)
         half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
-        volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
-        volatility = round((volatility), 2)
-        if volatility == 0.0:
-            self.null_volatility.append(ticker_name)
+        self.volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
+        self.volatility = round((self.volatility), 2)
+        return self.volatility
+
+
+class Tickers:
+    directory = 'trades'
+    files = os.listdir(directory)
+
+    def __init__(self):
+        self.min_volatility = 0
+        self.max_volatility = 0
+        self.null_volatility = []
+        self.volatility_list = []
+        self.vol = 0
+
+    def count_in_files(self, vol):
+        self.vol = vol
+        if self.vol.volatility == 0.0:
+            self.null_volatility.append(self.vol.ticker_name)
         else:
-            volatility_list.append((ticker_name, volatility))
-            volatility_list.sort(key=lambda i: i[1])
-        self.min_volatility = dict(volatility_list[2::-1])
-        self.max_volatility = dict(volatility_list[:-4:-1])
+            self.volatility_list.append((self.vol.ticker_name, self.vol.volatility))
+            self.volatility_list.sort(key=lambda i: i[1])
+        self.min_volatility = dict(self.volatility_list[2::-1])
+        self.max_volatility = dict(self.volatility_list[:-4:-1])
         return self.max_volatility, self.min_volatility, self.null_volatility
 
     def print_result(self):
@@ -120,12 +123,11 @@ class Tickers:
         print(self.null_volatility)
 
 
+one_file = Volatility()
+all_files = Tickers()
 
-file_name = ''
-ticker = Tickers()
-
-for file_name in files:
+for file_name in all_files.files:
     file_name = f'trades\\\{file_name}'
-    ticker.run()
-ticker.print_result()
-
+    one_file.run()
+    all_files.count_in_files(vol=one_file)
+all_files.print_result()
