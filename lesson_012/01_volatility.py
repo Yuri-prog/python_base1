@@ -70,13 +70,16 @@ import os
 
 class Volatility:
 
-    def __init__(self):
+    def __init__(self, file_name):
         self.ticker_name = ''
         self.volatility = 0
+        self.file_name = file_name
 
     def run(self):
+
         self.ticker_prices = []
-        file = open(file_name, 'r', encoding='utf8')
+
+        file = open(self.file_name, 'r', encoding='utf8')
         for line in file:
             line = (line.split(','))
             self.ticker_name = line[0]
@@ -101,34 +104,32 @@ class Tickers:
         self.volatility_list = []
         self.vol = 0
 
-    def count_in_files(self, vol):
-        self.vol = vol
-        if self.vol.volatility == 0.0:
-            self.null_volatility.append(self.vol.ticker_name)
-        else:
-            self.volatility_list.append((self.vol.ticker_name, self.vol.volatility))
-            self.volatility_list.sort(key=lambda i: i[1])
-        self.min_volatility = dict(self.volatility_list[2::-1])
-        self.max_volatility = dict(self.volatility_list[:-4:-1])
+
+    def count_in_files(self):
+        for file_name in self.files:
+            file_name = f'trades\\\{file_name}'
+            one_file = Volatility(file_name)
+            one_file.run()
+            if one_file.volatility == 0.0:
+                self.null_volatility.append(one_file.ticker_name)
+            else:
+                self.volatility_list.append((one_file.ticker_name, one_file.volatility))
+                self.volatility_list.sort(key=lambda i: i[1])
+            self.min_volatility = dict(self.volatility_list[2::-1])
+            self.max_volatility = dict(self.volatility_list[:-4:-1])
         return self.max_volatility, self.min_volatility, self.null_volatility
 
     def print_result(self):
-        print('Максимальная волатильность:')
-        for key, val in self.max_volatility.items():
-            print(key, val)
-        print('Минимальная волатильность:')
-        for key, val in self.min_volatility.items():
-            print(key, val)
-        print('Нулевая волатильность:')
-        print(self.null_volatility)
 
+            print('Максимальная волатильность:')
+            for key, val in self.max_volatility.items():
+                print(key, val)
+            print('Минимальная волатильность:')
+            for key, val in self.min_volatility.items():
+                print(key, val)
+            print('Нулевая волатильность:')
+            print(self.null_volatility)
 
-one_file = Volatility()  # TODO: нужно создавать по одному инстансу Volatility на каждый файл, и делать это надо внутри Tickers.
-                         # TODO: один иснтанс Volatility должен быть привязан к файлу, и не должен обрабатывать несколько файлов за время своей жизни
 all_files = Tickers()
-
-for file_name in all_files.files:  # TODO: сделайте это методом Tickers
-    file_name = f'trades\\\{file_name}'
-    one_file.run()
-    all_files.count_in_files(vol=one_file)
+all_files.count_in_files()
 all_files.print_result()

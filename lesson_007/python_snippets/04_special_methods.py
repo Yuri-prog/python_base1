@@ -131,7 +131,7 @@ class Backpack:
 
 
 my_backpack = Backpack()
-# my_backpack.add(item='ноутбук')
+#my_backpack.add(item='ноутбук')
 print(bool(my_backpack), len(my_backpack))
 if my_backpack:
     print('Рюкзак не пуст!')

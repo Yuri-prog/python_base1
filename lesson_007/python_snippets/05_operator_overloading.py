@@ -120,7 +120,9 @@ print(my_backpack)
 
 
 # Не обязательно возвращать объект такого же класса(типа)
+
 class Bread:
+
 
     def __str__(self):
         return 'Я хлеб'
@@ -130,7 +132,6 @@ class Bread:
 
 
 class Sausage:
-
     def __str__(self):
         return 'Я колбаса'
 
