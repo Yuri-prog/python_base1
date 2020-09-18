@@ -89,7 +89,7 @@ class Volatility:
                 self.ticker_prices.append(price)
         half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
         self.volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
-        self.volatility = round((self.volatility), 2)
+        self.volatility = round((self.volatility), 2)  # TODO: а потом это сравнится с 0, и кто-то потеряет много денег, доверившись вашей программе :)
         return self.volatility
 
 
