@@ -102,7 +102,6 @@ class Tickers:
         self.max_volatility = 0
         self.null_volatility = []
         self.volatility_list = []
-        self.vol = 0
 
 
     def count_in_files(self):
