@@ -89,7 +89,7 @@ class Volatility:
                 self.ticker_prices.append(price)
         half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
         self.volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
-        self.volatility = round((self.volatility), 2)  # TODO: а потом это сравнится с 0, и кто-то потеряет много денег, доверившись вашей программе :)
+        self.volatility = round((self.volatility), 5)
         return self.volatility
 
 
@@ -98,8 +98,8 @@ class Tickers:
     files = os.listdir(directory)
 
     def __init__(self):
-        self.min_volatility = 0
-        self.max_volatility = 0
+        self.min_volatility = {}
+        self.max_volatility = {}
         self.null_volatility = []
         self.volatility_list = []
 
