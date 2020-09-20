@@ -31,7 +31,7 @@ class Volatility:
     def run(self):
 
         self.ticker_prices = []
-        file = open(self.file_name, 'r', encoding='utf8')
+        file = open(self.file_name, 'r', encoding='utf8')  # TODO: используйте with
         for line in file:
             line = (line.split(','))
             self.ticker_name = line[0]
@@ -41,7 +41,7 @@ class Volatility:
                 self.ticker_prices.append(price)
         half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
         self.volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
-        self.volatility = round((self.volatility), 5)
+        self.volatility = round((self.volatility), 5)  # TODO: округдение тут не нужно
         return self.volatility
 
 
@@ -95,6 +95,12 @@ second.join()
 
 print_result() #TODO: Время выполнения двух потоков в два раза больше времени выполнения одного. Потоки действительно работают
                # параллельно или я что-то не так сделал? Или GIL мешает?
+               # TODO: Питон устроен так, что потоки в нем выполняются не параллельно. Происходит это благодаря GIL.
+               # TODO: Процессор "прыгает" от одного потока к другому, выполняя инструкции из них по чуть-чуть.
 
-endTime = datetime.now()
+# TODO: Но проблема в том, что у вас программа делает два раза одно и то же. Так мы пользы из задания не извлечем.
+# TODO: Cделайте так, чтобы каждый файл обрабатывался в отдельном треде, а класс Tickers пусть управляет тредами и собирает с них данные.
+
+
+endTime = datetime.now()  # TODO: переменные и функции именуются в snake_case
 print("Время выполнения: ", endTime - startTime)
