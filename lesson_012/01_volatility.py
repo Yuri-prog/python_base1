@@ -79,19 +79,17 @@ class Volatility:
 
         self.ticker_prices = []
 
-        file = open(self.file_name, 'r', encoding='utf8')  # TODO: файл нужно закрыть. Чтобы не париться с ручным закрытием файлов, используйте with
-        for line in file:
-            line = (line.split(','))
-            self.ticker_name = line[0]
-            price = line[2]
-            if price[0].isnumeric():
-                price = float(price)
-                self.ticker_prices.append(price)
-        half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
-        self.volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
-        self.volatility = round((self.volatility), 5)  # TODO: Я уже отмечал это в замечаниях к этому заданию.
-                                                       # TODO: Что-либо округлять можно только при выводе, а это значение
-                                                       # TODO: используется далее в сравнениях. Округление тут не нужно вообще.
+        with open(self.file_name, 'r', encoding='utf8') as file:
+            for line in file:
+                line = (line.split(','))
+                self.ticker_name = line[0]
+                price = line[2]
+                if price[0].isnumeric():
+                    price = float(price)
+                    self.ticker_prices.append(price)
+            half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
+            self.volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
+
         return self.volatility
 
 
@@ -121,15 +119,14 @@ class Tickers:
         return self.max_volatility, self.min_volatility, self.null_volatility
 
     def print_result(self):
-            # TODO: 8 пробелов в отступах, а надо 4
-            print('Максимальная волатильность:')
-            for key, val in self.max_volatility.items():
-                print(key, val)
-            print('Минимальная волатильность:')
-            for key, val in self.min_volatility.items():
-                print(key, val)
-            print('Нулевая волатильность:')
-            print(self.null_volatility)
+        print('Максимальная волатильность:')
+        for key, val in self.max_volatility.items():
+            print(key, val)
+        print('Минимальная волатильность:')
+        for key, val in self.min_volatility.items():
+            print(key, val)
+        print('Нулевая волатильность:')
+        print(self.null_volatility)
 
 all_files = Tickers()
 all_files.count_in_files()
