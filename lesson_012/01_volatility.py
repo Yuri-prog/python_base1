@@ -131,3 +131,5 @@ class Tickers:
 all_files = Tickers()
 all_files.count_in_files()
 all_files.print_result()
+
+# зачет!
