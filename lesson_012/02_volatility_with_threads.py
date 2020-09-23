@@ -69,7 +69,8 @@ class Tickers():
         for my_thread in my_threads:
             my_thread.join()
             my_thread.volatility_list.sort(key=lambda i: i[1])
-            self.min_volatility = dict(my_thread.volatility_list[2::-1])
+            self.min_volatility = dict(my_thread.volatility_list[2::-1])  # TODO: зачем это делать для каждого треда? Для доступа к атрибуту класса кстати лучше использовать переменную класса.
+                                                                          # TODO: В нашем случае это Volatility
             self.max_volatility = dict(my_thread.volatility_list[:-4:-1])
         print('Максимальная волатильность:')
         for key, val in self.max_volatility.items():
