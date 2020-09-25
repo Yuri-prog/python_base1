@@ -26,6 +26,7 @@ class Volatility(Thread):
     volatility_list = []
     null_volatility = []
 
+
     def __init__(self, file_name, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.file_name = file_name
@@ -59,8 +60,6 @@ class Tickers():
     def __init__(self):
         self.min_volatility = {}
         self.max_volatility = {}
-        self.null_volatility = []
-        self.volatility_list = []
 
     def main(self):
         my_threads = [Volatility(file_name=file_name) for file_name in self.files]
@@ -68,10 +67,9 @@ class Tickers():
             my_thread.start()
         for my_thread in my_threads:
             my_thread.join()
-            my_thread.volatility_list.sort(key=lambda i: i[1])
-            self.min_volatility = dict(my_thread.volatility_list[2::-1])  # TODO: зачем это делать для каждого треда? Для доступа к атрибуту класса кстати лучше использовать переменную класса.
-                                                                          # TODO: В нашем случае это Volatility
-            self.max_volatility = dict(my_thread.volatility_list[:-4:-1])
+            Volatility.volatility_list.sort(key=lambda i: i[1])
+        self.min_volatility = dict(Volatility.volatility_list[2::-1])
+        self.max_volatility = dict(Volatility.volatility_list[:-4:-1])
         print('Максимальная волатильность:')
         for key, val in self.max_volatility.items():
             print(key, val)
@@ -79,7 +77,7 @@ class Tickers():
         for key, val in self.min_volatility.items():
             print(key, val)
         print('Нулевая волатильность:')
-        print(my_thread.null_volatility)
+        print(Volatility.null_volatility)
 
 
 start_time = datetime.now()
