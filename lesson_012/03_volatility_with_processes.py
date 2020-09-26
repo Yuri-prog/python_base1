@@ -72,7 +72,7 @@ class Tickers():
             for my_process in my_processes:
                 my_process.run()
                 #my_process.start()                #TODO: Команда start() должна запускать функцию run(). Почему у меня функция run() работает, a start() нет?
-                print( my_process)
+                print( my_process)                 # TODO: Покажите мне код, который не работает. Гадание по закомментированному коду - не очень хорошая идея
 
             # for my_process in my_processes:
             #     my_process.join()
