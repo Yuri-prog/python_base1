@@ -24,6 +24,7 @@ downloads/
 eggs/
 .eggs/
 lib/
+new 1.py
 lib64/
 parts/
 sdist/

@@ -5,12 +5,10 @@
 # В очередь можно положить элемент и взять его. Queue гарантирует что потоки не помешают друг другу
 # - операции очереди атомарные и блокирующие.
 
-import time
-from collections import defaultdict
-
 import queue
 import random
 import threading
+from collections import defaultdict
 
 FISH = (None, 'плотва', 'окунь', 'лещ')
 

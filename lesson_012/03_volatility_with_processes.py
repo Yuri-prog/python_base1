@@ -70,12 +70,12 @@ class Tickers():
         my_processes = [Volatility(file_name=file_name) for file_name in self.files]
         if __name__ == '__main__':
             for my_process in my_processes:
-                my_process.run()
-                #my_process.start()                #TODO: Команда start() должна запускать функцию run(). Почему у меня функция run() работает, a start() нет?
+                #my_process.run()
+                my_process.start()                #TODO: Команда start() должна запускать функцию run(). Почему у меня функция run() работает, a start() нет?
                 print( my_process)                 # TODO: Покажите мне код, который не работает. Гадание по закомментированному коду - не очень хорошая идея
 
-            # for my_process in my_processes:
-            #     my_process.join()
+            for my_process in my_processes:
+                my_process.join()
 
                 Volatility.collector.get()
         Volatility.volatility_list.sort(key=lambda i: i[1])
