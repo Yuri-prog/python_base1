@@ -23,9 +23,10 @@ import multiprocessing
 
 
 class Volatility(multiprocessing.Process):
+    # TODO: эти два списка тут не нужны, т.к. в данном случае они будут свои для каждого инстанса, соответственно там всегда будет не более одного значения.
     volatility_list = []
     null_volatility = []
-    collector = multiprocessing.Queue(maxsize=5)
+    collector = multiprocessing.Queue(maxsize=500)
 
     def __init__(self, file_name, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -72,12 +73,17 @@ class Tickers():
             for my_process in my_processes:
                 #my_process.run()
                 my_process.start()                #TODO: Команда start() должна запускать функцию run(). Почему у меня функция run() работает, a start() нет?
-                print( my_process)                 # TODO: Покажите мне код, который не работает. Гадание по закомментированному коду - не очень хорошая идея
+                print( my_process)                # TODO: Тут всё работает, просто все процессы со временем виснут в ожидании, пока не освободится collector.
 
-            for my_process in my_processes:
-                my_process.join()
+            for my_process in my_processes:  # TODO: этот код успевает проделать только пару итераций, пока запущенные процессы не заполнят очередь.
+                                             # TODO: В результате все оставшиеся процессы заблокированы, пока не случится collector.get(),
+
+                my_process.join()            # TODO: а join заблокирован, пока не завершится процесс, у которого он вызван (а он ждет освобождения очереди).
 
                 Volatility.collector.get()
+        # TODO: если увеличить max_size у очереди, то это будет работать.
+        # TODO: Но в данной реализации в collector не всегда будет ровно одно значение при вызове get(), соответственно, можно потерять часть данных.
+        # TODO: Нужно об этом помнить.
         Volatility.volatility_list.sort(key=lambda i: i[1])
         self.min_volatility = dict(Volatility.volatility_list[2::-1])
         self.max_volatility = dict(Volatility.volatility_list[:-4:-1])
