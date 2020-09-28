@@ -23,10 +23,7 @@ import multiprocessing
 
 
 class Volatility(multiprocessing.Process):
-    # TODO: эти два списка тут не нужны, т.к. в данном случае они будут свои для каждого инстанса, соответственно там всегда будет не более одного значения.
-    volatility_list = []
-    null_volatility = []
-    collector = multiprocessing.Queue(maxsize=500)
+
 
     def __init__(self, file_name, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -34,9 +31,11 @@ class Volatility(multiprocessing.Process):
         self.ticker_name = ''
         self.volatility = 0
         self.ticker_prices = []
-
+        self.volatility_list_1 = []
+        self.null_volatility_1 = []
 
     def run(self):
+
         self.file_name = f'trades\\\{self.file_name}'
         with open(self.file_name, 'r', encoding='utf8') as file:
             for line in file:
@@ -49,44 +48,58 @@ class Volatility(multiprocessing.Process):
             half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
             self.volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
             if self.volatility == 0.0:
-                self.null_volatility.append(self.ticker_name)
+                self.null_volatility_1.append(self.ticker_name)
             else:
-                self.volatility_list.append((self.ticker_name, self.volatility))
+                self.volatility_list_1.append((self.ticker_name, self.volatility))
+        print(self.volatility_list_1, self.null_volatility_1)
+        return (self.volatility_list_1)
 
-        return Volatility.collector.put(Volatility.volatility_list)
+
 
 
 
 class Tickers():
     directory = 'trades'
     files = os.listdir(directory)
+    collector = multiprocessing.Queue()
 
     def __init__(self):
         self.min_volatility = {}
         self.max_volatility = {}
-        self.null_volatility = []
 
 
     def main(self):
+
+        volatility_list = []
+        null_volatility = []
         my_processes = [Volatility(file_name=file_name) for file_name in self.files]
         if __name__ == '__main__':
             for my_process in my_processes:
                 #my_process.run()
-                my_process.start()                #TODO: Команда start() должна запускать функцию run(). Почему у меня функция run() работает, a start() нет?
-                print( my_process)                # TODO: Тут всё работает, просто все процессы со временем виснут в ожидании, пока не освободится collector.
+                my_process.start()
+                                                                                            #TODO: Команда start() должна запускать функцию run(). Почему у меня функция run() работает, a start() нет?
+                print( my_process)                                                         # TODO: Тут всё работает, просто все процессы со временем виснут в ожидании, пока не освободится collector.
+                print(my_process.volatility_list_1)
+                                                                                           # TODO: У меня все равно не получается. Очередь сделал без ограничений.
+                                                                                           # TODO: Если я запускаю run, информация из Volatility передается в Tickers и производятся вычисления,
+                                                                                           # TODO: а при запуске start мы видим, что распечатка волатильности в методе класса Volatility выдает значение,
+                                                                                           # TODO: а та же распечатка в методе класса Tickers выдает пустой список. Почему не передается информация?
+                Tickers.collector.put(my_process.volatility_list_1)
+            for my_process in my_processes:                                               # TODO: этот код успевает проделать только пару итераций, пока запущенные процессы не заполнят очередь.
+                                                                                        # TODO: В результате все оставшиеся процессы заблокированы, пока не случится collector.get(),
+                my_process.join()
+                                                                                     # TODO: а join заблокирован, пока не завершится процесс, у которого он вызван (а он ждет освобождения очереди).
 
-            for my_process in my_processes:  # TODO: этот код успевает проделать только пару итераций, пока запущенные процессы не заполнят очередь.
-                                             # TODO: В результате все оставшиеся процессы заблокированы, пока не случится collector.get(),
-
-                my_process.join()            # TODO: а join заблокирован, пока не завершится процесс, у которого он вызван (а он ждет освобождения очереди).
-
-                Volatility.collector.get()
+                Tickers.collector.get()
         # TODO: если увеличить max_size у очереди, то это будет работать.
         # TODO: Но в данной реализации в collector не всегда будет ровно одно значение при вызове get(), соответственно, можно потерять часть данных.
         # TODO: Нужно об этом помнить.
-        Volatility.volatility_list.sort(key=lambda i: i[1])
-        self.min_volatility = dict(Volatility.volatility_list[2::-1])
-        self.max_volatility = dict(Volatility.volatility_list[:-4:-1])
+                volatility_list += my_process.volatility_list_1
+                null_volatility += my_process.null_volatility_1
+            print(volatility_list)
+        volatility_list.sort(key=lambda i: i[1])
+        self.min_volatility = dict(volatility_list[2::-1])
+        self.max_volatility = dict(volatility_list[:-4:-1])
         print('Максимальная волатильность:')
         for key, val in self.max_volatility.items():
             print(key, val)
@@ -94,7 +107,7 @@ class Tickers():
         for key, val in self.min_volatility.items():
             print(key, val)
         print('Нулевая волатильность:')
-        print(Volatility.null_volatility)
+        print(null_volatility)
 
 
 start_time = datetime.now()
