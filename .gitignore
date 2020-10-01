@@ -1,6 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 
 **probe.py
+new 1.py
 
 # User-specific stuff:
 .idea/
@@ -24,7 +25,6 @@ downloads/
 eggs/
 .eggs/
 lib/
-new 1.py
 lib64/
 parts/
 sdist/
