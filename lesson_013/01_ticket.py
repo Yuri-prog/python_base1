@@ -46,3 +46,5 @@ parser.add_argument('--save_to', type=str, help='Путь сохранения �
 args = parser.parse_args()
 print(args.surname)
 make_ticket(args.surname, args.initials, args.from_, args.to, args.date)
+
+# зачет! 
