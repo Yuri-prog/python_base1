@@ -24,6 +24,7 @@ import multiprocessing
 
 class Volatility(multiprocessing.Process):
 
+    # TODO: когда очередь инициализировалась тут, было ок. Но вы её зачем-то отсюда унесли
 
     def __init__(self, file_name, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -59,6 +60,8 @@ class Volatility(multiprocessing.Process):
 
 
 class Tickers():
+
+    # TODO: уберите вообще всё из полей класса, они вас только путают
     directory = 'trades'
     files = os.listdir(directory)
     collector = multiprocessing.Queue()
@@ -73,28 +76,18 @@ class Tickers():
         volatility_list = []
         null_volatility = []
         my_processes = [Volatility(file_name=file_name) for file_name in self.files]
-        if __name__ == '__main__':
+        if __name__ == '__main__':  # TODO: это тут не нужно
             for my_process in my_processes:
-                #my_process.run()
                 my_process.start()
-                                                                                            #TODO: Команда start() должна запускать функцию run(). Почему у меня функция run() работает, a start() нет?
-                print( my_process)                                                         # TODO: Тут всё работает, просто все процессы со временем виснут в ожидании, пока не освободится collector.
-                print(my_process.volatility_list_1)
-                                                                                           # TODO: У меня все равно не получается. Очередь сделал без ограничений.
-                                                                                           # TODO: Если я запускаю run, информация из Volatility передается в Tickers и производятся вычисления,
-                                                                                           # TODO: а при запуске start мы видим, что распечатка волатильности в методе класса Volatility выдает значение,
-                                                                                           # TODO: а та же распечатка в методе класса Tickers выдает пустой список. Почему не передается информация?
-                Tickers.collector.put(my_process.volatility_list_1)
-            for my_process in my_processes:                                               # TODO: этот код успевает проделать только пару итераций, пока запущенные процессы не заполнят очередь.
-                                                                                        # TODO: В результате все оставшиеся процессы заблокированы, пока не случится collector.get(),
+                print(my_process.volatility_list_1)  # TODO: нельзя так просто взять и получить состояние класса из другого процесса через точку. Так вы получаете то значение поля, которое было до вызова start
+                Tickers.collector.put(my_process.volatility_list_1)  # TODO: почему это происходит здесь? Отправлять что-то в очередь нужно из дочернего процесса. А дочерние процессы сейчас про нее вообще ничего не знают.
+                                                                     # TODO: collector надо передавать в Volatility при инициализации, и все данные отправлять-принимаеть только через него.
+            for my_process in my_processes:
                 my_process.join()
-                                                                                     # TODO: а join заблокирован, пока не завершится процесс, у которого он вызван (а он ждет освобождения очереди).
 
-                Tickers.collector.get()
-        # TODO: если увеличить max_size у очереди, то это будет работать.
-        # TODO: Но в данной реализации в collector не всегда будет ровно одно значение при вызове get(), соответственно, можно потерять часть данных.
-        # TODO: Нужно об этом помнить.
-                volatility_list += my_process.volatility_list_1
+                Tickers.collector.get()  # TODO: результат выполнения этой команды уходит вникуда
+
+                volatility_list += my_process.volatility_list_1  # TODO: тут будет не то значение, которое было посчитано в дочернем процессе
                 null_volatility += my_process.null_volatility_1
             print(volatility_list)
         volatility_list.sort(key=lambda i: i[1])
