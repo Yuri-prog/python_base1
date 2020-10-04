@@ -23,8 +23,9 @@ import multiprocessing
 
 
 class Volatility(multiprocessing.Process):
+    volatility_list = []
+    null_volatility = []
 
-    # TODO: когда очередь инициализировалась тут, было ок. Но вы её зачем-то отсюда унесли
 
     def __init__(self, file_name, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -32,11 +33,9 @@ class Volatility(multiprocessing.Process):
         self.ticker_name = ''
         self.volatility = 0
         self.ticker_prices = []
-        self.volatility_list_1 = []
-        self.null_volatility_1 = []
+        #self.collector = multiprocessing.Queue()
 
     def run(self):
-
         self.file_name = f'trades\\\{self.file_name}'
         with open(self.file_name, 'r', encoding='utf8') as file:
             for line in file:
@@ -49,50 +48,36 @@ class Volatility(multiprocessing.Process):
             half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
             self.volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
             if self.volatility == 0.0:
-                self.null_volatility_1.append(self.ticker_name)
+                self.null_volatility.append(self.ticker_name)
             else:
-                self.volatility_list_1.append((self.ticker_name, self.volatility))
-        print(self.volatility_list_1, self.null_volatility_1)
-        return (self.volatility_list_1)
-
-
+                self.volatility_list.append((self.ticker_name, self.volatility))
+        #self.collector.put(self.volatility_list)
+        #print(self.volatility_list)
+        return self.volatility_list, self.null_volatility
 
 
 
 class Tickers():
-
-    # TODO: уберите вообще всё из полей класса, они вас только путают
     directory = 'trades'
     files = os.listdir(directory)
-    collector = multiprocessing.Queue()
 
     def __init__(self):
         self.min_volatility = {}
         self.max_volatility = {}
 
-
     def main(self):
-
-        volatility_list = []
-        null_volatility = []
-        my_processes = [Volatility(file_name=file_name) for file_name in self.files]
-        if __name__ == '__main__':  # TODO: это тут не нужно
-            for my_process in my_processes:
-                my_process.start()
-                print(my_process.volatility_list_1)  # TODO: нельзя так просто взять и получить состояние класса из другого процесса через точку. Так вы получаете то значение поля, которое было до вызова start
-                Tickers.collector.put(my_process.volatility_list_1)  # TODO: почему это происходит здесь? Отправлять что-то в очередь нужно из дочернего процесса. А дочерние процессы сейчас про нее вообще ничего не знают.
-                                                                     # TODO: collector надо передавать в Volatility при инициализации, и все данные отправлять-принимаеть только через него.
-            for my_process in my_processes:
-                my_process.join()
-
-                Tickers.collector.get()  # TODO: результат выполнения этой команды уходит вникуда
-
-                volatility_list += my_process.volatility_list_1  # TODO: тут будет не то значение, которое было посчитано в дочернем процессе
-                null_volatility += my_process.null_volatility_1
-            print(volatility_list)
-        volatility_list.sort(key=lambda i: i[1])
-        self.min_volatility = dict(volatility_list[2::-1])
-        self.max_volatility = dict(volatility_list[:-4:-1])
+        #my_processes = [Volatility(file_name=file_name) for file_name in self.files]
+        my_process = Volatility(file_name='TICKER_AFM9.csv')
+        #for my_process in my_processes:
+        if __name__ == '__main__':
+            my_process.start()
+        #for my_process in my_processes:
+            my_process.join()
+            #my_processes.collector.get()
+            #print(my_process.volatility_list)  #TODO: В данном случае запущен один поток. Я не понимаю, почему он не передает в main() результат выполнения функции run().
+            my_process.volatility_list.sort(key=lambda i: i[1])
+        self.min_volatility = dict(my_process.volatility_list[2::-1])
+        self.max_volatility = dict(my_process.volatility_list[:-4:-1])
         print('Максимальная волатильность:')
         for key, val in self.max_volatility.items():
             print(key, val)
@@ -100,11 +85,11 @@ class Tickers():
         for key, val in self.min_volatility.items():
             print(key, val)
         print('Нулевая волатильность:')
-        print(null_volatility)
+        print(Volatility.null_volatility)
 
 
 start_time = datetime.now()
-all_threads = Tickers()
-all_threads.main()
+all_processes = Tickers()
+all_processes.main()
 end_time = datetime.now()
 print("Время выполнения: ", end_time - start_time)
