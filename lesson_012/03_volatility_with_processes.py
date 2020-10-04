@@ -75,7 +75,11 @@ class Tickers():
             my_process.join()
             #my_processes.collector.get()
             #print(my_process.volatility_list)  #TODO: В данном случае запущен один поток. Я не понимаю, почему он не передает в main() результат выполнения функции run().
-            my_process.volatility_list.sort(key=lambda i: i[1])
+
+                                                # TODO: Не поток, а процесс. И их на самом деле два. Один, который главный, и второй, который стартует при вызове my_process.start().
+
+            my_process.volatility_list.sort(key=lambda i: i[1])  # TODO: почему это не будет работать, я объяснил на предыдущей итерации. Если состояние объекта обрабатывается в другом процессе,
+                                                                 # TODO: то получить измененное состояние нельзя никак иначе кроме как через очередь. 
         self.min_volatility = dict(my_process.volatility_list[2::-1])
         self.max_volatility = dict(my_process.volatility_list[:-4:-1])
         print('Максимальная волатильность:')
