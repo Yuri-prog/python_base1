@@ -85,3 +85,4 @@ all_threads = Tickers()
 all_threads.main()
 end_time = datetime.now()
 print("Время выполнения: ", end_time - start_time)
+# зачет!

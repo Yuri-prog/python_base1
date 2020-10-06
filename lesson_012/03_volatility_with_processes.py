@@ -107,3 +107,5 @@ if __name__ == '__main__':
     tickers = Tickers(files=files)
     tickers.start()
     tickers.join()
+
+# зачет!
