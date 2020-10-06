@@ -17,23 +17,22 @@
 #       ТИКЕР7, ТИКЕР8, ТИКЕР9, ТИКЕР10, ТИКЕР11, ТИКЕР12
 # Волатильности указывать в порядке убывания. Тикеры с нулевой волатильностью упорядочить по имени.
 #
-import os
-from datetime import datetime
 import multiprocessing
+import os
+from queue import Empty
 
 
 class Volatility(multiprocessing.Process):
     volatility_list = []
     null_volatility = []
 
-
-    def __init__(self, file_name, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, file_name, collector, *args, **kwargs):
+        super(Volatility, self).__init__(*args, **kwargs)
         self.file_name = file_name
         self.ticker_name = ''
         self.volatility = 0
         self.ticker_prices = []
-        #self.collector = multiprocessing.Queue()
+        self.collector = collector
 
     def run(self):
         self.file_name = f'trades\\\{self.file_name}'
@@ -47,41 +46,53 @@ class Volatility(multiprocessing.Process):
                     self.ticker_prices.append(price)
             half_sum = (max(self.ticker_prices) + min(self.ticker_prices)) / 2
             self.volatility = (max(self.ticker_prices) - min(self.ticker_prices)) / half_sum * 100
-            if self.volatility == 0.0:
-                self.null_volatility.append(self.ticker_name)
-            else:
-                self.volatility_list.append((self.ticker_name, self.volatility))
-        #self.collector.put(self.volatility_list)
-        #print(self.volatility_list)
-        return self.volatility_list, self.null_volatility
+            self.collector.put(self.ticker_name)
+            self.collector.put(self.volatility)
+            if self.collector.full():
+                print('Очередь заполнена', flush=True)
+            print(f'Значение {self.ticker_name, self.volatility} загружено в очередь')
 
 
+directory = 'trades'
+files = os.listdir(directory)
 
-class Tickers():
-    directory = 'trades'
-    files = os.listdir(directory)
 
-    def __init__(self):
+class Tickers(multiprocessing.Process):
+
+    def __init__(self, files, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.min_volatility = {}
         self.max_volatility = {}
+        self.collector = multiprocessing.Queue()
+        self.files = files
+        self.my_processes = []
 
-    def main(self):
-        #my_processes = [Volatility(file_name=file_name) for file_name in self.files]
-        my_process = Volatility(file_name='TICKER_AFM9.csv')
-        #for my_process in my_processes:
-        if __name__ == '__main__':
+    def run(self):
+
+        for file_name in self.files:
+            my_process = Volatility(file_name=file_name, collector=self.collector)
+            self.my_processes.append(my_process)
+        for my_process in self.my_processes:
             my_process.start()
-        #for my_process in my_processes:
+
+        while True:
+            try:
+                Volatility.ticker_name = self.collector.get(timeout=1)
+                Volatility.volatility = self.collector.get(timeout=1)
+                print(f'Принято из очереди {Volatility.ticker_name, Volatility.volatility}', flush=True)
+                if Volatility.volatility == 0.0:
+                    Volatility.null_volatility.append(Volatility.ticker_name)
+                else:
+                    Volatility.volatility_list.append((Volatility.ticker_name, Volatility.volatility))
+            except Empty:
+                print('Очередь пуста', flush=True)
+                if not any(my_process.is_alive() for my_process in self.my_processes):
+                    break
+        for my_process in self.my_processes:
             my_process.join()
-            #my_processes.collector.get()
-            #print(my_process.volatility_list)  #TODO: В данном случае запущен один поток. Я не понимаю, почему он не передает в main() результат выполнения функции run().
-
-                                                # TODO: Не поток, а процесс. И их на самом деле два. Один, который главный, и второй, который стартует при вызове my_process.start().
-
-            my_process.volatility_list.sort(key=lambda i: i[1])  # TODO: почему это не будет работать, я объяснил на предыдущей итерации. Если состояние объекта обрабатывается в другом процессе,
-                                                                 # TODO: то получить измененное состояние нельзя никак иначе кроме как через очередь. 
-        self.min_volatility = dict(my_process.volatility_list[2::-1])
-        self.max_volatility = dict(my_process.volatility_list[:-4:-1])
+        Volatility.volatility_list.sort(key=lambda i: i[1])
+        self.min_volatility = dict(Volatility.volatility_list[2::-1])
+        self.max_volatility = dict(Volatility.volatility_list[:-4:-1])
         print('Максимальная волатильность:')
         for key, val in self.max_volatility.items():
             print(key, val)
@@ -92,8 +103,7 @@ class Tickers():
         print(Volatility.null_volatility)
 
 
-start_time = datetime.now()
-all_processes = Tickers()
-all_processes.main()
-end_time = datetime.now()
-print("Время выполнения: ", end_time - start_time)
+if __name__ == '__main__':
+    tickers = Tickers(files=files)
+    tickers.start()
+    tickers.join()
