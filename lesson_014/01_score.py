@@ -32,8 +32,11 @@
 # Скрипт должен принимать параметр --result и печатать на консоль:
 #   Количество очков для результатов ХХХ - УУУ.
 
-# TODO тут ваш код
+import argparse
+import bowling
 
-# При написании кода помнить, что заказчик может захотеть доработок и новых возможностей...
-# И, возможно, вам пригодится паттерн проектирования "Состояние",
-#   см https://clck.ru/Fudd8 и https://refactoring.guru/ru/design-patterns/state
+parser = argparse.ArgumentParser(description='Запуск из командной строки: python файл данные')
+parser.add_argument('game_result', type=str, help='Результаты игры')
+args = parser.parse_args()
+bowling.get_score(args.game_result)
+
