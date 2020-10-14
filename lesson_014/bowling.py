@@ -38,6 +38,7 @@ def get_score(game_result):
 
 #Файл test_bowling.py находится в папке pithon_snippets\tests
 
-
-
-
+# TODO: тут программа отработает некорректно
+get_score('99XXXXXXXXX')
+get_score('XXXXX//XXXX')
+get_score('XX/XX/XXXXX')
