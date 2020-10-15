@@ -43,5 +43,6 @@ def get_score(game_result):
 
 # TODO: тут программа отработает некорректно
 get_score('99XXXXXXXXX') #Почему нет? Здесь работает.
+                         # TODO: как можно сбить 9 кеглей, а потом еще 9 в одном фрейме?
 #get_score('XXXXX//XXXX') # Здесь исправил.
 #get_score('X-/XXXXXXXX')

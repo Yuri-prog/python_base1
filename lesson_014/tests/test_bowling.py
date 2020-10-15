@@ -4,7 +4,7 @@ import unittest
 #import myfile
 #C:\Users\asus\PycharmProjects\python_base1\lesson_014\take frm here> bowling.py
 
-from .bowling import get_score # TODO: У меня не импортируется bowling, если не поместить  test_bowling в один каталог с bowling. Почему так?
+from lesson_014.bowling import get_score  # TODO: Так должно заработать по идее
 
 
 class MySortTest(unittest.TestCase):
@@ -28,6 +28,8 @@ class MySortTest(unittest.TestCase):
     def test_all_numbers(self):
         result = get_score('12345678912345678912')
         self.assertEqual(result, 93)
+
+    # TODO: нужно добавить тесты на некорректные строки + те случаи по которым я написал замечания + может еще какие придумаете
 
 
 if __name__ == '__main__':
