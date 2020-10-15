@@ -31,7 +31,7 @@
 # Из текущего файла сделать консольную утилиту для определения количества очков, с помощью пакета argparse
 # Скрипт должен принимать параметр --result и печатать на консоль:
 #   Количество очков для результатов ХХХ - УУУ.
-# TODO: тесты надо достать из сниппетов
+
 import argparse
 import bowling
 
@@ -39,4 +39,3 @@ parser = argparse.ArgumentParser(description='Запуск из командно
 parser.add_argument('game_result', type=str, help='Результаты игры')
 args = parser.parse_args()
 bowling.get_score(args.game_result)
-

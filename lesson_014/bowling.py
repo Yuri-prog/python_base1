@@ -18,6 +18,9 @@ def get_score(game_result):
         raise ValueError('Неверные данные.')
     for i in range(1, len(tmp_results), 2):
         results.append([tmp_results[i-1], tmp_results[i]])
+        if tmp_results[i] == '/':
+            if tmp_results[i-1].isdigit() is False and tmp_results[i-1] != '-':
+                raise ValueError('Неверные данные.')
     for value in results:
         if value[0] == '-':
             value[0] = '0'
@@ -39,6 +42,6 @@ def get_score(game_result):
 #Файл test_bowling.py находится в папке pithon_snippets\tests
 
 # TODO: тут программа отработает некорректно
-get_score('99XXXXXXXXX')
-get_score('XXXXX//XXXX')
-get_score('XX/XX/XXXXX')
+get_score('99XXXXXXXXX') #Почему нет? Здесь работает.
+#get_score('XXXXX//XXXX') # Здесь исправил.
+#get_score('X-/XXXXXXXX')
