@@ -15,12 +15,12 @@ def get_score(game_result):
         else:
             tmp_results.append(i)
     if len(tmp_results)%2 == 1:
-        raise ValueError('Неверные данные.')
+        raise ValueError('Неверные данные. Ошибка в количестве данных.')
     for i in range(1, len(tmp_results), 2):
         results.append([tmp_results[i-1], tmp_results[i]])
         if tmp_results[i] == '/':
             if tmp_results[i-1].isdigit() is False and tmp_results[i-1] != '-':
-                raise ValueError('Неверные данные.')
+                raise ValueError('Неверные данные. Ошибка указателя spare.')
     for value in results:
         if value[0] == '-':
             value[0] = '0'
@@ -28,6 +28,8 @@ def get_score(game_result):
             value[1] = '0'
         if value[0].isdigit()&value[1].isdigit():
             frame_result = int(value[0])+int(value[1])
+            if frame_result > 10:
+                raise ValueError('Неверные данные. Сумма очков фрема больше 10.')
         elif value[1] == '/':
             frame_result = 15
         else:
@@ -39,10 +41,6 @@ def get_score(game_result):
     print(common_sum)
     return common_sum
 
-#Файл test_bowling.py находится в папке pithon_snippets\tests
-
-# TODO: тут программа отработает некорректно
-get_score('99XXXXXXXXX') #Почему нет? Здесь работает.
-                         # TODO: как можно сбить 9 кеглей, а потом еще 9 в одном фрейме?
+#get_score('XXXXX47XXXX')
 #get_score('XXXXX//XXXX') # Здесь исправил.
 #get_score('X-/XXXXXXXX')
