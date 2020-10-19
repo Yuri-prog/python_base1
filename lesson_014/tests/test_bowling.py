@@ -1,5 +1,12 @@
 import unittest
-from lesson_014.bowling import get_score #TODO: Сейчас при попытке запуска теста из под командной строки не находит lesson_014
+from lesson_014.bowling import get_score
+# Сейчас при попытке запуска теста из под командной строки не находит lesson_014
+# TODO Пути старайтесь указывать относительно рабочей директории (той, в которой лежит главный запускаемый файл)
+# TODO т.к. здесь у нас проект состоит из нескольких "мини"-проектов, то можно выполнить хитрый приём, явно указав
+# TODO на рабочую директорию.
+# TODO Сделать это можно либо в Run - Edit configurations
+# TODO Либо можно просто выделить нужную папку как source root
+# TODO для этого надо нажать на неё правой кнопкой - mark directory as - source root
 
 
 class MySortTest(unittest.TestCase):
