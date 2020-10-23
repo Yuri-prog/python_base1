@@ -1,5 +1,5 @@
 import unittest
-from bowling import get_score
+from bowling import get_score #TODO Спасибо, заработало
 
 
 # Сейчас при попытке запуска теста из под командной строки не находит lesson_014

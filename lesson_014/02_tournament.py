@@ -26,7 +26,18 @@
 # Из текущего файла сделать консольный скрипт для формирования файла с результатами турнира.
 # Параметры скрипта: --input <файл протокола турнира> и --output <файл результатов турнира>
 
-# TODO тут ваш код
+text_file = 'tournament.txt'
+
+def tour_results(text_file):
+    with open(text_file, mode='r', encoding='utf8') as file:
+        for line in file:
+            print(line)
+
+
+
+tour_results(text_file)
+
+
 
 # Усложненное задание (делать по желанию)
 #

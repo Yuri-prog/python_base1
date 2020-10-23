@@ -29,7 +29,7 @@ def get_score(game_result):
         if value[0].isdigit() & value[1].isdigit():
             frame_result = int(value[0]) + int(value[1])
             if frame_result > 9:
-                raise ValueError('Неверные данные. Сумма очков фрема больше 9.')
+                raise ValueError('Неверные данные. Сумма очков фрейма больше 9.')
         elif value[1] == '/':
             frame_result = 15
         else:
@@ -38,7 +38,7 @@ def get_score(game_result):
     common_sum = strike_sum + sum
     if (len(strike_list) + len(results)) != 10:
         raise ValueError('Ошибка данных. Число фреймов не соответствует заданному.')
-    print(common_sum)
+    #print(common_sum)
     return common_sum
 
 # get_score('811/X--3/XX171/45')
