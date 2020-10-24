@@ -26,18 +26,14 @@
 # Из текущего файла сделать консольный скрипт для формирования файла с результатами турнира.
 # Параметры скрипта: --input <файл протокола турнира> и --output <файл результатов турнира>
 
-text_file = 'tournament.txt'
+import argparse
+import tour_results
 
-def tour_results(text_file):
-    with open(text_file, mode='r', encoding='utf8') as file:
-        for line in file:
-            print(line)
-
-
-
-tour_results(text_file)
-
-
+parser = argparse.ArgumentParser(description='Запуск из командной строки: python файл данные')
+parser.add_argument('text_file', type=str, help='Файл данных')
+parser.add_argument('write_file', type=str, help='Файл с результатами')
+args = parser.parse_args()
+tour_results.write_result(args.text_file, args.write_file)
 
 # Усложненное задание (делать по желанию)
 #

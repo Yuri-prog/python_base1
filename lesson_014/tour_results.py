@@ -22,7 +22,7 @@ def tour_results(text_file):
                 key_1 = key[17:]
             else:
                 key_1 = key[3:]
-            new_list.append('{:*^90} \n'.format(key_1+' '))
+            new_list.append('{:*^90} \n'.format(key_1 + ' '))
             for tour_player in value:
                 if not tour_player.startswith('winner'):
                     tour_player_list = tour_player.split('\t')
@@ -41,20 +41,19 @@ def tour_results(text_file):
                         tour_player = '\t'.join(tour_player_list)
                 else:
                     if max:
-                         tour_player = f'\nПобедитель {max}!'
+                        tour_player = f'\nПобедитель {max}!'
                     else:
                         tour_player = '\nВ туре нет победителя из-за ошибочных данных'
 
                 new_list.append(tour_player)
         new_results = '\n'.join(new_list)
-        print(new_results)
+        #print(new_results)
         return new_results
 
 
-def write_result(write_file):
+def write_result(text_file, write_file):
     tour_results(text_file)
     with open(write_file, mode='w', encoding='utf8') as file:
         file.write(tour_results(text_file))
 
-
-write_result(write_file)
+# write_result(text_file, write_file)
