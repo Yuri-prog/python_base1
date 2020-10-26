@@ -32,7 +32,7 @@ import tour_results
 parser = argparse.ArgumentParser(description='Запуск из командной строки: python файл данные')
 parser.add_argument('text_file', type=str, help='Файл данных')
 parser.add_argument('write_file', type=str, help='Файл с результатами')
-args = parser.parse_args()
+args = parser.parse_args('tournament.txt tour_test.txt'.split())
 tour_results.write_result(args.text_file, args.write_file)
 
 # Усложненное задание (делать по желанию)
@@ -46,3 +46,4 @@ tour_results.write_result(args.text_file, args.write_file)
 # ...
 # | Алексей  |        20        |       5      |
 # +----------+------------------+--------------+
+#зачёт!
