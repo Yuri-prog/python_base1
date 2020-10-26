@@ -7,10 +7,12 @@ write_file = 'tournament_result.txt'
 def tour_results(text_file):
     text_dict = {}
     new_list = []
+
     with open(text_file, mode='r', encoding='utf8') as file:
         for line in file:
             text_file += line
             text_list = text_file.split('\n\n')
+
         for i in text_list:
             j = str(i).split('\n')
             n = {j[0]: j[1:]}
@@ -27,6 +29,8 @@ def tour_results(text_file):
                 if not tour_player.startswith('winner'):
                     tour_player_list = tour_player.split('\t')
                     result = tour_player_list[1]
+
+
                     try:
                         score = get_score(result)
                         if score > score1:
@@ -47,8 +51,8 @@ def tour_results(text_file):
 
                 new_list.append(tour_player)
         new_results = '\n'.join(new_list)
-        #print(new_results)
-        return new_results
+
+    return new_results
 
 
 def write_result(text_file, write_file):
@@ -56,4 +60,4 @@ def write_result(text_file, write_file):
     with open(write_file, mode='w', encoding='utf8') as file:
         file.write(tour_results(text_file))
 
-# write_result(text_file, write_file)
+write_result(text_file, write_file)
