@@ -32,8 +32,10 @@ import tour_results
 parser = argparse.ArgumentParser(description='Запуск из командной строки: python файл данные')
 parser.add_argument('text_file', type=str, help='Файл данных')
 parser.add_argument('write_file', type=str, help='Файл с результатами')
-args = parser.parse_args('tournament.txt tour_test.txt'.split())
-tour_results.write_result(args.text_file, args.write_file)
+parser.add_argument('version', type=str, help='russian или inter')
+args = parser.parse_args()
+tour_results.write_result(args.text_file, args.write_file, args.version)
+
 
 # Усложненное задание (делать по желанию)
 #
