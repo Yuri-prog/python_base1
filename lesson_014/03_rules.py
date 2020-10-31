@@ -31,5 +31,7 @@ parser = argparse.ArgumentParser(description='Запуск из командно
 parser.add_argument('text_file', type=str, help='Файл данных')
 parser.add_argument('write_file', type=str, help='Файл с результатами')
 parser.add_argument('version', type=str, help='russian или inter')
-args = parser.parse_args()
+args = parser.parse_args('tournament.txt tournament_1.txt inter'.split())
 tour_results.write_result(args.text_file, args.write_file, args.version)
+
+#зачёт!
