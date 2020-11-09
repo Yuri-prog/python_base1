@@ -109,6 +109,7 @@ def game():
     current_experience = 0
     current_date = datetime.datetime.now()
     loc_list = []
+    game_events = []
 
     def monster_fight():
         if len(monsters) == 1:
@@ -146,10 +147,12 @@ def game():
                 break
 
     def write_csv():
-        new_event = [f'{cur_loc}, {current_experience}, {current_date}']
         with open('dungeon.csv', 'a', newline='') as out_csv:
             writer = csv.writer(out_csv)
-            writer.writerow(new_event)
+            writer.writerow(['Game starts'])
+            writer.writerows(game_events)
+            writer.writerow(['Game over'])
+            writer.writerow([])
 
     def quit():
         quit = input(colored('Хотите начать заново? y/n', color='yellow'))
@@ -163,20 +166,26 @@ def game():
         actions = ['Атаковать монстра', 'Перейти в другую локацию', 'Сдаться и выйти из игры']
         monsters = []
         locations = []
+
         try:
             for cur_loc, value in current_location.items():
                 cprint(f'Вы в локации {cur_loc}', color='grey')
                 cprint(f'Ваш опыт {current_experience}. Остаток времени до наводнения {remaining_time} секунд',
                        color='grey')
+                new_event = [cur_loc, current_experience, current_date]
+                game_events.append(new_event)
                 if str(remaining_time) < str(0):
                     cprint('Наводнение! Вы утонули', color='red')
+                    write_csv()
                     quit()
                 if cur_loc.startswith('Hatch'):
                     if current_experience >= 280:
                         cprint('Вы выиграли!!!', color='green')
+                        write_csv()
                         quit()
                     else:
                         cprint('У Вас недостаточно опыта, чтобы открыть люк. Вы проиграли', color='red')
+                        write_csv()
                         quit()
                 current_list = current_location[cur_loc]
                 for i in current_list:
@@ -222,6 +231,7 @@ def game():
                 cprint(f'Перед Вами {len(locations)} вход{ending} в локации', color='grey')
                 if len(locations) == 0:
                     cprint('Вы в тупике! Обратного хода нет. Вы проиграли', color='red')
+                    write_csv()
                     quit()
                 for i, k in enumerate(locations):
                     if k.startswith('Hatch'):
@@ -245,26 +255,26 @@ def game():
                     monster_fight()
                     current_experience += int(monster_exp)
                     remaining_time = Decimal(remaining_time) - Decimal(monster_time)
-                    write_csv()
                 elif number == '2':
                     enter_loc()
                     remaining_time = Decimal(remaining_time) - Decimal(loc_time)
-                    write_csv()
                 elif number == '3':
                     cprint('Вы сдаетесь.', color='red')
+                    write_csv()
+
                     quit()
             elif len(actions) == 2:
                 if number == '1':
                     enter_loc()
                     remaining_time = Decimal(remaining_time) - Decimal(loc_time)
-                    write_csv()
                 elif number == '2':
                     cprint('Вы сдаетесь.', color='red')
+                    write_csv()
                     quit()
+
         except KeyError:
             break
 
 
 game()
-
 # Учитывая время и опыт, не забывайте о точности вычислений!
