@@ -92,11 +92,179 @@
 #
 # и так далее...
 
+import csv
+import datetime
+import json
+from decimal import Decimal
 
-remaining_time = '123456.0987654321'
-# если изначально не писать число в виде строки - теряется точность!
-field_names = ['current_location', 'current_experience', 'current_date']
+from termcolor import cprint, colored
 
-# TODO тут ваш код
+
+def game():
+    with open('rpg.json', 'r') as read_file:
+        loaded_json_file = json.load(read_file)
+
+    remaining_time = '123456.0987654321'
+    current_location = loaded_json_file
+    current_experience = 0
+    current_date = datetime.datetime.now()
+    loc_list = []
+
+    def monster_fight():
+        if len(monsters) == 1:
+            cprint(f'Вы атаковали монстра {monsters[0]}', color='blue')
+            del_monster = monsters[0]
+        else:
+            while True:
+                attaked_monster = input(colored('Выберите номер монстра:', color='yellow'))
+                if not attaked_monster.isdigit() or int(attaked_monster) < 1 or int(attaked_monster) > len(monsters):
+                    cprint('Неверный ввод, попробуйте еще раз', color='yellow')
+                    continue
+                cprint(f'Вы атаковали монстра {monsters[(int(attaked_monster) - 1)]}', color='blue')
+                del_monster = monsters[(int(attaked_monster) - 1)]
+                break
+
+        for key, value in current_location.items():
+            for i in value:
+                if i == del_monster:
+                    value.remove(i)
+                    break
+        monsters.remove(del_monster)
+
+    def enter_loc():
+        nonlocal current_location
+        if len(locations) == 1:
+            current_location = loc_list[0]
+
+        else:
+            while True:
+                choose_loc = input(colored('Выберите локацию', color='yellow'))
+                if not choose_loc.isdigit() or int(choose_loc) < 1 or int(choose_loc) > len(locations):
+                    cprint('Неверный ввод, попробуйте еще раз', color='yellow')
+                    continue
+                current_location = loc_list[int(choose_loc) - 1]
+                break
+
+    def write_csv():
+        new_event = [f'{cur_loc}, {current_experience}, {current_date}']
+        with open('dungeon.csv', 'a', newline='') as out_csv:
+            writer = csv.writer(out_csv)
+            writer.writerow(new_event)
+
+    def quit():
+        quit = input(colored('Хотите начать заново? y/n', color='yellow'))
+        if quit == 'y':
+            game()
+        else:
+            raise KeyError('Выход')
+
+    while True:
+        loc_list = []
+        actions = ['Атаковать монстра', 'Перейти в другую локацию', 'Сдаться и выйти из игры']
+        monsters = []
+        locations = []
+        try:
+            for cur_loc, value in current_location.items():
+                cprint(f'Вы в локации {cur_loc}', color='grey')
+                cprint(f'Ваш опыт {current_experience}. Остаток времени до наводнения {remaining_time} секунд',
+                       color='grey')
+                if str(remaining_time) < str(0):
+                    cprint('Наводнение! Вы утонули', color='red')
+                    quit()
+                if cur_loc.startswith('Hatch'):
+                    if current_experience >= 280:
+                        cprint('Вы выиграли!!!', color='green')
+                        quit()
+                    else:
+                        cprint('У Вас недостаточно опыта, чтобы открыть люк. Вы проиграли', color='red')
+                        quit()
+                current_list = current_location[cur_loc]
+                for i in current_list:
+                    if isinstance(i, dict):
+                        loc_list.append(i)
+                for i in value:
+                    if isinstance(i, str):
+                        if i.startswith('Mob') or i.startswith('Boss'):
+                            monster = i
+                            monsters.append(monster)
+                        else:
+                            continue
+                    else:
+                        for key1, value1 in i.items():
+                            locations.append(key1)
+                if len(monsters) == 1:
+                    ending = ''
+                elif 5 > len(monsters) > 1:
+                    ending = 'а'
+                else:
+                    ending = 'ов'
+                cprint(f'Перед Вами {len(monsters)} монстр{ending}', color='grey')
+                for i, k in enumerate(monsters):
+                    if k.startswith('Mob'):
+                        monster_exp = k[7:9]
+                        monster_time = k[12:]
+                    elif k.startswith('Boss_'):
+                        monster_exp = k[8:11]
+                        monster_time = k[14:]
+                    else:
+                        monster_exp = k[11:14]
+                        monster_time = k[17:]
+                    cprint(
+                        f'{i + 1}. {k}. Получаемый за битву опыт {monster_exp}, время на уничтожение {monster_time} секунд',
+                        color='cyan')
+
+                if len(locations) == 1:
+                    ending = ''
+                elif 5 > len(locations) > 1:
+                    ending = 'а'
+                else:
+                    ending = 'ов'
+                cprint(f'Перед Вами {len(locations)} вход{ending} в локации', color='grey')
+                if len(locations) == 0:
+                    cprint('Вы в тупике! Обратного хода нет. Вы проиграли', color='red')
+                    quit()
+                for i, k in enumerate(locations):
+                    if k.startswith('Hatch'):
+                        loc_time = k[8:]
+                    else:
+                        end = k.rfind('_', 7, 12)
+                        loc_time = k[(end + 3):]
+                    cprint(f'{i + 1}. {k}. Время достижения локации {loc_time} секунд', color='cyan')
+            cprint('Выберите действие:', color='yellow')
+            if len(monsters) == 0:
+                actions.remove('Атаковать монстра')
+            for i, k in enumerate(actions):
+                cprint(f'{i + 1}. {k}', color='yellow')
+
+            number = input()
+            if not number.isdigit() or int(number) < 1 or int(number) > len(actions):
+                print('Неверный ввод, попробуйте еще раз')
+                continue
+            if len(actions) == 3:
+                if number == '1':
+                    monster_fight()
+                    current_experience += int(monster_exp)
+                    remaining_time = Decimal(remaining_time) - Decimal(monster_time)
+                    write_csv()
+                elif number == '2':
+                    enter_loc()
+                    remaining_time = Decimal(remaining_time) - Decimal(loc_time)
+                    write_csv()
+                elif number == '3':
+                    cprint('Вы сдаетесь.', color='red')
+                    quit()
+            elif len(actions) == 2:
+                if number == '1':
+                    enter_loc()
+                    remaining_time = Decimal(remaining_time) - Decimal(loc_time)
+                    write_csv()
+                elif number == '2':
+                    cprint('Вы сдаетесь.', color='red')
+                    quit()
+        except KeyError:
+            break
+
+
+game()
 
 # Учитывая время и опыт, не забывайте о точности вычислений!
