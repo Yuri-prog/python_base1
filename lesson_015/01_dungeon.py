@@ -99,7 +99,7 @@ from decimal import Decimal
 
 from termcolor import cprint, colored
 
-
+# TODO Логику игры стоит реализовать на классах
 def game():
     with open('rpg.json', 'r') as read_file:
         loaded_json_file = json.load(read_file)
@@ -174,21 +174,25 @@ def game():
                        color='grey')
                 new_event = [cur_loc, current_experience, current_date]
                 game_events.append(new_event)
-                if str(remaining_time) < str(0):
+                if str(remaining_time) < str(0):  # TODO сравнивать строки не очень хорошая практика
+                    # TODO лучше сравнивать именно числа
                     cprint('Наводнение! Вы утонули', color='red')
                     write_csv()
                     quit()
+                # TODO это условие можно связать с предыдущим (if/elif)
+                # TODO и по итогу вызвать write и quit один раз
                 if cur_loc.startswith('Hatch'):
                     if current_experience >= 280:
                         cprint('Вы выиграли!!!', color='green')
-                        write_csv()
+                        write_csv()  # TODO дублирование кода
                         quit()
                     else:
                         cprint('У Вас недостаточно опыта, чтобы открыть люк. Вы проиграли', color='red')
                         write_csv()
                         quit()
+                    # TODO действия можно вынести сюда
                 current_list = current_location[cur_loc]
-                for i in current_list:
+                for i in current_list:  # TODO 'i' пример плохого нэйминга, надо поправить (тут и ниже)
                     if isinstance(i, dict):
                         loc_list.append(i)
                 for i in value:
@@ -209,6 +213,7 @@ def game():
                     ending = 'ов'
                 cprint(f'Перед Вами {len(monsters)} монстр{ending}', color='grey')
                 for i, k in enumerate(monsters):
+                    # TODO попробуйте использовать регулярные выражения вместо обычных индексов и срезов
                     if k.startswith('Mob'):
                         monster_exp = k[7:9]
                         monster_time = k[12:]
@@ -221,6 +226,7 @@ def game():
                     cprint(
                         f'{i + 1}. {k}. Получаемый за битву опыт {monster_exp}, время на уничтожение {monster_time} секунд',
                         color='cyan')
+                    # TODO слишком длинная строка
 
                 if len(locations) == 1:
                     ending = ''
@@ -278,3 +284,7 @@ def game():
 
 game()
 # Учитывая время и опыт, не забывайте о точности вычислений!
+# TODO по итогу у вас выходит вот такой вывод в конце
+# Ваш опыт 280. Остаток времени до наводнения 25259.0987654321 секунд
+# TODO но при правильных расчётах времени должно оставаться впритык
+# Ваш опыт 280. Остаток времени до наводнения 159.0987654321 секунд
