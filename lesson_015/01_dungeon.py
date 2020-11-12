@@ -132,7 +132,7 @@ class Readwrite:
         else:
             raise KeyError('Выход')
 
-
+# TODO весь запускаемый код надо вынести в самый низ и закрыть в if __name__ == '__main__'
 readwrite = Readwrite(json_file, csv_file)
 
 
@@ -241,6 +241,9 @@ mons = Monsters()
 
 
 def game():
+    # TODO функция получается очень длинной
+    # TODO её было бы хорошо разнести по действиям,
+    # TODO и лучше сделать это в при помощи класса и методов
     remaining_time = '123456.0987654321'
     current_experience = 0
     current_date = datetime.datetime.now()
@@ -309,6 +312,12 @@ def game():
                     readwrite.write_csv()
                     readwrite.quit()
             elif len(actions) == 2:
+                # TODO здесь у вас по сути получается дублирование кода
+                # TODO подумайте над тем, как обойтисб без дублирования
+                # TODO например можно связать выбор и длину
+                #  3-2 = 1 (длина 3, выбор 2 = итог 1)
+                #  2-1 = 1 (длина 2, выбор 1 = итог 1)
+
                 if number == '1':
                     caves.enter_loc()
                     remaining_time = Decimal(remaining_time) - Decimal(caves.loc_time_list[(int(caves.choose_loc) - 1)])
