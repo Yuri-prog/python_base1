@@ -128,12 +128,12 @@ class Readwrite:
     def quit(self):
         quit = input(colored('Хотите начать заново? y/n', color='yellow'))
         if quit == 'y':
-            game()
+            gameplay.current_experience = 0
+            gameplay.remaining_time = remaining_time
+            caves.current_location = readwrite.open_json()
+            gameplay.game()
         else:
             raise KeyError('Выход')
-
-# TODO весь запускаемый код надо вынести в самый низ и закрыть в if __name__ == '__main__'
-readwrite = Readwrite(json_file, csv_file)
 
 
 class Caves:
@@ -179,9 +179,6 @@ class Caves:
             loc = num[1]
             loc_time = num[2]
             cprint(f'{number_loc + 1}. {loc}. Время достижения локации {loc_time} секунд', color='cyan')
-
-
-caves = Caves()
 
 
 class Monsters:
@@ -237,97 +234,91 @@ class Monsters:
                     color='cyan')
 
 
-mons = Monsters()
+class Gameplay:
 
+    def __init__(self, remaining_time):
+        self.actions = ['Атаковать монстра', 'Перейти в другую локацию', 'Сдаться и выйти из игры']
+        self.remaining_time = remaining_time
+        self.current_experience = 0
+        self.current_date = datetime.datetime.now()
 
-def game():
-    # TODO функция получается очень длинной
-    # TODO её было бы хорошо разнести по действиям,
-    # TODO и лучше сделать это в при помощи класса и методов
-    remaining_time = '123456.0987654321'
-    current_experience = 0
-    current_date = datetime.datetime.now()
-
-    readwrite.open_json()
-
-    while True:
-        caves.loc_list = []
-        actions = ['Атаковать монстра', 'Перейти в другую локацию', 'Сдаться и выйти из игры']
-        mons.monsters = []
-        caves.locations = []
-
-        try:
-            for cur_loc, value in caves.current_location.items():
-                cprint(f'Вы в локации {cur_loc}', color='grey')
-                cprint(f'Ваш опыт {current_experience}. Остаток времени до наводнения {remaining_time} секунд',
-                       color='grey')
-                new_event = [cur_loc, current_experience, current_date]
-                readwrite.game_events.append(new_event)
-                if Decimal(remaining_time) < 0 or cur_loc.startswith('Hatch'):
-                    if Decimal(remaining_time) < 0:
-                        cprint('Наводнение! Вы утонули', color='red')
-                    elif cur_loc.startswith('Hatch'):
-                        if current_experience >= 280:
-                            cprint('Вы выиграли!!!', color='green')
-                        else:
-                            cprint('У Вас недостаточно опыта, чтобы открыть люк. Вы проиграли', color='red')
-                    readwrite.write_csv()
-                    readwrite.quit()
-                current_list = caves.current_location[cur_loc]
-                for loc in current_list:
-                    if isinstance(loc, dict):
-                        caves.loc_list.append(loc)
-                monster_pattern = r'\w+\d{0,3}_exp\d{2,3}_tm\d{1,8}'
-                all_monsters = re.findall(monster_pattern, str(value))
-
-                for name in value:
-                    if all_monsters and name == all_monsters[0]:
-                        mons.monsters.append(all_monsters[0])
-                        all_monsters.remove(all_monsters[0])
+    def start(self):
+        for cur_loc, value in caves.current_location.items():
+            cprint(f'Вы в локации {cur_loc}', color='grey')
+            cprint(
+                f'Ваш опыт {gameplay.current_experience}. Остаток времени до наводнения {gameplay.remaining_time} секунд',
+                color='grey')
+            new_event = [cur_loc, gameplay.current_experience, self.current_date]
+            readwrite.game_events.append(new_event)
+            if Decimal(gameplay.remaining_time) < 0 or cur_loc.startswith('Hatch'):
+                if Decimal(gameplay.remaining_time) < 0:
+                    cprint('Наводнение! Вы утонули', color='red')
+                elif cur_loc.startswith('Hatch'):
+                    if gameplay.current_experience >= 280:
+                        cprint('Вы выиграли!!!', color='green')
                     else:
-                        for key1, value1 in name.items():
-                            caves.locations.append(key1)
-            mons.count_monsters()
-            caves.count_loc()
-            cprint('Выберите действие:', color='yellow')
-            if len(mons.monsters) == 0:
-                actions.remove('Атаковать монстра')
-            for num, action in enumerate(actions):
-                cprint(f'{num + 1}. {action}', color='yellow')
+                        cprint('У Вас недостаточно опыта, чтобы открыть люк. Вы проиграли', color='red')
+                readwrite.write_csv()
+                readwrite.quit()
+            monster_pattern = r'\w+\d{0,3}_exp\d{2,3}_tm\d{1,8}'
+            all_monsters = re.findall(monster_pattern, str(value))
+            for name in value:
+                if all_monsters and name == all_monsters[0]:
+                    mons.monsters.append(all_monsters[0])
+                    all_monsters.remove(all_monsters[0])
+                else:
+                    for key1, value1 in name.items():
+                        caves.loc_list.append(name)
+                        caves.locations.append(key1)
 
-            number = input()
-            if not number.isdigit() or int(number) < 1 or int(number) > len(actions):
-                print('Неверный ввод, попробуйте еще раз')
-                continue
-            if len(actions) == 3:
-                if number == '1':
-                    mons.monster_fight()
-                    current_experience += int(mons.monster_exp)
-                    remaining_time = Decimal(remaining_time) - Decimal(mons.monster_time)
-                elif number == '2':
-                    caves.enter_loc()
-                    remaining_time = Decimal(remaining_time) - Decimal(caves.loc_time_list[(int(caves.choose_loc) - 1)])
-                elif number == '3':
-                    cprint('Вы сдаетесь.', color='red')
-                    readwrite.write_csv()
-                    readwrite.quit()
-            elif len(actions) == 2:
-                # TODO здесь у вас по сути получается дублирование кода
-                # TODO подумайте над тем, как обойтисб без дублирования
-                # TODO например можно связать выбор и длину
-                #  3-2 = 1 (длина 3, выбор 2 = итог 1)
-                #  2-1 = 1 (длина 2, выбор 1 = итог 1)
+    def choose_action(self):
 
-                if number == '1':
-                    caves.enter_loc()
-                    remaining_time = Decimal(remaining_time) - Decimal(caves.loc_time_list[(int(caves.choose_loc) - 1)])
-                elif number == '2':
-                    cprint('Вы сдаетесь.', color='red')
-                    readwrite.write_csv()
-                    readwrite.quit()
-
-        except KeyError:
-            break
+        cprint('Выберите действие:', color='yellow')
+        if len(mons.monsters) == 0:
+            if len(gameplay.actions) == 3:
+                self.actions.remove('Атаковать монстра')
+        for num, action in enumerate(self.actions):
+            cprint(f'{num + 1}. {action}', color='yellow')
+        number = input()
+        if not number.isdigit() or int(number) < 1 or int(number) > len(self.actions):
+            print('Неверный ввод, попробуйте еще раз')
+            self.choose_action()
+        if len(self.actions) == 3 and number == '1':
+            mons.monster_fight()
+            self.current_experience += int(mons.monster_exp)
+            self.remaining_time = Decimal(self.remaining_time) - Decimal(mons.monster_time)
+        elif (len(self.actions) == 3 and number == '2') | (len(self.actions) == 2 and number == '1'):
+            caves.enter_loc()
+            self.remaining_time = Decimal(self.remaining_time) - Decimal(
+                caves.loc_time_list[(int(caves.choose_loc) - 1)])
+        elif (len(self.actions) == 3 and number == '3') | (len(self.actions) == 2 and number == '2'):
+            cprint('Вы сдаетесь.', color='red')
+            readwrite.write_csv()
+            readwrite.quit()
 
 
-game()
+    def game(self):
+        while True:
+            caves.loc_list = []
+            mons.monsters = []
+            caves.locations = []
+            readwrite.open_json()
+            gameplay.actions = ['Атаковать монстра', 'Перейти в другую локацию', 'Сдаться и выйти из игры']
+
+            try:
+                gameplay.start()
+                mons.count_monsters()
+                caves.count_loc()
+                gameplay.choose_action()
+
+            except KeyError:
+                break
+
+
+if __name__ == '__main__':
+    readwrite = Readwrite(json_file, csv_file)
+    caves = Caves()
+    mons = Monsters()
+    gameplay = Gameplay(remaining_time)
+
+gameplay.game()
