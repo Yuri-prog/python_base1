@@ -296,7 +296,6 @@ class Gameplay:
             readwrite.write_csv()
             readwrite.quit()
 
-
     def game(self):
         while True:
             caves.loc_list = []
@@ -320,5 +319,5 @@ if __name__ == '__main__':
     caves = Caves()
     mons = Monsters()
     gameplay = Gameplay(remaining_time)
-
-gameplay.game()
+    gameplay.game()
+#зачёт!
