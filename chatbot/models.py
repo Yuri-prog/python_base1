@@ -10,9 +10,11 @@ class UserState(db.Entity):
     step_name = Required(str)
     context = Required(Json)
 
-class Registration(db.Entity):
+class Ticket(db.Entity):
     '''Заявка на регистрацию'''
-    name = Required(str)
-    email = Required(str)
+    city_out = Required(str)
+    city_in = Required(str)
+    flight_date = Required(str)
+    flight_number = Required(str)
 
 db.generate_mapping(create_tables=True)

@@ -2,9 +2,6 @@
 import datetime
 import re
 
-from generate_ticket import generate_ticket
-
-re_name = re.compile(r'^[\w\-\s]{3,40}$')
 re_email = re.compile(r'\b[a-zA-z0-9_.+-]+@[a-zA-z0-9-]+\.[a-zA-z0-9-.]+\b')
 re_phone = re.compile(r'\W*\d\W*\W*\d\d\d\W*\W*\d\d\d\W*\d\d\W*\d\d')
 re_number = re.compile(r'\b[1-2]\b')
@@ -13,13 +10,6 @@ re_date = re.compile(r'(0[1-9]|1[0-9]|2[0-9]|3[0-1])-(0[1-9]|1[1-2])-20[2-9]\d')
 re_choice = re.compile(r'\b[0-5]\b')
 city_list = ['москва', 'санкт-петербург', 'лондон', 'париж', 'рим', 'берлин', 'барселона', 'нью-йорк']
 
-# def handle_point_1(text, context):
-#     match = re.match(re_name, text)
-#     if match:
-#         context['point_1'] = text
-#         return True
-#     else:
-#         return False
 
 def handle_point_1(text, context):
     for match in city_list:
@@ -40,8 +30,6 @@ def handle_point_2(text, context):
         else:
             continue
 
-
-
 def handle_email(text, context):
     matches = re.findall(re_email, text)
     matches1 = re.findall(re_phone, text)
@@ -57,16 +45,6 @@ def handle_email(text, context):
     else:
         return False
 
-def generate_ticket_handler(text, context):
-    return generate_ticket(name=context['name'], email=context['email'])
-
-# def handle_number(text, context):
-#     match = re.match(re_number, text)
-#     if match:
-#         context['number'] = text
-#         return True
-#     else:
-#         return False
 
 def handle_quantity(text, context):
     match = re.match(re_quantity, text)
