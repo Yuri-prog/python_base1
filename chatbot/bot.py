@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 
 import datetime
-#import vk_api
+import vk_api
 import random
 from pony.orm import db_session
 from vk_api import VkApi
@@ -19,7 +20,7 @@ log = logging.getLogger('bot')
 
 def configure_logging():
     stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(logging.Formatter('%(levelname)s %(message)s'))
+    stream_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
     stream_handler.setLevel(logging.INFO)
     log.addHandler(stream_handler)
 
@@ -127,9 +128,12 @@ class Bot:
             if next_step['next_step']:
                 state.step_name = step['next_step']
             else:
-                log.info('Оформлен билет {point_1} {point_2}'.format(**state.context))
-                Ticket(city_out=state.context['point_1'], city_in=state.context['point_2'], flight_date=state.context['out_date'],
-                       flight_number=state.context['flight_number'])
+                if next_step == steps['step8']:
+                    log.info('Оформлен билет {point_1}-{point_2} на рейс {flight_number} {out_date}.'.format(**state.context))
+                    Ticket(city_out=state.context['point_1'], city_in=state.context['point_2'], flight_date=state.context['out_date'],
+                           flight_number=state.context['flight_number'])
+                else:
+                    log.info('Билет не оформлен.'.format(**state.context))
                 # finish scenario
                 state.delete()
         else:
@@ -242,5 +246,5 @@ class Dispatcher:
 if __name__ == '__main__':
     dispatcher = Dispatcher()
     configure_logging()
-    bot = Bot(settings.group_id, settings.token, )
+    bot = Bot(settings.GROUP_ID, settings.TOKEN, )
     bot.run()

@@ -75,9 +75,3 @@ def handle_comment(text, context):
     context['comment'] = text
     return True
 
-def handle_agreement(text, context):
-    if text.lower() == 'да' or text.lower() == 'нет':
-        context['agreement'] = text
-        return True
-    else:
-        return False

@@ -25,7 +25,7 @@ class Test1(TestCase):
         'object': {
             'message': {
                 'date': 1603015285, 'from_id': 617520269, 'id': 462, 'out': 0, 'peer_id':617520269,
-                'text': 'rrr', 'conversation_message_id': 461, 'fwd_messages': [], 'important': False,
+                'text': 'привет бот', 'conversation_message_id': 461, 'fwd_messages': [], 'important': False,
                 'random_id': 0, 'attachments': [], 'is_hidden': False},
             'client_info': {
                 'button_actions': ['text', 'vkpay', 'open_app', 'location', 'open_link'],
@@ -45,7 +45,7 @@ class Test1(TestCase):
             with patch('bot.VkBotLongPoll', return_value=long_poller_listen_mock):
                 bot = Bot('', '')
                 bot.on_event = Mock()
-                bot.send_image = Mock()#image send
+                #bot.send_image = Mock()#image send
                 bot.run()
 
                 bot.on_event.assert_called()
@@ -63,12 +63,12 @@ class Test1(TestCase):
     ]
     EXPECTED_OUTPUTS = [
         settings.DEFAULT_ANSWER,
-        settings.INTENTS[0]['answer'],
-        settings.INTENTS[1]['answer'],
-        settings.SCENARIOS['registration']['steps']['step1']['text'],
-        settings.SCENARIOS['registration']['steps']['step2']['text'],
-        settings.SCENARIOS['registration']['steps']['step2']['failure_text'],
-        settings.SCENARIOS['registration']['steps']['step3']['text'].format(name='Вениамин', email='email@email.ru')
+        settings.TICKETS_INTENTS[0]['answer'],
+        settings.TICKETS_INTENTS[1]['answer'],
+        settings.TICKET_SCENARIOS['purchase']['steps']['step1']['text'],
+        settings.TICKET_SCENARIOS['purchase']['steps']['step2']['text'],
+        settings.TICKET_SCENARIOS['purchase']['steps']['step2']['failure_text'],
+        #settings.TICKET_SCENARIOS['purchase']['steps']['step3']['text'].format(name='Вениамин', email='email@email.ru')
     ]
 
     @isolate_db
@@ -101,24 +101,24 @@ class Test1(TestCase):
 
         assert real_outputs == self.EXPECTED_OUTPUTS
 
-    # def test_on_event(self):
-    #     event = VkBotMessageEvent(raw=self.RAW_EVENT)
-    #
-    #     send_mock = Mock()
-    #
-    #     with patch('bot.vk_api.VkApi'):
-    #         with patch('bot.VkBotLongPoll'):
-    #             bot = Bot('', '')
-    #             bot.api = Mock()
-    #             bot.api.messages.send = send_mock
-    #
-    #             bot.on_event(event)
-    #
-    #     send_mock.assert_called_once_with(
-    #         message=self.RAW_EVENT['object']['message']['text'],
-    #         random_id=ANY,
-    #         peer_id=self.RAW_EVENT['object']['message']['peer_id']
-    #     )
+    def test_on_event(self):
+        event = VkBotMessageEvent(raw=self.RAW_EVENT)
+
+        send_mock = Mock()
+
+        with patch('bot.vk_api.VkApi'):
+            with patch('bot.VkBotLongPoll'):
+                bot = Bot('', '')
+                bot.api = Mock()
+                bot.api.messages.send = send_mock
+
+                bot.on_event(event)
+
+        send_mock.assert_called_once_with(
+            message=self.RAW_EVENT['object']['message']['text'],
+            random_id=ANY,
+            peer_id=self.RAW_EVENT['object']['message']['peer_id']
+        )
     def test_image_generation(self):
         ticket_file = generate_ticket('Dghh', 'ggg')
         with open('files/ticket_example.png', 'rb') as expected_file:
