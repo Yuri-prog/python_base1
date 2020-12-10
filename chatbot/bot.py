@@ -143,6 +143,8 @@ class Bot:
 
 
 class Dispatcher:
+    """ Выдает клиенту список 5 вылетов на выбор
+    """
     def __init__(self):
         self.flight_list = []
 
@@ -207,6 +209,8 @@ class Dispatcher:
         return flight_text
 
     def choose_ticket(self, state):
+        """ Обрабатывает выбор клиента и выдает конечный результат. Запрашивает контакты клиента.
+        """
         quantity = state.context['quantity']
         choice = state.context['choice']
         flight_number = self.flight_list[int(choice) - 1][2]
@@ -231,6 +235,8 @@ class Dispatcher:
         return result_offer
 
     def final(self, state):
+        """ Финальное сообщение.
+        """
         contact = state.context['email']
         if '@' in contact:
             phrase = 'электронной почте'
