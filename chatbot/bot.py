@@ -105,6 +105,7 @@ class Bot:
 
         handler = getattr(handlers, step['handler'])
         if handler(text=text, context=state.context):
+            #print(state)
             next_step = steps[step['next_step']]
             if step['handler'] == 'handle_point_2' and state.context['point_2'] not in settings.SCHEDULE_CONFIG[
                 state.context['point_1']]:
@@ -112,8 +113,12 @@ class Bot:
                 text_to_send = next_step['text'].format(**state.context)
             elif step['handler'] == 'handle_date':
                 text_to_send = dispatcher.dispatcher(state)
+                #text_to_send = next_step['text'].format(**state.context)
+                #next_step = steps['step5']
             elif step['handler'] == 'handle_comment':
+                #text_to_send =
                 text_to_send = dispatcher.choose_ticket(state)
+                #text_to_send = next_step['text'].format(**state.context)
             elif step['handler'] == 'handle_choice' and state.context['choice'] == '0':
                 next_step = steps['step10']
                 text_to_send = next_step['text'].format(**state.context)
@@ -242,7 +247,7 @@ class Dispatcher:
                 f' оформления билета. Всего хорошего! До свидания!'
         return final
 
-
+dispatcher = Dispatcher()
 if __name__ == '__main__':
     dispatcher = Dispatcher()
     configure_logging()

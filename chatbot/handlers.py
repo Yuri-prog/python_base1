@@ -6,7 +6,7 @@ re_email = re.compile(r'\b[a-zA-z0-9_.+-]+@[a-zA-z0-9-]+\.[a-zA-z0-9-.]+\b')
 re_phone = re.compile(r'\W*\d\W*\W*\d\d\d\W*\W*\d\d\d\W*\d\d\W*\d\d')
 re_number = re.compile(r'\b[1-2]\b')
 re_quantity = re.compile(r'\b[1-5]\b')
-re_date = re.compile(r'(0[1-9]|1[0-9]|2[0-9]|3[0-1])-(0[1-9]|1[1-2])-20[2-9]\d')#(r'\d\d-\d\d-\d\d\d\d')
+re_date = re.compile(r'\b(0[1-9]|1[0-9]|2[0-9]|3[0-1])-(0[1-9]|1[1-2])-20[2-9]\d\b')#(r'\d\d-\d\d-\d\d\d\d')
 re_choice = re.compile(r'\b[0-5]\b')
 city_list = ['москва', 'санкт-петербург', 'лондон', 'париж', 'рим', 'берлин', 'барселона', 'нью-йорк']
 

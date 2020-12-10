@@ -6,11 +6,8 @@ from unittest.mock import patch, Mock, ANY
 from pony.orm import db_session, rollback
 
 import settings
-from bot import Bot
+from bot import Bot, dispatcher
 from vk_api.bot_longpoll import VkBotMessageEvent
-
-from generate_ticket import generate_ticket
-
 
 def isolate_db(test_func):
     def wrapper(*args, **kwargs):
@@ -45,7 +42,6 @@ class Test1(TestCase):
             with patch('bot.VkBotLongPoll', return_value=long_poller_listen_mock):
                 bot = Bot('', '')
                 bot.on_event = Mock()
-                #bot.send_image = Mock()#image send
                 bot.run()
 
                 bot.on_event.assert_called()
@@ -54,13 +50,27 @@ class Test1(TestCase):
 
     INPUTS = [
         'Привет',
-        'А когда',
-        'Где будет конференция',
-        'Зарегистрируй меня',
-        'Вениамин',
-        'мой адрес email@email',
+        'справка',
+        'купить',
+        '/',
+        'рим',
+        'прага',
+        'москва',
+        '23-12-2021',
+        '2',
+        '3',
+        'нет',
         'email@email.ru'
     ]
+
+    class UserState:
+        '''Состояние пользователя внутри сценария.'''
+
+        def __init__(self):
+            self.context = {'point_1':'рим', 'point_2':'москва', 'out_date':'23-12-2021', 'choice':'2', 'quantity':'3', 'email':'email@email.ru'}
+
+    state = UserState()
+
     EXPECTED_OUTPUTS = [
         settings.DEFAULT_ANSWER,
         settings.TICKETS_INTENTS[0]['answer'],
@@ -68,7 +78,12 @@ class Test1(TestCase):
         settings.TICKET_SCENARIOS['purchase']['steps']['step1']['text'],
         settings.TICKET_SCENARIOS['purchase']['steps']['step2']['text'],
         settings.TICKET_SCENARIOS['purchase']['steps']['step2']['failure_text'],
-        #settings.TICKET_SCENARIOS['purchase']['steps']['step3']['text'].format(name='Вениамин', email='email@email.ru')
+        settings.TICKET_SCENARIOS['purchase']['steps']['step3']['text'],
+        dispatcher.dispatcher(state),
+        settings.TICKET_SCENARIOS['purchase']['steps']['step5']['text'],
+        settings.TICKET_SCENARIOS['purchase']['steps']['step6']['text'],
+        dispatcher.choose_ticket(state),
+        dispatcher.final(state)
     ]
 
     @isolate_db
@@ -89,7 +104,6 @@ class Test1(TestCase):
         with patch('bot.VkBotLongPoll', return_value=long_poller_mock):
             bot = Bot('', '')
             bot.api = api_mock
-            bot.send_image = Mock()  # image send
             bot.run()
 
         assert send_mock.call_count == len(self.INPUTS)
@@ -101,26 +115,3 @@ class Test1(TestCase):
 
         assert real_outputs == self.EXPECTED_OUTPUTS
 
-    def test_on_event(self):
-        event = VkBotMessageEvent(raw=self.RAW_EVENT)
-
-        send_mock = Mock()
-
-        with patch('bot.vk_api.VkApi'):
-            with patch('bot.VkBotLongPoll'):
-                bot = Bot('', '')
-                bot.api = Mock()
-                bot.api.messages.send = send_mock
-
-                bot.on_event(event)
-
-        send_mock.assert_called_once_with(
-            message=self.RAW_EVENT['object']['message']['text'],
-            random_id=ANY,
-            peer_id=self.RAW_EVENT['object']['message']['peer_id']
-        )
-    def test_image_generation(self):
-        ticket_file = generate_ticket('Dghh', 'ggg')
-        with open('files/ticket_example.png', 'rb') as expected_file:
-            expected_bytes = expected_file.read()
-        assert ticket_file.read() == expected_bytes
