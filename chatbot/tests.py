@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 from copy import deepcopy
 from unittest import TestCase
-from unittest.mock import patch, Mock, ANY
-
+from unittest.mock import patch, Mock
 from pony.orm import db_session, rollback
-
+from vk_api.bot_longpoll import VkBotMessageEvent
 import settings
 from bot import Bot, dispatcher
-from vk_api.bot_longpoll import VkBotMessageEvent
+
 
 def isolate_db(test_func):
     def wrapper(*args, **kwargs):
@@ -21,7 +20,7 @@ class Test1(TestCase):
         'type': 'message_new',
         'object': {
             'message': {
-                'date': 1603015285, 'from_id': 617520269, 'id': 462, 'out': 0, 'peer_id':617520269,
+                'date': 1603015285, 'from_id': 617520269, 'id': 462, 'out': 0, 'peer_id': 617520269,
                 'text': 'привет бот', 'conversation_message_id': 461, 'fwd_messages': [], 'important': False,
                 'random_id': 0, 'attachments': [], 'is_hidden': False},
             'client_info': {
@@ -43,7 +42,6 @@ class Test1(TestCase):
                 bot = Bot('', '')
                 bot.on_event = Mock()
                 bot.run()
-
                 bot.on_event.assert_called()
                 bot.on_event.assert_any_call(obj)
                 assert bot.on_event.call_count == count
@@ -64,12 +62,11 @@ class Test1(TestCase):
     ]
 
     class UserState:
-        '''Состояние пользователя внутри сценария.'''
+        def __init__(self, INPUTS):
+            self.context = {'point_1': INPUTS[4], 'point_2': INPUTS[6], 'out_date': INPUTS[7], 'choice': INPUTS[8],
+                            'quantity': INPUTS[9], 'email': INPUTS[11]}
 
-        def __init__(self):
-            self.context = {'point_1':'рим', 'point_2':'москва', 'out_date':'23-12-2021', 'choice':'2', 'quantity':'3', 'email':'email@email.ru'}
-
-    state = UserState()
+    state = UserState(INPUTS)
 
     EXPECTED_OUTPUTS = [
         settings.DEFAULT_ANSWER,
@@ -114,4 +111,3 @@ class Test1(TestCase):
             real_outputs.append(kwargs['message'])
 
         assert real_outputs == self.EXPECTED_OUTPUTS
-
