@@ -148,9 +148,12 @@ class Dispatcher:
     def __init__(self):
         self.flight_list = []
 
+    # TODO код получается слишком объемный для одного метода
+    # TODO попробуйте разделить код на независимые части
     def dispatcher(self, state):
         date_now = datetime.datetime.now()
         flight_date = datetime.datetime.strptime(state.context['out_date'], '%d-%m-%Y')
+        # TODO атрибуты инициализировать надо в init класса
         self.city_out = state.context['point_1']
         self.city_in = state.context['point_2']
         flight_index = 0
