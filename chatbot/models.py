@@ -2,7 +2,7 @@ from pony.orm import Database, Required, Json
 from settings import DB_CONFIG
 db = Database()
 db.bind(**DB_CONFIG)
-
+# TODO стиль кода
 class UserState(db.Entity):
     '''Состояние пользователя внутри сценария'''
     user_id = Required(str, unique=True)
