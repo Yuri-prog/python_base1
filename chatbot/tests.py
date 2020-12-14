@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
+import datetime
+import time
 from copy import deepcopy
 from unittest import TestCase
 from unittest.mock import patch, Mock
+
 from pony.orm import db_session, rollback
 from vk_api.bot_longpoll import VkBotMessageEvent
+
 import settings
 from bot import Bot, dispatcher
 
@@ -13,7 +17,9 @@ def isolate_db(test_func):
         with db_session:
             test_func(*args, **kwargs)
             rollback()
+
     return wrapper
+
 
 class Test1(TestCase):
     RAW_EVENT = {
@@ -46,6 +52,8 @@ class Test1(TestCase):
                 bot.on_event.assert_any_call(obj)
                 assert bot.on_event.call_count == count
 
+    #test_date = '01-01-2021'#dispatcher.flight_date_start
+
     INPUTS = [
         'Привет',
         'справка',
@@ -53,20 +61,22 @@ class Test1(TestCase):
         '/',
         'рим',
         'прага',
-        'москва',
-        '23-12-2021',
+        'нью-йорк',
+        '01-01-2021',
         '2',
-        '3',
+        '2',
         'нет',
         'email@email.ru'
     ]
 
-    class UserState:
-        def __init__(self, INPUTS):
-            self.context = {'point_1': INPUTS[4], 'point_2': INPUTS[6], 'out_date': INPUTS[7], 'choice': INPUTS[8],
-                            'quantity': INPUTS[9], 'email': INPUTS[11]}
-
-    state = UserState(INPUTS)
+    # class UserState:
+    #     def __init__(self, INPUTS):
+    #         self.context = {'point_1': INPUTS[4], 'point_2': INPUTS[6], 'out_date': INPUTS[7], 'choice': INPUTS[8],'quantity': INPUTS[9], 'email': INPUTS[11], 'comment':'нет', 'flight_number':'', 'dispatcher':'', 'choose_ticket':''}
+    #
+    # state = UserState(INPUTS)
+    x = ('Выбрано 2 билета на рейс по маршруту РИМ-НЬЮ-ЙОРК.\n Рейс AF9742. Вылет 01.01.2021 в 09.30. Прибытие в конечный пункт в 19.20.\n '
+         'Если Вы согласны с предложением, напишите свой адрес электронной почты или телефон для связи с оператором. Если не согласны, напишите "нет".')#.format(test_date)
+    print(x)
 
     EXPECTED_OUTPUTS = [
         settings.DEFAULT_ANSWER,
@@ -76,11 +86,26 @@ class Test1(TestCase):
         settings.TICKET_SCENARIOS['purchase']['steps']['step2']['text'],
         settings.TICKET_SCENARIOS['purchase']['steps']['step2']['failure_text'],
         settings.TICKET_SCENARIOS['purchase']['steps']['step3']['text'],
-        dispatcher.dispatcher(state),
+        #dispatcher.dispatcher(state),
+        settings.TICKET_SCENARIOS['purchase']['steps']['step4']['text'].format(dispatcher=' Предлагается список вылетов по направлению'
+                                                                              ' РИМ - НЬЮ-ЙОРК, наиболее близких по времени к указанной дате. Выберите,' \
+                                                                              ' пожалуйста, порядковый номер желаемого вылета из предлагаемого списка.'
+                                                                              ' Если Вам не подходит ни один рейс, выберите 0:\n'
+                                                                              '1. Номер рейса AF9742. Вылет 28.12.2020 в 09.30.\n'
+                                                                              '2. Номер рейса AF9742. Вылет 01.01.2021 в 09.30.\n'
+                                                                              '3. Номер рейса AF9742. Вылет 14.01.2021 в 09.30.\n'
+                                                                              '4. Номер рейса AF9742. Вылет 28.01.2021 в 09.30.\n'
+                                                                              '5. Номер рейса AF9742. Вылет 01.02.2021 в 09.30.\n'),
         settings.TICKET_SCENARIOS['purchase']['steps']['step5']['text'],
         settings.TICKET_SCENARIOS['purchase']['steps']['step6']['text'],
-        dispatcher.choose_ticket(state),
-        dispatcher.final(state)
+        #dispatcher.choose_ticket(state),
+        settings.TICKET_SCENARIOS['purchase']['steps']['step7']['text'].format(choose_ticket=x),#'Выбрано 2 билета на рейс по маршруту РИМ-НЬЮ-ЙОРК.\n'
+        #                                                                        ' Рейс AF9742. Вылет 01.01.2021 в 09.30. Прибытие в конечный пункт в 19.20.\n'
+        #                                                                        ' Если Вы согласны с предложением, напишите свой адрес электронной почты или'
+        #                                                                         ' телефон для связи с оператором. Если не согласны, напишите "нет".'),
+        #dispatcher.final(state)
+        settings.TICKET_SCENARIOS['purchase']['steps']['step8']['text'].format(final='В ближайшее время с Вами свяжется специалист по электронной почте'
+                                                                              ' email@email.ru для окончательного оформления билета. Всего хорошего! До свидания!')
     ]
 
     @isolate_db
@@ -94,7 +119,7 @@ class Test1(TestCase):
             event = deepcopy(self.RAW_EVENT)
             event['object']['message']['text'] = input_text
             events.append(VkBotMessageEvent(event))
-
+            print(input_text)
         long_poller_mock = Mock()
         long_poller_mock.listen = Mock(return_value=events)
 
@@ -109,5 +134,6 @@ class Test1(TestCase):
         for call in send_mock.call_args_list:
             args, kwargs = call
             real_outputs.append(kwargs['message'])
+            print(real_outputs)
 
         assert real_outputs == self.EXPECTED_OUTPUTS

@@ -60,9 +60,14 @@ TICKET_SCENARIOS = {
                 'handler': 'handle_date',
                 'next_step': 'step4'
             },
-
+            # 'step4': {
+            #     'text': 'Вылет из {city_out}',
+            #     'failure_text': 'Неверный ввод. Попробуйте еще раз. введите число от 0 до 5.',
+            #     'handler': 'handle_dispatcher',
+            #     'next_step': 'step5'
+            #},
             'step4': {
-                'text': '',
+                'text': '{dispatcher}',
                 'failure_text': 'Неверный ввод. Попробуйте еще раз. введите число от 0 до 5.',
                 'handler': 'handle_choice',
                 'next_step': 'step5'
@@ -85,14 +90,14 @@ TICKET_SCENARIOS = {
             },
 
             'step7': {
-                'text': '',
+                'text': '{choose_ticket}',
                 'failure_text': 'Неверный ввод. Повторите, пожалуйста.',
                 'handler': 'handle_email',
                 'next_step': 'step8'
             },
 
             'step8': {
-                'text': '',
+                'text': '{final}',
                 'failure_text': None,
                 'handler': None,
                 'next_step': None

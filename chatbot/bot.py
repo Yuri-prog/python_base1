@@ -16,7 +16,8 @@ except ImportError:
     exit('Do cp settings.py.default settings.py and set token.')
 
 log = logging.getLogger('bot')
-
+# user_id = event.object.message['peer_id']
+# state = UserState.get(user_id=str(user_id))
 
 def configure_logging():
     stream_handler = logging.StreamHandler()
@@ -36,7 +37,7 @@ class Bot:
     Use python3.8
     """
 
-    def __init__(self, group_id, token, ):
+    def __init__(self, group_id, token):
         """
         param group_id: group_id из vk
         param token: секретный ключ
@@ -49,7 +50,6 @@ class Bot:
 
     def run(self):
         """Запуск бота"""
-
         for event in self.long_poller.listen():
             try:
                 self.on_event(event)
@@ -91,6 +91,7 @@ class Bot:
                                random_id=random.randint(0, 2 ** 20),
                                peer_id=user_id, )
 
+
     def start_scenario(self, user_id, scenario_name):
         scenario = settings.TICKET_SCENARIOS[scenario_name]
         first_step = scenario['first_step']
@@ -102,29 +103,14 @@ class Bot:
     def continue_scenario(self, text, state):
         steps = settings.TICKET_SCENARIOS[state.scenario_name]['steps']
         step = steps[state.step_name]
-
         handler = getattr(handlers, step['handler'])
-        if handler(text=text, context=state.context):
-            next_step = steps[step['next_step']]
-            if step['handler'] == 'handle_point_2' and state.context['point_2'] not in settings.SCHEDULE_CONFIG[
-                state.context['point_1']]:
-                next_step = steps['step9']
-                text_to_send = next_step['text'].format(**state.context)
-            elif step['handler'] == 'handle_date':
-                text_to_send = dispatcher.dispatcher(state)
-            elif step['handler'] == 'handle_comment':
-                text_to_send = dispatcher.choose_ticket(state)
-            elif step['handler'] == 'handle_choice' and state.context['choice'] == '0':
-                next_step = steps['step10']
-                text_to_send = next_step['text'].format(**state.context)
-            elif step['handler'] == 'handle_email':
-                if state.context['email'] == 'нет':
-                    next_step = steps['step10']
-                    text_to_send = next_step['text'].format(**state.context)
-                else:
-                    text_to_send = dispatcher.final(state)
+        if handler(text=text, context=state.context, state=state):
+            if type(handler(text=text, context=state.context, state=state)) is str:
+                next_step = steps[handler(text=text, context=state.context, state=state)]
             else:
-                text_to_send = next_step['text'].format(**state.context)
+                next_step = steps[step['next_step']]
+
+            text_to_send = next_step['text'].format(**state.context)
             if next_step['next_step']:
                 state.step_name = step['next_step']
             else:
@@ -147,15 +133,12 @@ class Dispatcher:
     """
     def __init__(self):
         self.flight_list = []
-
+        self.json = {}
     # TODO код получается слишком объемный для одного метода
     # TODO попробуйте разделить код на независимые части
     def dispatcher(self, state):
         date_now = datetime.datetime.now()
         flight_date = datetime.datetime.strptime(state.context['out_date'], '%d-%m-%Y')
-        # TODO атрибуты инициализировать надо в init класса
-        self.city_out = state.context['point_1']
-        self.city_in = state.context['point_2']
         flight_index = 0
         flight_date_span = []
         shift = datetime.timedelta(days=45)
@@ -174,7 +157,7 @@ class Dispatcher:
 
         for span_date in flight_date_span:
             week_day = span_date.weekday()
-            for day in settings.SCHEDULE_CONFIG[self.city_out][self.city_in].keys():
+            for day in settings.SCHEDULE_CONFIG[state.context['point_1']][state.context['point_2']].keys():
                 if (type(day) is int and day == week_day) or (type(day) is not int and int(day) == span_date.day):
                     for number, item in \
                             settings.SCHEDULE_CONFIG[state.context['point_1']][state.context['point_2']][
@@ -202,11 +185,15 @@ class Dispatcher:
         self.flight_list = flight_ticket_span[(flight_index - day_shift):(flight_index + (5 - day_shift))]
         for number, item in enumerate(self.flight_list):
             string = f'{number + 1}. Номер рейса {item[2]}. Вылет {item[0].strftime("%d.%m.%Y")} в {item[0].strftime("%H.%M")}.\n'
-            flight_inform += (string)
-        flight_text = f'Предлагается список вылетов  по направлению {self.city_out.upper()} - ' \
-                      f'{self.city_in.upper()}, наиболее близких по времени к' \
-                      f' указанной дате. Выберите, пожалуйста, порядковый номер желаемого вылета из предлагаемого списка. ' \
-                      f'Если Вам не подходит ни один рейс, выберите 0:\n' \
+            flight_inform += string
+        self.json = {'city_out': state.context["point_1"],
+                'city_in': state.context["point_2"],
+                'flight_inform': flight_inform
+        }
+        flight_text = f' Предлагается список вылетов по направлению {state.context["point_1"].upper()} - ' \
+                      f'{state.context["point_2"].upper()}, наиболее близких по времени к' \
+                      f' указанной дате. Выберите, пожалуйста, порядковый номер желаемого вылета из предлагаемого списка.' \
+                      f' Если Вам не подходит ни один рейс, выберите 0:\n' \
                       f'{flight_inform}' \
 
         return flight_text
@@ -228,7 +215,8 @@ class Dispatcher:
             ending_1 = ''
             ending_2 = ''
 
-        result_offer = f'Выбран{ending_1} {quantity} билет{ending_2} на рейс по маршруту {self.city_out.upper()}-{self.city_in.upper()}.\n' \
+        result_offer = f'Выбран{ending_1} {quantity} билет{ending_2} на рейс по маршруту {state.context["point_1"].upper()}' \
+                       f'-{state.context["point_2"].upper()}.\n' \
                        f' Рейс {flight_number}. Вылет {self.flight_list[int(choice) - 1][0].strftime("%d.%m.%Y")}' \
                        f' в {self.flight_list[int(choice) - 1][0].strftime("%H.%M")}. Прибытие в конечный пункт в' \
                        f' {self.flight_list[int(choice) - 1][1].strftime("%H.%M")}.\n' \
@@ -253,7 +241,9 @@ class Dispatcher:
 
 dispatcher = Dispatcher()
 if __name__ == '__main__':
-    dispatcher = Dispatcher()
+    #dispatcher = Dispatcher(state)
+    #bot.dispatcher(state)
     configure_logging()
-    bot = Bot(settings.GROUP_ID, settings.TOKEN, )
+    bot = Bot(settings.GROUP_ID, settings.TOKEN,)
+    #bot.dispatcher(state)
     bot.run()
