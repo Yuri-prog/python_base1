@@ -1,11 +1,8 @@
 '''Handler - функция, принимающая на вход текст входящего сообщения и context(dict), а возвращает bool, пройден шаг или нет'''
 import datetime
 import re
-
-import settings
-#from bot import dispatcher
 import bot
-
+import settings
 
 re_email = re.compile(r'\b[a-zA-z0-9_.+-]+@[a-zA-z0-9-]+\.[a-zA-z0-9-.]+\b')
 re_phone = re.compile(r'\W*\d\W*\W*\d\d\d\W*\W*\d\d\d\W*\d\d\W*\d\d')
@@ -46,7 +43,6 @@ def handle_email(text, context, state):
         return True
     elif matches1:
         context['email'] = text
-        print(context['email'])
         context['final'] = bot.dispatcher.final(state)
         return True
     elif text == 'нет':
@@ -74,6 +70,7 @@ def handle_date(text, context, state):
             return True
     else:
         return False
+
 
 def handle_choice(text, context, state):
     match = re.match(re_choice, text)

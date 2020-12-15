@@ -16,8 +16,6 @@ except ImportError:
     exit('Do cp settings.py.default settings.py and set token.')
 
 log = logging.getLogger('bot')
-# user_id = event.object.message['peer_id']
-# state = UserState.get(user_id=str(user_id))
 
 def configure_logging():
     stream_handler = logging.StreamHandler()

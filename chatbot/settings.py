@@ -60,12 +60,7 @@ TICKET_SCENARIOS = {
                 'handler': 'handle_date',
                 'next_step': 'step4'
             },
-            # 'step4': {
-            #     'text': 'Вылет из {city_out}',
-            #     'failure_text': 'Неверный ввод. Попробуйте еще раз. введите число от 0 до 5.',
-            #     'handler': 'handle_dispatcher',
-            #     'next_step': 'step5'
-            #},
+
             'step4': {
                 'text': '{dispatcher}',
                 'failure_text': 'Неверный ввод. Попробуйте еще раз. введите число от 0 до 5.',
