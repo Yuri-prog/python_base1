@@ -131,32 +131,19 @@ class Dispatcher:
     """
     def __init__(self):
         self.flight_list = []
-        self.json = {}
-    # TODO код получается слишком объемный для одного метода
-    # TODO попробуйте разделить код на независимые части
-    def dispatcher(self, state):
-        date_now = datetime.datetime.now()
-        flight_date = datetime.datetime.strptime(state.context['out_date'], '%d-%m-%Y')
-        flight_index = 0
-        flight_date_span = []
-        shift = datetime.timedelta(days=45)
-        step = datetime.timedelta(days=1)
-        flight_date_start = flight_date - shift
-        flight_date_finish = flight_date + shift
-        flight_ticket_span = []
-        span_date_1 = flight_date
+        self.flight_date = None
+        self.flight_date_span = []
+        self.flight_ticket_span = []
+        self.flight_index = 0
+        self.flight_text = ''
+
+    def flights(self, state):
+        span_date_1 = self.flight_date
         flight_date_time = None
-        flight_inform = ''
-        day_shift = 2
-
-        while flight_date_start < flight_date_finish:
-            flight_date_span.append(flight_date_start)
-            flight_date_start += step
-
-        for span_date in flight_date_span:
-            week_day = span_date.weekday()
+        for span_date in self.flight_date_span:
             for day in settings.SCHEDULE_CONFIG[state.context['point_1']][state.context['point_2']].keys():
-                if (type(day) is int and day == week_day) or (type(day) is not int and int(day) == span_date.day):
+                if (type(day) is int and day == span_date.weekday()) or (
+                        type(day) is not int and int(day) == span_date.day):
                     for number, item in \
                             settings.SCHEDULE_CONFIG[state.context['point_1']][state.context['point_2']][
                                 day].items():
@@ -164,37 +151,49 @@ class Dispatcher:
                                                                     datetime.datetime.strptime(item[0],
                                                                                                '%H.%M').time()))
                         arrival_time = datetime.datetime.strptime(item[1], '%H.%M').time()
-                        flight_ticket_span.append([span_date_time, arrival_time, number])
-                        if span_date == flight_date or (span_date_1 < flight_date and span_date > flight_date):
+                        self.flight_ticket_span.append([span_date_time, arrival_time, number])
+                        if span_date == self.flight_date or (span_date_1 < self.flight_date and span_date > self.flight_date):
                             if not flight_date_time:
                                 flight_date_time = span_date_time
-                            if not flight_index:
-                                flight_index = flight_ticket_span.index([span_date_time, arrival_time, number])
+                            if not self.flight_index:
+                                self.flight_index = self.flight_ticket_span.index([span_date_time, arrival_time, number])
                             else:
                                 continue
                         span_date_1 = span_date
 
-        for value in (flight_ticket_span[flight_index - day_shift:flight_index + (5 - day_shift)]):
-            if (flight_date.timestamp() - value[0].timestamp()) < (
-                    flight_date.timestamp() - date_now.timestamp() - 3600):
+    def flight_inform(self, state):
+        day_shift = 2
+        flight_inform = ''
+        for value in (self.flight_ticket_span[self.flight_index - day_shift:self.flight_index + (5 - day_shift)]):
+            if (self.flight_date.timestamp() - value[0].timestamp()) < (
+                    self.flight_date.timestamp() - datetime.datetime.now().timestamp() - 3600):
                 break
             else:
                 day_shift -= 1
-        self.flight_list = flight_ticket_span[(flight_index - day_shift):(flight_index + (5 - day_shift))]
+        self.flight_list = self.flight_ticket_span[(self.flight_index - day_shift):(self.flight_index + (5 - day_shift))]
         for number, item in enumerate(self.flight_list):
             string = f'{number + 1}. Номер рейса {item[2]}. Вылет {item[0].strftime("%d.%m.%Y")} в {item[0].strftime("%H.%M")}.\n'
             flight_inform += string
-        self.json = {'city_out': state.context["point_1"],
-                'city_in': state.context["point_2"],
-                'flight_inform': flight_inform
-        }
-        flight_text = f' Предлагается список вылетов по направлению {state.context["point_1"].upper()} - ' \
+
+        self.flight_text = (f' Предлагается список вылетов по направлению {state.context["point_1"].upper()} - ' \
                       f'{state.context["point_2"].upper()}, наиболее близких по времени к' \
                       f' указанной дате. Выберите, пожалуйста, порядковый номер желаемого вылета из предлагаемого списка.' \
                       f' Если Вам не подходит ни один рейс, выберите 0:\n' \
-                      f'{flight_inform}' \
+                      f'{flight_inform}') \
 
-        return flight_text
+
+    def dispatcher(self, state):
+        self.flight_date = datetime.datetime.strptime(state.context['out_date'], '%d-%m-%Y')
+        step = datetime.timedelta(days=1)
+        flight_date_start = self.flight_date - datetime.timedelta(days=45)
+        flight_date_finish = self.flight_date + datetime.timedelta(days=45)
+
+        while flight_date_start < flight_date_finish:
+            self.flight_date_span.append(flight_date_start)
+            flight_date_start += step
+        self.flights(state)
+        self.flight_inform(state)
+        return self.flight_text
 
     def choose_ticket(self, state):
         """ Обрабатывает выбор клиента и выдает конечный результат. Запрашивает контакты клиента.
@@ -239,9 +238,6 @@ class Dispatcher:
 
 dispatcher = Dispatcher()
 if __name__ == '__main__':
-    #dispatcher = Dispatcher(state)
-    #bot.dispatcher(state)
     configure_logging()
     bot = Bot(settings.GROUP_ID, settings.TOKEN,)
-    #bot.dispatcher(state)
     bot.run()
