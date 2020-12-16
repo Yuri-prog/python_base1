@@ -143,6 +143,7 @@ class Dispatcher:
             for day in state_points.keys():
                 if (isinstance(day, int) and day == span_date.weekday()) or \
                     (isinstance(day, int) is False and int(day) == span_date.day):
+                    # TODO отступ должен быть больше - code/reformat code поможет
                     for number, item in state_points[day].items():
                         cur_time = datetime.datetime.strptime(item[0], '%H.%M').time()
                         span_date_time = (datetime.datetime.combine(span_date.date(), cur_time))
@@ -164,7 +165,7 @@ class Dispatcher:
         index_start = self.flight_index - day_shift
         index_finish = self.flight_index + (5 - day_shift)
         self.flight_list = self.flight_ticket_span[index_start:index_finish]
-        for value in (self.flight_list):
+        for value in (self.flight_list):  # TODO лишние скобки
             timeshift_1 = self.flight_date.timestamp() - value[0].timestamp()
             timeshift_2 = self.flight_date.timestamp() - datetime.datetime.now().timestamp() - 3600
             if timeshift_1 < timeshift_2:
@@ -172,12 +173,15 @@ class Dispatcher:
             else:
                 day_shift -= 1
         for number, item in enumerate(self.flight_list):
+            # TODO длинная строка
             string = f'{number + 1}. Номер рейса {item[2]}. Вылет {item[0].strftime("%d.%m.%Y")} в {item[0].strftime("%H.%M")}.\n'
             flight_inform += string
 
         self.flight_text = (f' Предлагается список вылетов по направлению {state.context["point_1"].upper()} - ' \
+                            # TODO '\' можно убрать 
                       f'{state.context["point_2"].upper()}, наиболее близких по времени к' \
                       f' указанной дате. Выберите, пожалуйста, порядковый номер желаемого вылета из предлагаемого списка.' \
+                            # TODO длинная строка
                       f' Если Вам не подходит ни один рейс, выберите 0:\n' \
                       f'{flight_inform}') \
 
@@ -211,7 +215,8 @@ class Dispatcher:
         if quantity == '1':
             ending_1 = ''
             ending_2 = ''
-
+        # TODO длинная строка, "\" можно и нужно заменять на () - все строки взять в скобки, либо использовать
+        # TODO многострочную строку
         result_offer = f'Выбран{ending_1} {quantity} билет{ending_2} на рейс по маршруту {state.context["point_1"].upper()}' \
                        f'-{state.context["point_2"].upper()}.\n' \
                        f' Рейс {flight_number}. Вылет {self.flight_list[int(choice) - 1][0].strftime("%d.%m.%Y")}' \
