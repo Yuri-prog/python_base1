@@ -51,8 +51,8 @@ class Bot:
         for event in self.long_poller.listen():
             try:
                 self.on_event(event)
-            except Exception:  # TODO почему бы не записать саму ошибку в лог?
-                log.exception('Ошибка в обработке события')
+            except Exception:
+                log.error('Ошибка в обработке события')
 
     @db_session
     def on_event(self, event):
@@ -141,10 +141,8 @@ class Dispatcher:
         state_points = settings.SCHEDULE_CONFIG[state.context['point_1']][state.context['point_2']]
         for span_date in self.flight_date_span:
             for day in state_points.keys():
-                # TODO тип объектов надо проверять через isinstance
-                # TODO проверка через type is - антипаттерн (не так эффективна)
-                if (type(day) is int and day == span_date.weekday()) or \
-                        (type(day) is not int and int(day) == span_date.day):
+                if (isinstance(day, int) and day == span_date.weekday()) or \
+                    (isinstance(day, int) is False and int(day) == span_date.day):
                     for number, item in state_points[day].items():
                         cur_time = datetime.datetime.strptime(item[0], '%H.%M').time()
                         span_date_time = (datetime.datetime.combine(span_date.date(), cur_time))
@@ -160,18 +158,19 @@ class Dispatcher:
                                 continue
                         span_date_1 = span_date
 
-    # TODO выше я упростил некоторые моменты
-    # TODO обратите внимание на это и попробуйте по аналогии упростить код ниже
     def flight_inform(self, state):
         day_shift = 2
         flight_inform = ''
-        for value in (self.flight_ticket_span[self.flight_index - day_shift:self.flight_index + (5 - day_shift)]):
-            if (self.flight_date.timestamp() - value[0].timestamp()) < (
-                    self.flight_date.timestamp() - datetime.datetime.now().timestamp() - 3600):
+        index_start = self.flight_index - day_shift
+        index_finish = self.flight_index + (5 - day_shift)
+        self.flight_list = self.flight_ticket_span[index_start:index_finish]
+        for value in (self.flight_list):
+            timeshift_1 = self.flight_date.timestamp() - value[0].timestamp()
+            timeshift_2 = self.flight_date.timestamp() - datetime.datetime.now().timestamp() - 3600
+            if timeshift_1 < timeshift_2:
                 break
             else:
                 day_shift -= 1
-        self.flight_list = self.flight_ticket_span[(self.flight_index - day_shift):(self.flight_index + (5 - day_shift))]
         for number, item in enumerate(self.flight_list):
             string = f'{number + 1}. Номер рейса {item[2]}. Вылет {item[0].strftime("%d.%m.%Y")} в {item[0].strftime("%H.%M")}.\n'
             flight_inform += string

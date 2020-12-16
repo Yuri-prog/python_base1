@@ -67,25 +67,25 @@ class Test1(TestCase):
         'нет',
         'email@email.ru'
     ]
-    # TODO x,y,z - плохие примеры нэйминга, не жалейте букв
-    x = (
-        f' Предлагается список вылетов по направлению РИМ - НЬЮ-ЙОРК, '
-        f'наиболее близких по времени к указанной дате. Выберите,'
-        f' пожалуйста, порядковый номер желаемого вылета из предлагаемого списка. '
-        f'Если Вам не подходит ни один рейс, выберите 0:\n'
-        f'1. Номер рейса AF9742. Вылет 14.01.{test_date_year} в 09.30.\n'
-        f'2. Номер рейса AF9742. Вылет 28.01.{test_date_year} в 09.30.\n'
-        f'3. Номер рейса AF9742. Вылет 01.02.{test_date_year} в 09.30.\n'
-        f'4. Номер рейса AF9742. Вылет 14.02.{test_date_year} в 09.30.\n'
-        f'5. Номер рейса AF9742. Вылет 28.02.{test_date_year} в 09.30.\n')
 
-    y = (f'Выбрано 2 билета на рейс по маршруту РИМ-НЬЮ-ЙОРК.\n Рейс AF9742. Вылет 28.01.{test_date_year} '
-         f'в 09.30. Прибытие в конечный пункт в 19.20.\n '
-         f'Если Вы согласны с предложением, напишите свой адрес электронной почты или телефон для связи с оператором. '
-         f'Если не согласны, напишите "нет".')
+    text_1 = (
+              f' Предлагается список вылетов по направлению РИМ - НЬЮ-ЙОРК, '
+              f'наиболее близких по времени к указанной дате. Выберите,'
+              f' пожалуйста, порядковый номер желаемого вылета из предлагаемого списка. '
+              f'Если Вам не подходит ни один рейс, выберите 0:\n'
+              f'1. Номер рейса AF9742. Вылет 14.01.{test_date_year} в 09.30.\n'
+              f'2. Номер рейса AF9742. Вылет 28.01.{test_date_year} в 09.30.\n'
+              f'3. Номер рейса AF9742. Вылет 01.02.{test_date_year} в 09.30.\n'
+              f'4. Номер рейса AF9742. Вылет 14.02.{test_date_year} в 09.30.\n'
+              f'5. Номер рейса AF9742. Вылет 28.02.{test_date_year} в 09.30.\n')
 
-    z = ('В ближайшее время с Вами свяжется специалист по электронной почте email@email.ru '
-         'для окончательного оформления билета. Всего хорошего! До свидания!')
+    text_2= (f'Выбрано 2 билета на рейс по маршруту РИМ-НЬЮ-ЙОРК.\n Рейс AF9742. Вылет 28.01.{test_date_year} '
+             f'в 09.30. Прибытие в конечный пункт в 19.20.\n '
+             f'Если Вы согласны с предложением, напишите свой адрес электронной почты или телефон для связи с оператором. '
+             f'Если не согласны, напишите "нет".')
+
+    text_3 = ('В ближайшее время с Вами свяжется специалист по электронной почте email@email.ru '
+              'для окончательного оформления билета. Всего хорошего! До свидания!')
 
     EXPECTED_OUTPUTS = [
         settings.DEFAULT_ANSWER,
@@ -95,11 +95,11 @@ class Test1(TestCase):
         settings.TICKET_SCENARIOS['purchase']['steps']['step2']['text'],
         settings.TICKET_SCENARIOS['purchase']['steps']['step2']['failure_text'],
         settings.TICKET_SCENARIOS['purchase']['steps']['step3']['text'],
-        settings.TICKET_SCENARIOS['purchase']['steps']['step4']['text'].format(dispatcher=x),
+        settings.TICKET_SCENARIOS['purchase']['steps']['step4']['text'].format(dispatcher=text_1),
         settings.TICKET_SCENARIOS['purchase']['steps']['step5']['text'],
         settings.TICKET_SCENARIOS['purchase']['steps']['step6']['text'],
-        settings.TICKET_SCENARIOS['purchase']['steps']['step7']['text'].format(choose_ticket=y),
-        settings.TICKET_SCENARIOS['purchase']['steps']['step8']['text'].format(final=z),
+        settings.TICKET_SCENARIOS['purchase']['steps']['step7']['text'].format(choose_ticket=text_2),
+        settings.TICKET_SCENARIOS['purchase']['steps']['step8']['text'].format(final=text_3),
     ]
 
     @isolate_db
