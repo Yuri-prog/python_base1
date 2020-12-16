@@ -6,7 +6,6 @@ from unittest.mock import patch, Mock
 
 from pony.orm import db_session, rollback
 from vk_api.bot_longpoll import VkBotMessageEvent
-
 import settings
 from bot import Bot
 
