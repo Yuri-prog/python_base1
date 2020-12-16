@@ -51,7 +51,7 @@ class Bot:
         for event in self.long_poller.listen():
             try:
                 self.on_event(event)
-            except Exception:
+            except Exception:  # TODO почему бы не записать саму ошибку в лог?
                 log.exception('Ошибка в обработке события')
 
     @db_session
@@ -69,9 +69,8 @@ class Bot:
         state = UserState.get(user_id=str(user_id))
 
         if state is not None:
-            text_to_send = self.continue_scenario(text, state)
-
             # continue scenario
+            text_to_send = self.continue_scenario(text, state)
         else:
             # search intent
             for intent in settings.TICKETS_INTENTS:
@@ -88,7 +87,6 @@ class Bot:
         self.api.messages.send(message=text_to_send,
                                random_id=random.randint(0, 2 ** 20),
                                peer_id=user_id, )
-
 
     def start_scenario(self, user_id, scenario_name):
         scenario = settings.TICKET_SCENARIOS[scenario_name]
@@ -140,27 +138,30 @@ class Dispatcher:
     def flights(self, state):
         span_date_1 = self.flight_date
         flight_date_time = None
+        state_points = settings.SCHEDULE_CONFIG[state.context['point_1']][state.context['point_2']]
         for span_date in self.flight_date_span:
-            for day in settings.SCHEDULE_CONFIG[state.context['point_1']][state.context['point_2']].keys():
-                if (type(day) is int and day == span_date.weekday()) or (
-                        type(day) is not int and int(day) == span_date.day):
-                    for number, item in \
-                            settings.SCHEDULE_CONFIG[state.context['point_1']][state.context['point_2']][
-                                day].items():
-                        span_date_time = (datetime.datetime.combine(span_date.date(),
-                                                                    datetime.datetime.strptime(item[0],
-                                                                                               '%H.%M').time()))
+            for day in state_points.keys():
+                # TODO тип объектов надо проверять через isinstance
+                # TODO проверка через type is - антипаттерн (не так эффективна)
+                if (type(day) is int and day == span_date.weekday()) or \
+                        (type(day) is not int and int(day) == span_date.day):
+                    for number, item in state_points[day].items():
+                        cur_time = datetime.datetime.strptime(item[0], '%H.%M').time()
+                        span_date_time = (datetime.datetime.combine(span_date.date(), cur_time))
                         arrival_time = datetime.datetime.strptime(item[1], '%H.%M').time()
                         self.flight_ticket_span.append([span_date_time, arrival_time, number])
-                        if span_date == self.flight_date or (span_date_1 < self.flight_date and span_date > self.flight_date):
+                        if span_date == self.flight_date or span_date_1 < self.flight_date < span_date:
                             if not flight_date_time:
                                 flight_date_time = span_date_time
                             if not self.flight_index:
-                                self.flight_index = self.flight_ticket_span.index([span_date_time, arrival_time, number])
+                                search_for = [span_date_time, arrival_time, number]
+                                self.flight_index = self.flight_ticket_span.index(search_for)
                             else:
                                 continue
                         span_date_1 = span_date
 
+    # TODO выше я упростил некоторые моменты
+    # TODO обратите внимание на это и попробуйте по аналогии упростить код ниже
     def flight_inform(self, state):
         day_shift = 2
         flight_inform = ''
@@ -235,6 +236,7 @@ class Dispatcher:
         final = f'В ближайшее время с Вами свяжется специалист по {phrase} {contact} для окончательного' \
                 f' оформления билета. Всего хорошего! До свидания!'
         return final
+
 
 dispatcher = Dispatcher()
 if __name__ == '__main__':

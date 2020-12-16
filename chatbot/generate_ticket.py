@@ -13,7 +13,7 @@ EMAIL_OFFSET = (350, 765)
 
 AVATAR_SIZE = 100
 AVATAR_OFFSET = (100, 100)
-
+# TODO стиль кода + надо лишнее удалить
 def generate_ticket(name, email):
     base = Image.open(TEMPLATE_PATH).convert("RGBA")
     font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
