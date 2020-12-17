@@ -1,6 +1,4 @@
-'''Handler - функция, принимающая на вход текст входящего сообщения и context(dict), а возвращает bool, пройден шаг или нет'''
-# TODO описание нужно добавлять к каждой функции в идеале
-# TODO просто вводную информацию по модулю можно дать через комментарий, строку для этого использовать не стоит
+
 import datetime
 import re
 import bot
@@ -15,7 +13,7 @@ re_choice = re.compile(r'\b[0-5]\b')
 city_list = ['москва', 'санкт-петербург', 'лондон', 'париж', 'рим', 'берлин', 'барселона', 'нью-йорк']
 
 
-def handle_point_1(text, context, state):
+def handle_point_1(text, context, state):  #хэндлер проверяет правильность ввода пункта вылета
     for match in city_list:
         if match in text.lower():
             context['point_1'] = text.lower()
@@ -24,7 +22,7 @@ def handle_point_1(text, context, state):
             continue
 
 
-def handle_point_2(text, context, state):
+def handle_point_2(text, context, state):  #хэндлер проверяет правильность ввода пункта прилета
     for match in city_list:
         if match in text.lower():
             context['point_2'] = text.lower()
@@ -36,8 +34,8 @@ def handle_point_2(text, context, state):
             continue
 
 
-def handle_email(text, context, state):
-    matches = re.findall(re_email, text)
+def handle_email(text, context, state):    # хэндлер принимает контактные данные пользователя, проверяет правильность
+    matches = re.findall(re_email, text)   # ввода и прекращает операцию по желанию пользователя
     matches1 = re.findall(re_phone, text)
     if matches:
         context['email'] = text
@@ -54,7 +52,7 @@ def handle_email(text, context, state):
         return False
 
 
-def handle_quantity(text, context, state):
+def handle_quantity(text, context, state):  # проверка количества билетов
     match = re.match(re_quantity, text)
     if match:
         context['quantity'] = text
@@ -63,7 +61,7 @@ def handle_quantity(text, context, state):
         return False
 
 
-def handle_date(text, context, state):
+def handle_date(text, context, state):    # проверка правильности ввода даты и выдача списка вариантов вылета
     match = re.match(re_date, text)
     if match:
         if datetime.datetime.strptime(text, '%d-%m-%Y').date() >= datetime.date.today():
@@ -74,7 +72,7 @@ def handle_date(text, context, state):
         return False
 
 
-def handle_choice(text, context, state):
+def handle_choice(text, context, state): # обработка варианта выбора билета
     match = re.match(re_choice, text)
     if match:
         context['choice'] = text
@@ -86,7 +84,7 @@ def handle_choice(text, context, state):
         return False
 
 
-def handle_comment(text, context, state):
+def handle_comment(text, context, state):  # обработка комментария и выдача информации о предлагаемом билете
     context['comment'] = text
     context['choose_ticket'] = bot.dispatcher.choose_ticket(state)
     return True
