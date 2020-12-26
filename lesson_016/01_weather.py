@@ -237,7 +237,7 @@ class DatabaseUpdater:
         conn.text_factory = str
         cursor = conn.cursor()
         cursor.execute("CREATE TABLE IF NOT EXISTS weather "
-                       "(id, temp_d, cloud_d, wind_d, pres_d, temp_n, cloud_n, wind_n, pres_n);")
+                       "(id, date, temp_d, cloud_d, wind_d, pres_d, temp_n, cloud_n, wind_n, pres_n);")
         imagemaker.card()
         cursor.execute("SELECT id FROM weather")
         m = cursor.fetchall()
@@ -247,8 +247,8 @@ class DatabaseUpdater:
             n = 0
         print(n)
         cursor.execute(
-            f"INSERT INTO weather (id, temp_d, cloud_d, wind_d, pres_d, temp_n, cloud_n, wind_n, pres_n)"
-            f" VALUES('{(int(n)+1)}', '{imagemaker.t_d}', '{imagemaker.c_d}', '{imagemaker.w_d}', '{imagemaker.p_d}',"
+            f"INSERT INTO weather (id, date, temp_d, cloud_d, wind_d, pres_d, temp_n, cloud_n, wind_n, pres_n)"
+            f" VALUES('{(int(n)+1)}', '{imagemaker.day}', '{imagemaker.t_d}', '{imagemaker.c_d}', '{imagemaker.w_d}', '{imagemaker.p_d}',"
             f"'{imagemaker.t_n}', '{imagemaker.c_n}', '{imagemaker.w_n}', '{imagemaker.p_n}');")
         conn.commit()
         cursor.execute("SELECT * from weather")
@@ -261,7 +261,7 @@ class DatabaseUpdater:
 
 weathermaker = WeatherMaker()
 weathermaker.take_weather()
-imagemaker = ImageMaker('25 декабря')
+imagemaker = ImageMaker('28 декабря')
 imagemaker.choose_day()
 databaseupdater = DatabaseUpdater()
 #imagemaker.card()
