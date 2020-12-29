@@ -52,6 +52,7 @@ import requests
 from PIL import Image
 from bs4 import BeautifulSoup
 import sqlite3
+from models import Weather, Date
 
 class WeatherMaker:
     def __init__(self):
@@ -116,9 +117,9 @@ class WeatherMaker:
                     list_of_values[8].text:
                         [list_of_values[23].text, list_of_values[31].text, list_of_values[39].text,
                          list_of_values[47].text, ],
-                    # list_of_values[48].text:
-                    #     [list_of_values[63].text, list_of_values[72].text, list_of_values[80].text, list_of_values[88].text,],
-                },
+                #     list_of_values[48].text:
+                #         [list_of_values[63].text, list_of_values[72].text, list_of_values[80].text, list_of_values[88].text,],
+                 },
             }
 
 
@@ -227,42 +228,40 @@ class ImageMaker:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+imagemaker = ImageMaker('1 января')
+weathermaker = WeatherMaker()
 
 class DatabaseUpdater:
     def __init__(self):
         pass
 
     def writing(self):
-        conn = sqlite3.connect('weather.db')
-        conn.text_factory = str
-        cursor = conn.cursor()
-        cursor.execute("CREATE TABLE IF NOT EXISTS weather "
-                       "(id, date, temp_d, cloud_d, wind_d, pres_d, temp_n, cloud_n, wind_n, pres_n);")
-        imagemaker.card()
-        cursor.execute("SELECT id FROM weather")
-        m = cursor.fetchall()
-        if m:
-            n = m[-1][0]
-        else:
-            n = 0
-        print(n)
-        cursor.execute(
-            f"INSERT INTO weather (id, date, temp_d, cloud_d, wind_d, pres_d, temp_n, cloud_n, wind_n, pres_n)"
-            f" VALUES('{(int(n)+1)}', '{imagemaker.day}', '{imagemaker.t_d}', '{imagemaker.c_d}', '{imagemaker.w_d}', '{imagemaker.p_d}',"
-            f"'{imagemaker.t_n}', '{imagemaker.c_n}', '{imagemaker.w_n}', '{imagemaker.p_n}');")
-        conn.commit()
-        cursor.execute("SELECT * from weather")
-        conn.commit()
-        result = cursor.fetchall()
-        print(result)
+        new_date = Date(name=imagemaker.day)
+        new_date.save()
+        Weather.create(
+            date=new_date,
+            temp_d=imagemaker.t_d,
+            cloud_d=imagemaker.c_d,
+            wind_d=imagemaker.w_d,
+            pres_d=imagemaker.p_d,
+            temp_n=imagemaker.t_n,
+            cloud_n=imagemaker.c_n,
+            wind_n=imagemaker.w_n,
+            pres_n=imagemaker.p_n,
+        )
+        for weather in Weather.select():
+            print(f'{weather.id}. Дата: {weather.date.name}.\n  День: Температура: {weather.temp_d}.'
+                  f' Облачность: {weather.cloud_d}.Ветер: {weather.wind_d}. Давление: {weather.pres_d}.\n '
+                  f' Ночь: Температура: {weather.temp_n}. Облачность: {weather.cloud_n}. Ветер: {weather.wind_n}.'
+                  f' Давление: {weather.pres_n}.'
+                  )
+        # Date.delete().execute()
+        # Weather.delete().execute()
 
-        # cursor.execute("DELETE FROM weather")
-        # conn.commit()
-
-weathermaker = WeatherMaker()
 weathermaker.take_weather()
-imagemaker = ImageMaker('28 декабря')
+#imagemaker = ImageMaker('28 декабря')
 imagemaker.choose_day()
+imagemaker.card()
 databaseupdater = DatabaseUpdater()
-#imagemaker.card()
 databaseupdater.writing()
+Date.delete()
