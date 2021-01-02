@@ -58,6 +58,7 @@ from models import Weather
 
 today = datetime.datetime.today()
 
+
 class WeatherMaker:
     def __init__(self):
         self.result = {}
@@ -72,9 +73,9 @@ class WeatherMaker:
             self.list_of_values = html_doc.find_all('td', {'class': "td_short_gr"})
 
     def take_weather(self):
-        days = (run.date.day-today.day)
+        days = (run.date.day - today.day)
         self.table_date = run.date
-        self.weather_date = self.list_of_values[days+1].text
+        self.weather_date = self.list_of_values[days + 1].text
         self.result = {
             self.weather_date: {
                 self.list_of_values[8].text:
@@ -85,6 +86,7 @@ class WeatherMaker:
                      self.list_of_values[74 + days].text, self.list_of_values[82 + days].text, ],
             },
         }
+
 
 class ImageMaker:
     def __init__(self):
@@ -182,10 +184,6 @@ class ImageMaker:
         cv2.destroyAllWindows()
 
 
-imagemaker = ImageMaker()
-weathermaker = WeatherMaker()
-
-
 class DatabaseUpdater:
     def __init__(self):
         self.shift = 0
@@ -211,9 +209,6 @@ class DatabaseUpdater:
         )
 
 
-'02.01.2021-07.01.2021'
-
-
 class Run:
     def __init__(self):
         self.shift = None
@@ -225,7 +220,7 @@ class Run:
                   f' Облачность: {weather.cloud_d}.Ветер: {weather.wind_d}. Давление: {weather.pres_d} мм рт.ст.\n '
                   f' Ночь: Температура: {weather.temp_n}. Облачность: {weather.cloud_n}. Ветер: {weather.wind_n}.'
                   f' Давление: {weather.pres_n} мм рт.ст.\n'
-                                    )
+                  )
 
     def change_str(self, text_1):
         try:
@@ -253,7 +248,7 @@ class Run:
                            f'{(today + datetime.timedelta(days=5)).strftime("%d.%m.%Y")} через тире.')
             if self.change_str(text_1):
                 if self.change_str(text_1)[0].day >= today.day or \
-                   self.change_str(text_1)[1].day <= (today + datetime.timedelta(days=5)).day:
+                        self.change_str(text_1)[1].day <= (today + datetime.timedelta(days=5)).day:
                     day = 0
                     while True:
                         self.date = self.change_str(text_1)[0] + datetime.timedelta(days=day)
@@ -301,11 +296,10 @@ class Run:
         else:
             print('Введен неправильный номер')
 
-
+imagemaker = ImageMaker()
+weathermaker = WeatherMaker()
 databaseupdater = DatabaseUpdater()
 run = Run()
-run.base_reading(today-datetime.timedelta(days=7), today)
+run.base_reading(today - datetime.timedelta(days=7), today)
 weathermaker.take_list()
 run.run()
-
-

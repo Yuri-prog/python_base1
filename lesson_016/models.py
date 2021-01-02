@@ -1,14 +1,11 @@
 import peewee
-import sqlite3
+#import sqlite3
 database = peewee.SqliteDatabase('weather.db')
 
 class BaseTable(peewee.Model):
     # В подклассе Meta указываем подключение к той или иной базе данных
     class Meta:
         database = database
-
-#class Date(BaseTable):
-    #name = peewee.DateTimeField()
 
 class Weather(BaseTable):
     date = peewee.DateTimeField()
