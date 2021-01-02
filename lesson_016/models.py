@@ -7,11 +7,11 @@ class BaseTable(peewee.Model):
     class Meta:
         database = database
 
-class Date(BaseTable):
-    name = peewee.DateTimeField()
+#class Date(BaseTable):
+    #name = peewee.DateTimeField()
 
 class Weather(BaseTable):
-    date = peewee.ForeignKeyField(Date)
+    date = peewee.DateTimeField()
     temp_d = peewee.CharField()
     cloud_d = peewee.CharField()
     wind_d = peewee.CharField()
@@ -21,7 +21,5 @@ class Weather(BaseTable):
     wind_n = peewee.CharField()
     pres_n = peewee.CharField()
 
-    class Meta:
-        database = database
 
-database.create_tables([Date, Weather])
+database.create_tables([Weather])
