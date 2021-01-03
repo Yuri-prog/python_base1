@@ -58,7 +58,9 @@ from models import Weather
 
 today = datetime.datetime.today()
 
-
+# TODO каждый класс стоит выделить в отдельный модуль
+# TODO и добавить в конце модуля проверку работы текущего класса
+# TODO (чтобы убедиться, что каждый класс может выполнять свои функции независимо от других)
 class WeatherMaker:
     def __init__(self):
         self.result = {}
@@ -86,6 +88,8 @@ class WeatherMaker:
                      self.list_of_values[74 + days].text, self.list_of_values[82 + days].text, ],
             },
         }
+        # TODO чтобы было проще работать с этим объектом - добавьте в метод return
+        # TODO который будет возращать нужные прогнозы за нужный диапазон дат
 
 
 class ImageMaker:
@@ -96,7 +100,17 @@ class ImageMaker:
     def choose_day(self):
         gradus_1 = ''
         gradus_2 = ''
+        # TODO данные надо подавать в этот класс через параметры
+        # TODO обращаться к внешней переменной - плохо, это создает лишние зависимости
+        # TODO лучше всего все эти классы использовать независимо, а организовать их совместную работу
+        # TODO через класс-менеджер
+        # TODO этот менеджер будет получать данные из одного класса и передавать их другому
+        # TODO при этом именно он будет взаимодействовать с пользователем
+        # TODO (кажется ниже у вас что-то такое уже есть, надо будет в него встроить эту логику)
         for day_time in weathermaker.result[weathermaker.weather_date].keys():
+            # TODO 1) если атрибуты используются только в одном методе - нет смысла их делать атрибутами
+            # TODO 2) нужно исполльзовать полезный нэйминг, сейчас я плохо представляю что значат все эти переменные
+            # TODO 3) нужны ли эти операции внутри цикла?
             self.t_d = weathermaker.result[weathermaker.weather_date]["День"][0][0:-1]
             self.c_d = weathermaker.result[weathermaker.weather_date]["День"][1]
             self.w_d = weathermaker.result[weathermaker.weather_date]["День"][2]
@@ -119,6 +133,7 @@ class ImageMaker:
 
             self.date = f' Прогноз погоды на {weathermaker.table_date.strftime("%d.%m.%Y")}:'
             self.text = (f'День: '
+                         # TODO слишком длинные строки быть не должны, не забывайте про стиль кода
                          f' Температура {self.t_d} {gradus_1}. {self.c_d}.  Ветер{self.w_d}. Давление {self.p_d} мм рт.ст.'
                          f'  Ночь: '
                          f' Температура {self.t_n} {gradus_2}. {self.c_n}.  Ветер{self.w_n}. Давление {self.p_n} мм рт.ст.  '
@@ -171,7 +186,9 @@ class ImageMaker:
             card = cv2.putText(card, string, (3, y + 40), cv2.FONT_HERSHEY_COMPLEX,
                                0.5, (0, 55, 0), 1, cv2.LINE_AA)
             y += 20
-
+        # TODO Картинки хорошо бы сохранять, каждую отдельно (название можно изменять по дате и городу)
+        # TODO Сохранять картинки стоит в отдельную директорию,
+        # TODO которую перед этим хорошо было бы проверить/создать
         cv2.imwrite('Card.jpg', card)
         card = Image.open('Card.jpg')
         card.paste(picture, (25, 25))
@@ -192,10 +209,33 @@ class DatabaseUpdater:
         date_exist = True
         try:
             Weather.select().where(Weather.date == weathermaker.table_date).get()
-        except:
+        except:  # TODO пустые except-ы оставлять не стоит - плохой стиль
             date_exist = False
         if date_exist:
             Weather.delete().where(Weather.date == weathermaker.table_date).execute()
+        # TODO При добавлении новых данных в базу попробуйте использовать метод get_or_create
+        # TODO Он либо создаст новую запись, либо укажет на то, что запись уже существует
+        # TODO По возвращенному айди можно будет обновить старую запись, вместо создания новой.
+        # TODO Обратите внимание на описание этого метода и на то, что он возвращает при использовании
+        # http://docs.peewee-orm.com/en/latest/peewee/api.html#Model.get_or_create
+        # TODO Returns:
+        #  Tuple of Model instance and boolean indicating if a new object was created.
+        # TODO Т.е. возвращается кортеж с ID элемента, который был найден или был создан
+        # TODO И возвращается True/False объект, который говорит о том, был ли объект создан
+        # TODO Если объект не был создан - его хорошо было бы обновить по вернувшемуся ID
+        # TODO Принцип примерно следующий:
+        # for data in data_to_save:
+        # TODO Сперва получаем данные из get_or_create по одному из полей(в данном случае по дате)
+        #     weather, created = Weather.get_or_create(
+        #         date=data['date'],
+        # TODO В defaults указываются остальные данные, которые будут использованы при создании записи
+        #         defaults={'temperature': data['temperature'], 'pressure': data['pressure'],
+        #                   'conditions': data['conditions'], 'wind': data['wind']})
+        #     if not created:
+        # TODO Если запись не создана - обновляем её
+        #         query = Weather.update(temperature=data['temperature'], pressure=data['pressure'],
+        #                                conditions=data['conditions'], wind=data['wind']).where(Weather.id == weather.id)
+        #         query.execute()
         Weather.create(
             date=weathermaker.table_date,
             temp_d=imagemaker.t_d,
@@ -208,13 +248,20 @@ class DatabaseUpdater:
             pres_n=imagemaker.p_n,
         )
 
+    # TODO тут должен быть ещё один метод
+    # TODO который читает данные из базы за указанный промежуток дат и возвращает это return-ом
 
-class Run:
+
+class Run:  # TODO вот этот класс подходит на роль менеджера
+    # TODO внутри него можно создавать объекты других классов и использовать их
+    # TODO для выполнения задач, выбранных пользователем
     def __init__(self):
         self.shift = None
         self.date = ''
 
     def base_reading(self, first_day, last_day):
+        # TODO с базой напрямую общаться должен только один класс
+        # TODO остальное общение через него происходит
         for weather in Weather.select().where(first_day <= Weather.date <= last_day):
             print(f' Дата: {weather.date.strftime("%d.%m.%Y")}.\n  День: Температура: {weather.temp_d}.'
                   f' Облачность: {weather.cloud_d}.Ветер: {weather.wind_d}. Давление: {weather.pres_d} мм рт.ст.\n '
@@ -233,10 +280,15 @@ class Run:
                 date = datetime.datetime.strptime(text_1, '%d.%m.%Y')
                 return date
         except ValueError:
+            # TODO хорошо бы при этом выводить пример правильного ввода
             print('Введена неверная информация')
             return
 
     def run(self):
+        # TODO объемный метод получается
+        # TODO попробуйте упростить его/разбить на разные методы
+        # TODO например тут можно оставить выбор действия (и проверку выбора)
+        # TODO а сами действия разнести по отдельным методам
         text = input('Выберите действие:\n'
                      '1. Добавить прогноз в базу данных\n'
                      '2. Получить прогноз из базы даных\n'
