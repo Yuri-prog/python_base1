@@ -20,3 +20,4 @@ class Weather(BaseTable):
 
 
 database.create_tables([Weather])
+
