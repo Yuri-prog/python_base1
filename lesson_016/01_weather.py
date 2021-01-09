@@ -88,15 +88,14 @@ class Run:
                 date_card = datetime.datetime.combine(datetime.datetime.strptime(text_1, f'%d.%m.%Y'), time_now)
                 return date_card
         except ValueError:
-            print('Введена неверная информация. Требуется ввод в формате ДД.ММ.ГГГГ или диапазон'
-                  ' ДД.ММ.ГГГГ-ДД.ММ.ГГГГ.')
+            print('Введена неверная информация. Требуется ввод в формате ДД.ММ.ГГГГ.')
             return
 
     def write_to_base(self):
         text_1 = input(f'Выберите диапазон дат с {today.strftime("%d.%m.%Y")} по '
                        f'{(today + datetime.timedelta(days=5)).strftime("%d.%m.%Y")} через тире.')
         if self.change_str(text_1):
-            if self.change_str(text_1)[0].day >= today.day or \
+            if self.change_str(text_1)[0].day >= today.day and \
                     self.change_str(text_1)[1].day <= (today + datetime.timedelta(days=5)).day:
                 day = 0
                 while True:
@@ -126,18 +125,22 @@ class Run:
         text_1 = input(f'Выберите дату в диапазоне с {today.strftime("%d.%m.%Y")} по '
                        f'{(today + datetime.timedelta(days=5)).strftime("%d.%m.%Y")}.')
         if self.change_str(text_1):
-            if self.change_str(text_1) <= (today + datetime.timedelta(days=5)):
-                date = self.change_str(text_1)
-                weathermaker.take_weather(date)
-                cloud_cover = weathermaker.take_weather(date)[1]
-                self.print_text(date)
-                print_date = self.print_text(date)[0]
-                pr_text = self.print_text(date)[1]
-                imagemaker.card(print_date, pr_text, cloud_cover)
+            if not isinstance(self.change_str(text_1), tuple):
+                if self.change_str(text_1) <= (today + datetime.timedelta(days=5)) \
+                        and self.change_str(text_1) >= (today):
+                    date = self.change_str(text_1)
+                    weathermaker.take_weather(date)
+                    cloud_cover = weathermaker.take_weather(date)[1]
+                    self.print_text(date)
+                    print_date = self.print_text(date)[0]
+                    pr_text = self.print_text(date)[1]
+                    imagemaker.card(print_date, pr_text, cloud_cover)
 
+                else:
+                    print('Выбрана неверная дата')
+                    return
             else:
-                print('Выбрана неверная дата')
-                return
+                print('Неверный ввод. Требуется ввод одной даты в формате ДД.ММ.ГГГГ.')
 
     def print_forecasts(self):
         for day in range(0, 6):
@@ -151,34 +154,32 @@ class Run:
                 print(string)
 
     def run(self):
-
-        text = input('Выберите действие:\n'
-                     '1. Добавить прогноз в базу данных\n'
-                     '2. Получить прогноз из базы даных\n'
-                     '3. Вывести открытку с прогнозом\n'
-                     '4. Вывести прогнозы на консоль\n'
-                     '5. Очистить базу данных'
-                     )
-        if text == '1':
-            self.write_to_base()
-        elif text == '2':
-            self.read_from_base()
-        elif text == '3':
-            self.print_card()
-        elif text == '4':
-            self.print_forecasts()
-        elif text == '5':
-            Weather.delete().execute()
-        else:
-            print('Введен неправильный номер. Требуется ввод числа от 1 до 5.')
+        while True:
+            text = input('Выберите действие:\n'
+                         '1. Добавить прогноз в базу данных\n'
+                         '2. Получить прогноз из базы даных\n'
+                         '3. Вывести открытку с прогнозом\n'
+                         '4. Вывести прогнозы на консоль\n'
+                         '5. Очистить базу данных\n'
+                         '6. Выход'
+                         )
+            if text == '1':
+                self.write_to_base()
+            elif text == '2':
+                self.read_from_base()
+            elif str(text) == '3':
+                self.print_card()
+            elif str(text) == '4':
+                self.print_forecasts()
+            elif str(text) == '5':
+                Weather.delete().execute()
+            elif str(text) == '6':
+                break
+            else:
+                print('Введен неправильный номер. Требуется ввод числа от 1 до 6.')
 
 
 if __name__ == '__main__':
-    # TODO в менеджере можно создать ещё один метод
-    # TODO в него добавить создание этих классов и запуск запроса в цикле
-    # TODO чтобы можно было
-    # TODO 1) запустить работу одним методом
-    # TODO 2) выполнять много запросов за одни запуск
     imagemaker = ImageMaker()
     weathermaker = WeatherMaker()
     databaseupdater = DatabaseUpdater()
