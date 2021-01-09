@@ -70,4 +70,8 @@ def test():
     today = datetime.datetime.today()
     imagemaker.card(f'Прогноз погоды на {today.date()}:', 'test  test', 'Ясно')
 
+<<<<<<< HEAD
 test()
+=======
+#test()
+>>>>>>> origin/master
