@@ -25,6 +25,7 @@ class DatabaseUpdater:
             weather.execute()
 
     def base_reading(self, first_day, last_day):
+        base_text = ''
         for weather in Weather.select().where((Weather.date >= first_day) & (Weather.date <= last_day)):
             base_text = (f' Дата: {weather.date.strftime("%d.%m.%Y")}.\n  День: Температура: {weather.temp_d}.'
                          f' Облачность: {weather.cloud_d}.Ветер: {weather.wind_d}. Давление: {weather.pres_d} мм рт.ст.\n '
