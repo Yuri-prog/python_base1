@@ -173,10 +173,16 @@ class Run:
             print('Введен неправильный номер. Требуется ввод числа от 1 до 5.')
 
 
-imagemaker = ImageMaker()
-weathermaker = WeatherMaker()
-databaseupdater = DatabaseUpdater()
-run = Run()
-databaseupdater.base_reading(today - datetime.timedelta(days=7), today)
-weathermaker.take_list()
-run.run()
+if __name__ == '__main__':
+    # TODO в менеджере можно создать ещё один метод
+    # TODO в него добавить создание этих классов и запуск запроса в цикле
+    # TODO чтобы можно было
+    # TODO 1) запустить работу одним методом
+    # TODO 2) выполнять много запросов за одни запуск
+    imagemaker = ImageMaker()
+    weathermaker = WeatherMaker()
+    databaseupdater = DatabaseUpdater()
+    run = Run()
+    databaseupdater.base_reading(today - datetime.timedelta(days=7), today)
+    weathermaker.take_list()
+    run.run()
