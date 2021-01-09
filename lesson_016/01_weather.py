@@ -49,309 +49,134 @@
 
 import datetime
 
-import cv2
-import requests
-from PIL import Image
-from bs4 import BeautifulSoup
+from databaseupdater import DatabaseUpdater
+from imagemaker import ImageMaker
+from weathermaker import WeatherMaker
 
 from models import Weather
 
 today = datetime.datetime.today()
 
-# TODO каждый класс стоит выделить в отдельный модуль
-# TODO и добавить в конце модуля проверку работы текущего класса
-# TODO (чтобы убедиться, что каждый класс может выполнять свои функции независимо от других)
-class WeatherMaker:
-    def __init__(self):
-        self.result = {}
-        self.table_date = None
-        self.weather_date = ''
-        self.list_of_values = []
 
-    def take_list(self):
-        response = requests.get('https://meteoinfo.ru/forecasts/russia/moscow-area/moscow')
-        if response.status_code == 200:
-            html_doc = BeautifulSoup(response.text, features='html.parser')
-            self.list_of_values = html_doc.find_all('td', {'class': "td_short_gr"})
-
-    def take_weather(self):
-        days = (run.date.day - today.day)
-        self.table_date = run.date
-        self.weather_date = self.list_of_values[days + 1].text
-        self.result = {
-            self.weather_date: {
-                self.list_of_values[8].text:
-                    [self.list_of_values[17 + days].text, self.list_of_values[25 + days].text,
-                     self.list_of_values[33 + days].text, self.list_of_values[41 + days].text, ],
-                self.list_of_values[48].text:
-                    [self.list_of_values[58 + days].text, self.list_of_values[66 + days].text,
-                     self.list_of_values[74 + days].text, self.list_of_values[82 + days].text, ],
-            },
-        }
-        # TODO чтобы было проще работать с этим объектом - добавьте в метод return
-        # TODO который будет возращать нужные прогнозы за нужный диапазон дат
-
-
-class ImageMaker:
-    def __init__(self):
-        self.text = ''
-        self.cloud_cover = ''
-
-    def choose_day(self):
-        gradus_1 = ''
-        gradus_2 = ''
-        # TODO данные надо подавать в этот класс через параметры
-        # TODO обращаться к внешней переменной - плохо, это создает лишние зависимости
-        # TODO лучше всего все эти классы использовать независимо, а организовать их совместную работу
-        # TODO через класс-менеджер
-        # TODO этот менеджер будет получать данные из одного класса и передавать их другому
-        # TODO при этом именно он будет взаимодействовать с пользователем
-        # TODO (кажется ниже у вас что-то такое уже есть, надо будет в него встроить эту логику)
-        for day_time in weathermaker.result[weathermaker.weather_date].keys():
-            # TODO 1) если атрибуты используются только в одном методе - нет смысла их делать атрибутами
-            # TODO 2) нужно исполльзовать полезный нэйминг, сейчас я плохо представляю что значат все эти переменные
-            # TODO 3) нужны ли эти операции внутри цикла?
-            self.t_d = weathermaker.result[weathermaker.weather_date]["День"][0][0:-1]
-            self.c_d = weathermaker.result[weathermaker.weather_date]["День"][1]
-            self.w_d = weathermaker.result[weathermaker.weather_date]["День"][2]
-            self.p_d = weathermaker.result[weathermaker.weather_date]["День"][3]
-            self.t_n = weathermaker.result[weathermaker.weather_date]["Ночь"][0][0:-1]
-            self.c_n = weathermaker.result[weathermaker.weather_date]["Ночь"][1]
-            self.w_n = weathermaker.result[weathermaker.weather_date]["Ночь"][2]
-            self.p_n = weathermaker.result[weathermaker.weather_date]["Ночь"][3]
-            last_dig = weathermaker.result[weathermaker.weather_date][day_time][0][-2]
-            if last_dig == '1':
-                gradus = 'градус'
-            elif last_dig == '2' or last_dig == '3' or last_dig == '4':
-                gradus = 'градуса'
-            else:
-                gradus = 'градусов'
-            if day_time == 'День':
-                gradus_1 = gradus
-            else:
-                gradus_2 = gradus
-
-            self.date = f' Прогноз погоды на {weathermaker.table_date.strftime("%d.%m.%Y")}:'
-            self.text = (f'День: '
-                         # TODO слишком длинные строки быть не должны, не забывайте про стиль кода
-                         f' Температура {self.t_d} {gradus_1}. {self.c_d}.  Ветер{self.w_d}. Давление {self.p_d} мм рт.ст.'
-                         f'  Ночь: '
-                         f' Температура {self.t_n} {gradus_2}. {self.c_n}.  Ветер{self.w_n}. Давление {self.p_n} мм рт.ст.  '
-                         )
-
-    def viewimage(self, image, name_of_window):
-        cv2.namedWindow(name_of_window, cv2.WINDOW_NORMAL)
-        cv2.imshow(name_of_window, image)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
-    def card(self):
-        background = cv2.imread('python_snippets/external_data/probe1.jpg')
-        picture = cv2.imread('')
-        picture_1 = cv2.imread('')
-        for x in range(1024):
-            yellow = (255 - (x // 4), 255, 255)
-            light_blue = (255, 335 - (x // 4), 315 - (x // 4))
-            blue = (255, 255 - (x // 4), 255 - (x // 4))
-            gray = (295 - (x // 4), 295 - (x // 4), 295 - (x // 4))
-            if 'Снег' in self.cloud_cover or 'снег' in self.cloud_cover:
-                card_color = light_blue
-                picture = Image.open('python_snippets/external_data/weather_img/snow.jpg')
-                if 'Облачно' in self.cloud_cover:
-                    picture_1 = Image.open('python_snippets/external_data/weather_img/cloud.jpg')
-                elif 'Ясно' in self.cloud_cover:
-                    picture_1 = Image.open('python_snippets/external_data/weather_img/ыгт.jpg')
-            elif 'Дождь' in self.cloud_cover or 'дождь' in self.cloud_cover:
-                card_color = blue
-                picture = Image.open('python_snippets/external_data/weather_img/rain.jpg')
-                if 'Облачно' in self.cloud_cover:
-                    picture_1 = Image.open('python_snippets/external_data/weather_img/cloud.jpg')
-                elif 'Ясно' in self.cloud_cover:
-                    picture_1 = Image.open('python_snippets/external_data/weather_img/ыгт.jpg')
-            elif 'Ясно' in self.cloud_cover:
-                card_color = yellow
-                picture = Image.open('python_snippets/external_data/weather_img/sun.jpg')
-            elif 'Переменная облачность' in self.cloud_cover:
-                card_color = yellow
-                picture = Image.open('python_snippets/external_data/weather_img/sun.jpg')
-                picture_1 = Image.open('python_snippets/external_data/weather_img/cloud.jpg')
-            else:
-                card_color = gray
-                picture = Image.open('python_snippets/external_data/weather_img/cloud.jpg')
-            card = cv2.line(background, (x, 0), (x, 512), card_color, 10)
-        y = 220
-        card = cv2.putText(card, self.date, (3, y), cv2.FONT_HERSHEY_COMPLEX,
-                           0.7, (0, 0, 200), 1, cv2.LINE_AA)
-        for string in self.text.split('  '):
-            card = cv2.putText(card, string, (3, y + 40), cv2.FONT_HERSHEY_COMPLEX,
-                               0.5, (0, 55, 0), 1, cv2.LINE_AA)
-            y += 20
-        # TODO Картинки хорошо бы сохранять, каждую отдельно (название можно изменять по дате и городу)
-        # TODO Сохранять картинки стоит в отдельную директорию,
-        # TODO которую перед этим хорошо было бы проверить/создать
-        cv2.imwrite('Card.jpg', card)
-        card = Image.open('Card.jpg')
-        card.paste(picture, (25, 25))
-        if picture_1:
-            card.paste(picture_1, (125, 25))
-        card.save("card_with_cloud.jpg")
-        result = cv2.imread('card_with_cloud.jpg')
-        cv2.imshow('window', result)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
-
-class DatabaseUpdater:
-    def __init__(self):
-        self.shift = 0
-
-    def writing(self):
-        date_exist = True
-        try:
-            Weather.select().where(Weather.date == weathermaker.table_date).get()
-        except:  # TODO пустые except-ы оставлять не стоит - плохой стиль
-            date_exist = False
-        if date_exist:
-            Weather.delete().where(Weather.date == weathermaker.table_date).execute()
-        # TODO При добавлении новых данных в базу попробуйте использовать метод get_or_create
-        # TODO Он либо создаст новую запись, либо укажет на то, что запись уже существует
-        # TODO По возвращенному айди можно будет обновить старую запись, вместо создания новой.
-        # TODO Обратите внимание на описание этого метода и на то, что он возвращает при использовании
-        # http://docs.peewee-orm.com/en/latest/peewee/api.html#Model.get_or_create
-        # TODO Returns:
-        #  Tuple of Model instance and boolean indicating if a new object was created.
-        # TODO Т.е. возвращается кортеж с ID элемента, который был найден или был создан
-        # TODO И возвращается True/False объект, который говорит о том, был ли объект создан
-        # TODO Если объект не был создан - его хорошо было бы обновить по вернувшемуся ID
-        # TODO Принцип примерно следующий:
-        # for data in data_to_save:
-        # TODO Сперва получаем данные из get_or_create по одному из полей(в данном случае по дате)
-        #     weather, created = Weather.get_or_create(
-        #         date=data['date'],
-        # TODO В defaults указываются остальные данные, которые будут использованы при создании записи
-        #         defaults={'temperature': data['temperature'], 'pressure': data['pressure'],
-        #                   'conditions': data['conditions'], 'wind': data['wind']})
-        #     if not created:
-        # TODO Если запись не создана - обновляем её
-        #         query = Weather.update(temperature=data['temperature'], pressure=data['pressure'],
-        #                                conditions=data['conditions'], wind=data['wind']).where(Weather.id == weather.id)
-        #         query.execute()
-        Weather.create(
-            date=weathermaker.table_date,
-            temp_d=imagemaker.t_d,
-            cloud_d=imagemaker.c_d,
-            wind_d=imagemaker.w_d,
-            pres_d=imagemaker.p_d,
-            temp_n=imagemaker.t_n,
-            cloud_n=imagemaker.c_n,
-            wind_n=imagemaker.w_n,
-            pres_n=imagemaker.p_n,
-        )
-
-    # TODO тут должен быть ещё один метод
-    # TODO который читает данные из базы за указанный промежуток дат и возвращает это return-ом
-
-
-class Run:  # TODO вот этот класс подходит на роль менеджера
-    # TODO внутри него можно создавать объекты других классов и использовать их
-    # TODO для выполнения задач, выбранных пользователем
+class Run:
     def __init__(self):
         self.shift = None
-        self.date = ''
 
-    def base_reading(self, first_day, last_day):
-        # TODO с базой напрямую общаться должен только один класс
-        # TODO остальное общение через него происходит
-        for weather in Weather.select().where(first_day <= Weather.date <= last_day):
-            print(f' Дата: {weather.date.strftime("%d.%m.%Y")}.\n  День: Температура: {weather.temp_d}.'
-                  f' Облачность: {weather.cloud_d}.Ветер: {weather.wind_d}. Давление: {weather.pres_d} мм рт.ст.\n '
-                  f' Ночь: Температура: {weather.temp_n}. Облачность: {weather.cloud_n}. Ветер: {weather.wind_n}.'
-                  f' Давление: {weather.pres_n} мм рт.ст.\n'
-                  )
+    def print_text(self, date):
+        print_date = f' Прогноз погоды на {date.strftime("%d.%m.%Y")}:'
+        pr_text = (f'День:'
+                   f' Температура {weathermaker.take_weather(date)[0][1][:-1]} град. '
+                   f'{weathermaker.take_weather(date)[0][2]}.  Ветер{weathermaker.take_weather(date)[0][3]}. '
+                   f'Давление {weathermaker.take_weather(date)[0][4]} мм рт.ст.'
+                   f'  Ночь:'
+                   f' Температура {weathermaker.take_weather(date)[0][5][:-1]} град. '
+                   f'{weathermaker.take_weather(date)[0][6]}.  Ветер{weathermaker.take_weather(date)[0][7]}.'
+                   f' Давление {weathermaker.take_weather(date)[0][8]} мм рт.ст.  '
+                   )
+        base_data = weathermaker.take_weather(date)[0]
+        return print_date, pr_text, base_data
 
     def change_str(self, text_1):
         try:
+            time_now = today.time()
             if '-' in text_1:
                 text_1 = text_1.split('-')
-                first_date = datetime.datetime.strptime(text_1[0], '%d.%m.%Y')
-                last_date = datetime.datetime.strptime(text_1[1], '%d.%m.%Y')
+                first_date = datetime.datetime.combine(datetime.datetime.strptime(text_1[0], f'%d.%m.%Y'), time_now)
+                last_date = datetime.datetime.combine(datetime.datetime.strptime(text_1[1], f'%d.%m.%Y'), time_now)
                 return first_date, last_date
             else:
-                date = datetime.datetime.strptime(text_1, '%d.%m.%Y')
-                return date
+                date_card = datetime.datetime.combine(datetime.datetime.strptime(text_1, f'%d.%m.%Y'), time_now)
+                return date_card
         except ValueError:
-            # TODO хорошо бы при этом выводить пример правильного ввода
-            print('Введена неверная информация')
+            print('Введена неверная информация. Требуется ввод в формате ДД.ММ.ГГГГ или диапазон'
+                  ' ДД.ММ.ГГГГ-ДД.ММ.ГГГГ.')
             return
 
+    def write_to_base(self):
+        text_1 = input(f'Выберите диапазон дат с {today.strftime("%d.%m.%Y")} по '
+                       f'{(today + datetime.timedelta(days=5)).strftime("%d.%m.%Y")} через тире.')
+        if self.change_str(text_1):
+            if self.change_str(text_1)[0].day >= today.day or \
+                    self.change_str(text_1)[1].day <= (today + datetime.timedelta(days=5)).day:
+                day = 0
+                while True:
+                    date = self.change_str(text_1)[0] + datetime.timedelta(days=day)
+                    if date > self.change_str(text_1)[1]:
+                        break
+                    weathermaker.take_weather(date)
+                    self.print_text(date)
+                    base_data = self.print_text(date)[2]
+                    databaseupdater.writing(base_data)
+                    day += 1
+            else:
+                print('Выбраны неверные даты')
+                return
+
+    def read_from_base(self):
+        text_1 = input(f'Выберите диапазон дат до {(today + datetime.timedelta(days=5)).strftime("%d.%m.%Y")} '
+                       f'через тире.')
+        if self.change_str(text_1):
+            if self.change_str(text_1)[1].day <= (today + datetime.timedelta(days=5)).day:
+                databaseupdater.base_reading(self.change_str(text_1)[0].date(), self.change_str(text_1)[1].date())
+            else:
+                print('Выбраны неверные даты')
+                return
+
+    def print_card(self):
+        text_1 = input(f'Выберите дату в диапазоне с {today.strftime("%d.%m.%Y")} по '
+                       f'{(today + datetime.timedelta(days=5)).strftime("%d.%m.%Y")}.')
+        if self.change_str(text_1):
+            if self.change_str(text_1) <= (today + datetime.timedelta(days=5)):
+                date = self.change_str(text_1)
+                weathermaker.take_weather(date)
+                cloud_cover = weathermaker.take_weather(date)[1]
+                self.print_text(date)
+                print_date = self.print_text(date)[0]
+                pr_text = self.print_text(date)[1]
+                imagemaker.card(print_date, pr_text, cloud_cover)
+
+            else:
+                print('Выбрана неверная дата')
+                return
+
+    def print_forecasts(self):
+        for day in range(0, 6):
+            date = (today + datetime.timedelta(days=day))
+            # print(date)
+            weathermaker.take_weather(date)
+            self.print_text(date)
+            print(self.print_text(date)[0])
+            imagemaker.text = self.print_text(date)[1].split('  ')
+            for string in imagemaker.text:
+                print(string)
+
     def run(self):
-        # TODO объемный метод получается
-        # TODO попробуйте упростить его/разбить на разные методы
-        # TODO например тут можно оставить выбор действия (и проверку выбора)
-        # TODO а сами действия разнести по отдельным методам
+
         text = input('Выберите действие:\n'
                      '1. Добавить прогноз в базу данных\n'
                      '2. Получить прогноз из базы даных\n'
                      '3. Вывести открытку с прогнозом\n'
                      '4. Вывести прогнозы на консоль\n'
-                     '5. Очистить базу данных')
+                     '5. Очистить базу данных'
+                     )
         if text == '1':
-            text_1 = input(f'Выберите диапазон дат с {today.strftime("%d.%m.%Y")} по '
-                           f'{(today + datetime.timedelta(days=5)).strftime("%d.%m.%Y")} через тире.')
-            if self.change_str(text_1):
-                if self.change_str(text_1)[0].day >= today.day or \
-                        self.change_str(text_1)[1].day <= (today + datetime.timedelta(days=5)).day:
-                    day = 0
-                    while True:
-                        self.date = self.change_str(text_1)[0] + datetime.timedelta(days=day)
-                        if self.date > self.change_str(text_1)[1]:
-                            break
-                        weathermaker.take_weather()
-                        imagemaker.choose_day()
-                        databaseupdater.writing()
-                        day += 1
-                else:
-                    print('Выбраны неверные даты')
-                    return
+            self.write_to_base()
         elif text == '2':
-            text_1 = input(f'Выберите диапазон дат до {(today + datetime.timedelta(days=5)).strftime("%d.%m.%Y")} '
-                           f'через тире.')
-            if self.change_str(text_1):
-                if self.change_str(text_1)[1].day <= (today + datetime.timedelta(days=5)).day:
-                    self.base_reading(self.change_str(text_1)[0], self.change_str(text_1)[1])
-                else:
-                    print('Выбраны неверные даты')
-                    return
+            self.read_from_base()
         elif text == '3':
-            text_1 = input(f'Выберите дату в диапазоне с {today.strftime("%d.%m.%Y")} по '
-                           f'{(today + datetime.timedelta(days=5)).strftime("%d.%m.%Y")}.')
-            if self.change_str(text_1):
-                if self.change_str(text_1) <= (today + datetime.timedelta(days=5)):
-                    self.date = self.change_str(text_1)
-                    weathermaker.take_weather()
-                    imagemaker.choose_day()
-                    imagemaker.card()
-                else:
-                    print('Выбрана неверная дата')
-                    return
+            self.print_card()
         elif text == '4':
-            for day in range(0, 6):
-                self.date = (today + datetime.timedelta(days=day))
-                weathermaker.take_weather()
-                imagemaker.choose_day()
-                print(imagemaker.date)
-                imagemaker.text = imagemaker.text.split('  ')
-                for string in imagemaker.text:
-                    print(string)
+            self.print_forecasts()
         elif text == '5':
             Weather.delete().execute()
         else:
-            print('Введен неправильный номер')
+            print('Введен неправильный номер. Требуется ввод числа от 1 до 5.')
+
 
 imagemaker = ImageMaker()
 weathermaker = WeatherMaker()
 databaseupdater = DatabaseUpdater()
 run = Run()
-run.base_reading(today - datetime.timedelta(days=7), today)
+databaseupdater.base_reading(today - datetime.timedelta(days=7), today)
 weathermaker.take_list()
 run.run()
