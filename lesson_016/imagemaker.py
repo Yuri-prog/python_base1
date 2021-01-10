@@ -2,6 +2,7 @@ import datetime
 import cv2
 from PIL import Image
 
+
 class ImageMaker:
     def __init__(self):
         self.text = ''
@@ -48,28 +49,31 @@ class ImageMaker:
             print_card = cv2.line(background, (x, 0), (x, 512), card_color, 10)
         y = 220
         print_card = cv2.putText(print_card, print_date, (3, y), cv2.FONT_HERSHEY_COMPLEX,
-                           0.7, (0, 0, 200), 1, cv2.LINE_AA)
+                                 0.7, (0, 0, 200), 1, cv2.LINE_AA)
         for string in pr_text.split('  '):
             print_card = cv2.putText(print_card, string, (3, y + 40), cv2.FONT_HERSHEY_COMPLEX,
-                               0.5, (0, 55, 0), 1, cv2.LINE_AA)
+                                     0.5, (0, 55, 0), 1, cv2.LINE_AA)
             y += 20
 
+        # TODO у вас получается несколько сохранений идёт?
+        # TODO зачем сохранять изображение до того, как оно будет готово?
         cv2.imwrite('Card.jpg', print_card)
         print_card = Image.open('Card.jpg')
         print_card.paste(picture, (25, 25))
         if picture_1:
             print_card.paste(picture_1, (125, 25))
+        # TODO + тут нужна проверка на наличие папки Cards
+        # TODO и при необходимости её создание
         print_card.save(f"Cards\{print_date[-11:-1]}.jpg")
         result = cv2.imread(f'Cards\{print_date[-11:-1]}.jpg')
         cv2.imshow('window', result)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+
 def test():
     imagemaker = ImageMaker()
     today = datetime.datetime.today()
     imagemaker.card(f'Прогноз погоды на {today.date()}:', 'test  test', 'Ясно')
 
-
-#test()
-
+# test()
