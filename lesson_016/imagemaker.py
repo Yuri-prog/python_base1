@@ -1,7 +1,7 @@
 import datetime
 import cv2
 from PIL import Image
-
+import os
 
 class ImageMaker:
     def __init__(self):
@@ -57,13 +57,16 @@ class ImageMaker:
 
         # TODO у вас получается несколько сохранений идёт?
         # TODO зачем сохранять изображение до того, как оно будет готово?
+        #TODO До сохранения print_card -объект cv2, с ним paste не работает. А после сохранения это уже открытая
+        #TODO картинка, тогда все вставляется.
         cv2.imwrite('Card.jpg', print_card)
         print_card = Image.open('Card.jpg')
         print_card.paste(picture, (25, 25))
         if picture_1:
             print_card.paste(picture_1, (125, 25))
-        # TODO + тут нужна проверка на наличие папки Cards
-        # TODO и при необходимости её создание
+        path = "Cards"
+        if not os.path.exists(path):
+            os.mkdir(path)
         print_card.save(f"Cards\{print_date[-11:-1]}.jpg")
         result = cv2.imread(f'Cards\{print_date[-11:-1]}.jpg')
         cv2.imshow('window', result)
@@ -76,4 +79,4 @@ def test():
     today = datetime.datetime.today()
     imagemaker.card(f'Прогноз погоды на {today.date()}:', 'test  test', 'Ясно')
 
-# test()
+#test()
