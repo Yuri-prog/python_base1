@@ -187,3 +187,4 @@ if __name__ == '__main__':
     databaseupdater.base_reading(today - datetime.timedelta(days=7), today)
     weathermaker.take_list()
     run.run()
+#зачёт!
